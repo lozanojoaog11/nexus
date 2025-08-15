@@ -5,7 +5,7 @@ import { PlusIcon, ACCENT_COLOR } from '../constants';
 
 interface HabitsProps {
   habits: Habit[];
-  toggleHabitCompletion: (habitId: string, date: string) => void;
+  toggleHabitCompletion: (habitId: string, date: string, isCompleted: boolean) => void;
   onAddHabit: () => void;
   onDeleteHabit: (habitId: string) => void;
 }
@@ -22,62 +22,23 @@ const CheckIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-
-const calculateCurrentStreak = (habit: Habit) => {
-    let streak = 0;
-    const sortedHistory = [...habit.history]
-      .filter(h => h.completed)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-    if (sortedHistory.length === 0) return 0;
-    
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    const todayStr = today.toISOString().split('T')[0];
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-    
-    const lastCompletionDate = new Date(sortedHistory[0].date);
-    lastCompletionDate.setMinutes(lastCompletionDate.getMinutes() + lastCompletionDate.getTimezoneOffset());
-    const lastCompletionStr = lastCompletionDate.toISOString().split('T')[0];
-    
-    if(lastCompletionStr !== todayStr && lastCompletionStr !== yesterdayStr) return 0;
-
-    streak = 1;
-    for (let i = 0; i < sortedHistory.length - 1; i++) {
-      const current = new Date(sortedHistory[i].date);
-      const next = new Date(sortedHistory[i+1].date);
-      const diff = (current.getTime() - next.getTime()) / (1000 * 3600 * 24);
-      if (diff === 1) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    return streak;
-}
-
-
 const HabitRow: React.FC<{
     habit: Habit;
-    onToggle: (habitId: string, date: string) => void;
+    onToggle: (habitId: string, date: string, isCompleted: boolean) => void;
     onDelete: (habitId: string) => void;
 }> = ({ habit, onToggle, onDelete }) => {
     
     const completionRate = useMemo(() => {
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        const completedInLast30Days = habit.history.filter(h => 
+        const completedInLast30Days = (habit.history || []).filter(h => 
             h.completed && new Date(h.date) >= thirtyDaysAgo
         ).length;
         return Math.round((completedInLast30Days / 30) * 100);
     }, [habit.history]);
 
-    const currentStreak = useMemo(() => calculateCurrentStreak(habit), [habit]);
-
     const todayStr = new Date().toISOString().split('T')[0];
-    const isCompletedToday = habit.history.some(h => h.date === todayStr && h.completed);
+    const isCompletedToday = (habit.history || []).some(h => h.date === todayStr && h.completed);
 
     return (
         <div className="grid grid-cols-12 items-center gap-4 p-4 bg-[#1C1C1C] rounded-lg border border-white/10 group">
@@ -90,7 +51,7 @@ const HabitRow: React.FC<{
                 <p className="text-xs text-gray-500">Conclusão (30d)</p>
             </div>
             <div className="col-span-2 text-center">
-                <p className="font-bold text-lg" style={{color: ACCENT_COLOR}}>{currentStreak}</p>
+                <p className="font-bold text-lg" style={{color: ACCENT_COLOR}}>{(habit as any).currentStreak || 0}</p>
                 <p className="text-xs text-gray-500">Sequência Atual</p>
             </div>
             <div className="col-span-2 text-center">
@@ -99,14 +60,14 @@ const HabitRow: React.FC<{
             </div>
             <div className="col-span-1 flex justify-end items-center">
                 <button
-                    onClick={() => onToggle(habit.id, todayStr)}
+                    onClick={() => onToggle(habit.id, todayStr, isCompletedToday)}
                     className={`w-9 h-9 flex items-center justify-center rounded-lg border-2 transition-all duration-200 ${
                         isCompletedToday
-                        ? `bg-[${ACCENT_COLOR}]/20 border-[${ACCENT_COLOR}]`
+                        ? `bg-[#00A9FF]/20 border-[#00A9FF]`
                         : 'bg-gray-800 border-gray-700 hover:border-gray-500'
                     }`}
                 >
-                    {isCompletedToday && <CheckIcon className={`w-5 h-5 text-[${ACCENT_COLOR}]`} />}
+                    {isCompletedToday && <CheckIcon className={`w-5 h-5 text-[#00A9FF]`} />}
                 </button>
                  <button onClick={() => onDelete(habit.id)} className="ml-2 p-2 text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                     <TrashIcon className="w-4 h-4"/>

@@ -5,6 +5,7 @@ import { NAV_ITEMS, ACCENT_COLOR } from '../constants';
 interface SidebarProps {
   currentView: View;
   setCurrentView: (view: View) => void;
+  onSignOut: () => void;
 }
 
 const EixoLogo = ({ className }: { className?: string }) => (
@@ -21,7 +22,14 @@ const EixoLogo = ({ className }: { className?: string }) => (
     </svg>
 )
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView }) => {
+const SignOutIcon = ({ className }: { className?: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+    </svg>
+);
+
+
+const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, onSignOut }) => {
   return (
     <div className="w-64 bg-black/20 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col flex-shrink-0">
       <div className="flex items-center space-x-3 mb-16">
@@ -44,9 +52,18 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView }) => {
           </button>
         ))}
       </nav>
-      <div className="mt-auto text-center text-gray-600 text-xs">
-        <p>v1.1</p>
-        <p>O eixo permanece estável.</p>
+      <div className="mt-auto flex flex-col space-y-4">
+        <button
+            onClick={onSignOut}
+            className="flex items-center space-x-4 p-3 rounded-xl text-sm font-semibold transition-all duration-200 text-gray-500 hover:bg-red-500/10 hover:text-red-400"
+        >
+            <SignOutIcon className="w-5 h-5" />
+            <span>Sair</span>
+        </button>
+        <div className="text-center text-gray-600 text-xs">
+          <p>v1.1</p>
+          <p>O eixo permanece estável.</p>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,10 @@
 
+export type UserProfile = {
+  email: string;
+  createdAt: string; // ISO 8601
+  name?: string;
+};
+
 export type DailyCheckin = {
   date: string; // YYYY-MM-DD
   timestamp: string; // ISO 8601
@@ -32,6 +38,7 @@ export type Task = {
   notes?: string;
   relatedDevelopmentNodeId?: string; // Links task to a node in the Development Graph
   deadline?: string; // YYYY-MM-DD
+  projectId?: string;
   relatedHabitId?: string; // Links task to a supporting habit
 };
 

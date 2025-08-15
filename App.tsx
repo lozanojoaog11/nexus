@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
-import { View, DailyCheckin, Habit, Project, Task, TaskStatus, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, BookNote } from './types';
-import useLocalStorage from './hooks/useLocalStorage';
+import React, { useState, useMemo } from 'react';
+import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, BookNote, DailyCheckin } from './types';
+import useDatabase from './hooks/useDatabase';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import KanbanBoard from './components/KanbanBoard';
@@ -17,21 +17,25 @@ import Goals from './components/Goals';
 import GoalModal from './components/GoalModal';
 import DevelopmentAreaModal from './components/DevelopmentAreaModal';
 import BookModal from './components/BookModal';
-import { INITIAL_HABITS, INITIAL_PROJECTS, INITIAL_BOOKS, INITIAL_DEVELOPMENT_DATA, USER_MANIFESTO, INITIAL_AGENDA_EVENTS, INITIAL_GOALS } from './constants';
-import { generateDailyDirective } from './services/geminiService';
-
+import Login from './components/Login';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('dashboard');
-  const [dailyCheckin, setDailyCheckin] = useLocalStorage<DailyCheckin | null>('eixo-checkin', null);
-  const [habits, setHabits] = useLocalStorage<Habit[]>('eixo-habits', INITIAL_HABITS);
-  const [projects, setProjects] = useLocalStorage<Project[]>('eixo-projects', INITIAL_PROJECTS);
-  const [books, setBooks] = useLocalStorage<Book[]>('eixo-books', INITIAL_BOOKS);
-  const [development, setDevelopment] = useLocalStorage<DevelopmentGraph>('eixo-development', INITIAL_DEVELOPMENT_DATA);
-  const [agendaEvents, setAgendaEvents] = useLocalStorage<CalendarEvent[]>('eixo-agenda', INITIAL_AGENDA_EVENTS);
-  const [goals, setGoals] = useLocalStorage<Goal[]>('eixo-goals', INITIAL_GOALS);
-  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   
+  const {
+    loading,
+    isAuthenticated, isAuthReady,
+    signIn, signUp, signOut,
+    dailyCheckin, handleCheckinConfirm,
+    habits, addHabit, deleteHabit, toggleHabitCompletion,
+    projects, addProject, deleteProject, selectedProjectId, setSelectedProjectId,
+    tasks, addTask, updateTask, updateTaskStatus,
+    books, saveBook, deleteBook, addNoteToBook, updateNote, deleteNote,
+    developmentGraph, saveDevelopmentNode, deleteDevelopmentNode,
+    agendaEvents,
+    goals, saveGoal, deleteGoal,
+  } = useDatabase();
+
   const [showCheckinModal, setShowCheckinModal] = useState(false);
   const [isProcessingCheckin, setIsProcessingCheckin] = useState(false);
   const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
@@ -43,230 +47,18 @@ const App: React.FC = () => {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
 
+  const allTasks = useMemo(() => Object.values(tasks), [tasks]);
 
-  useEffect(() => {
-    if (!selectedProjectId && projects.length > 0) {
-      setSelectedProjectId(projects[0].id);
-    } else if (projects.length === 0) {
-      setSelectedProjectId(null);
-    }
-  }, [projects, selectedProjectId]);
-
-
-  const handleCheckinConfirm = async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>) => {
+  const onCheckinConfirm = async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>) => {
     setIsProcessingCheckin(true);
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    
-    try {
-        const directive = await generateDailyDirective(checkinData, USER_MANIFESTO);
-        setDailyCheckin({ date: todayStr, timestamp: today.toISOString(), ...checkinData, directive });
-    } catch (error) {
-        console.error("Failed to generate directive:", error);
-        setDailyCheckin({ date: todayStr, timestamp: today.toISOString(), ...checkinData, directive: "Diretriz indisponível. Foque no essencial." });
-    }
-    
+    await handleCheckinConfirm(checkinData);
     setIsProcessingCheckin(false);
     setShowCheckinModal(false);
   };
-  
-const calculateCurrentStreak = (history: Habit['history']) => {
-    let streak = 0;
-    const sortedHistory = [...history]
-      .filter(h => h.completed)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-    if (sortedHistory.length === 0) return 0;
-    
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    const todayStr = today.toISOString().split('T')[0];
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-    
-    const lastCompletionDate = new Date(sortedHistory[0].date);
-    // Adjust for timezone by getting the date part only
-    lastCompletionDate.setMinutes(lastCompletionDate.getMinutes() + lastCompletionDate.getTimezoneOffset());
-    const lastCompletionStr = lastCompletionDate.toISOString().split('T')[0];
-    
-    if(lastCompletionStr !== todayStr && lastCompletionStr !== yesterdayStr) return 0;
-
-    streak = 1;
-    for (let i = 0; i < sortedHistory.length - 1; i++) {
-      const current = new Date(sortedHistory[i].date);
-      const next = new Date(sortedHistory[i+1].date);
-      const diff = (current.getTime() - next.getTime()) / (1000 * 3600 * 24);
-      if (diff === 1) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    return streak;
-}
-
-
-const toggleHabitCompletion = (habitId: string, date: string) => {
-    setHabits(prevHabits => 
-        prevHabits.map(habit => {
-            if (habit.id === habitId) {
-                const newHistory = [...habit.history];
-                const historyIndex = newHistory.findIndex(h => h.date === date);
-
-                if (historyIndex > -1) {
-                    newHistory[historyIndex] = { ...newHistory[historyIndex], completed: !newHistory[historyIndex].completed };
-                } else {
-                    newHistory.push({ date, completed: true });
-                }
-                
-                const newCurrentStreak = calculateCurrentStreak(newHistory);
-                const newBestStreak = Math.max(habit.bestStreak || 0, newCurrentStreak);
-
-                return { ...habit, history: newHistory, bestStreak: newBestStreak };
-            }
-            return habit;
-        })
-    );
-};
-
-
-const addHabit = (name: string, category: Habit['category'], frequency: number) => {
-    const newHabit: Habit = {
-        id: `h${Date.now()}`,
-        name,
-        category,
-        frequency,
-        history: [],
-        bestStreak: 0,
-    };
-    setHabits(prev => [...prev, newHabit]);
-    setIsAddHabitModalOpen(false);
-};
-
-const deleteHabit = (habitId: string) => {
-    if (window.confirm('Tem certeza que deseja excluir este hábito?')) {
-        setHabits(prev => prev.filter(h => h.id !== habitId));
-    }
-};
-
-  const addProject = (name: string) => {
-    const newProject: Project = { id: `p${Date.now()}`, name, tasks: [] };
-    setProjects(prev => {
-        const newProjects = [...prev, newProject];
-        setSelectedProjectId(newProject.id);
-        return newProjects;
-    });
-    setIsAddProjectModalOpen(false);
-  };
-
-  const deleteProject = (projectId: string) => {
-      if (window.confirm('Tem certeza que deseja excluir este projeto e todas as suas tarefas?')) {
-        setProjects(prev => {
-            const remainingProjects = prev.filter(p => p.id !== projectId);
-            if (selectedProjectId === projectId) {
-                setSelectedProjectId(remainingProjects.length > 0 ? remainingProjects[0].id : null);
-            }
-            return remainingProjects;
-        });
-      }
-  };
-
-  const updateTask = (projectId: string, updatedTask: Task) => {
-    setProjects(prev => prev.map(p => {
-        if (p.id === projectId) {
-            return {
-                ...p,
-                tasks: p.tasks.map(t => t.id === updatedTask.id ? updatedTask : t)
-            };
-        }
-        return p;
-    }));
-  };
-
-  const updateTaskStatus = (projectId: string, taskId: string, newStatus: TaskStatus) => {
-    setProjects(prev => prev.map(p => {
-      if (p.id === projectId) {
-        return { ...p, tasks: p.tasks.map(t => t.id === taskId ? { ...t, status: newStatus } : t) };
-      }
-      return p;
-    }));
-  };
-
-  const addTask = (projectId: string, content: string) => {
-    const newTask: Task = { id: `t${Date.now()}`, content, status: 'A Fazer', isMIT: false };
-    setProjects(prev => prev.map(p => p.id === projectId ? { ...p, tasks: [...p.tasks, newTask] } : p));
-  };
-
-  const addNoteToBook = (bookId: string, noteContent: string) => {
-    const newNote = { id: `n${Date.now()}`, content: noteContent, createdAt: new Date().toISOString() };
-    setBooks(prev => prev.map(b => b.id === bookId ? { ...b, notes: [...b.notes, newNote] } : b));
-  };
-
-  const openBookModal = (book: Book | null = null) => {
-    setEditingBook(book);
-    setIsBookModalOpen(true);
-  };
-
-  const handleSaveBook = (bookToSave: Book) => {
-      setBooks(prev => {
-          const exists = prev.some(b => b.id === bookToSave.id);
-          if (exists) {
-              return prev.map(b => b.id === bookToSave.id ? bookToSave : b);
-          }
-          return [...prev, { ...bookToSave, id: `b${Date.now()}` }];
-      });
-      setIsBookModalOpen(false);
-      setEditingBook(null);
-  };
-
-  const handleDeleteBook = (bookId: string) => {
-      if (window.confirm('Tem certeza que deseja excluir este livro e todas as suas notas?')) {
-          setBooks(prev => prev.filter(b => b.id !== bookId));
-      }
-  };
-
-  const handleUpdateNote = (bookId: string, updatedNote: BookNote) => {
-      setBooks(prev => prev.map(b => {
-          if (b.id === bookId) {
-              return {
-                  ...b,
-                  notes: b.notes.map(n => n.id === updatedNote.id ? updatedNote : n)
-              };
-          }
-          return b;
-      }));
-  };
-
-  const handleDeleteNote = (bookId: string, noteId: string) => {
-      setBooks(prev => prev.map(b => {
-          if (b.id === bookId) {
-              return { ...b, notes: b.notes.filter(n => n.id !== noteId) };
-          }
-          return b;
-      }));
-  };
-  
-  const handleSaveGoal = (goalToSave: Goal) => {
-    const exists = goals.some(g => g.id === goalToSave.id);
-    if (exists) {
-        setGoals(prev => prev.map(g => g.id === goalToSave.id ? goalToSave : g));
-    } else {
-        setGoals(prev => [...prev, { ...goalToSave, id: `g${Date.now()}` }]);
-    }
-    setEditingGoal(null);
-    setIsGoalModalOpen(false);
-  };
-
-  const handleDeleteGoal = (goalId: string) => {
-      if(window.confirm('Tem certeza que deseja excluir esta meta?')) {
-          setGoals(prev => prev.filter(g => g.id !== goalId));
-      }
-  };
 
   const openGoalModal = (goal: Goal | null = null) => {
-      setEditingGoal(goal);
-      setIsGoalModalOpen(true);
+    setEditingGoal(goal);
+    setIsGoalModalOpen(true);
   };
 
   const openDevelopmentAreaModal = (node: DevelopmentNode | null = null) => {
@@ -274,36 +66,28 @@ const deleteHabit = (habitId: string) => {
     setIsDevelopmentAreaModalOpen(true);
   };
 
-  const handleSaveDevelopmentNode = (nodeToSave: DevelopmentNode) => {
-      setDevelopment(prev => {
-          const exists = prev.nodes.some(n => n.id === nodeToSave.id);
-          let newNodes;
-          if (exists) {
-              newNodes = prev.nodes.map(n => n.id === nodeToSave.id ? nodeToSave : n);
-          } else {
-              newNodes = [...prev.nodes, { ...nodeToSave, id: `dn${Date.now()}` }];
-          }
-          return { ...prev, nodes: newNodes };
-      });
-      setEditingDevelopmentNode(null);
-      setIsDevelopmentAreaModalOpen(false);
-  };
-
-  const handleDeleteDevelopmentNode = (nodeId: string) => {
-      if (window.confirm('Tem certeza que deseja excluir esta Área de Desenvolvimento? As conexões também serão removidas.')) {
-          setDevelopment(prev => ({
-              ...prev,
-              nodes: prev.nodes.filter(n => n.id !== nodeId),
-              edges: prev.edges.filter(e => e.source !== nodeId && e.target !== nodeId)
-          }));
-      }
+  const openBookModal = (book: Book | null = null) => {
+    setEditingBook(book);
+    setIsBookModalOpen(true);
   };
 
   const renderView = () => {
+    if (loading) {
+        return (
+            <div className="w-full h-full flex items-center justify-center">
+                <div className="text-center">
+                    <svg className="animate-spin h-8 w-8 text-[#00A9FF] mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p className="text-gray-400 mt-4">Sincronizando com a nuvem...</p>
+                </div>
+            </div>
+        );
+    }
+      
     const today = new Date().toISOString().split('T')[0];
     const hasCheckedInToday = !!dailyCheckin && dailyCheckin.date === today;
-    const allTasks = projects.flatMap(p => p.tasks);
-
 
     switch (currentView) {
       case 'dashboard':
@@ -314,7 +98,7 @@ const deleteHabit = (habitId: string) => {
                     projects={projects}
                     habits={habits} 
                     goals={goals}
-                    developmentGraph={development}
+                    developmentGraph={developmentGraph}
                     allTasks={allTasks}
                 />;
       case 'habits':
@@ -334,26 +118,26 @@ const deleteHabit = (habitId: string) => {
                     addTask={addTask}
                     onAddProject={() => setIsAddProjectModalOpen(true)}
                     deleteProject={deleteProject}
-                    developmentNodes={development.nodes}
+                    developmentNodes={developmentGraph.nodes}
                 />;
       case 'goals':
         return <Goals 
                     goals={goals}
                     onAddGoal={() => openGoalModal(null)}
                     onEditGoal={(goal) => openGoalModal(goal)}
-                    onDeleteGoal={handleDeleteGoal}
+                    onDeleteGoal={deleteGoal}
                 />;
       case 'agenda':
-        return <Agenda events={agendaEvents} tasks={projects.flatMap(p => p.tasks)} />;
+        return <Agenda events={agendaEvents} tasks={allTasks} />;
       case 'development':
         return <Development 
-                  graph={development}
+                  graph={developmentGraph}
                   goals={goals}
                   tasks={allTasks}
                   books={books}
                   onAddNode={() => openDevelopmentAreaModal(null)}
                   onEditNode={(node) => openDevelopmentAreaModal(node)}
-                  onDeleteNode={handleDeleteDevelopmentNode} 
+                  onDeleteNode={deleteDevelopmentNode} 
                 />;
       case 'guardian':
         return <Guardian />;
@@ -363,9 +147,9 @@ const deleteHabit = (habitId: string) => {
                   addNoteToBook={addNoteToBook}
                   onAddBook={() => openBookModal(null)}
                   onEditBook={(book) => openBookModal(book)}
-                  onDeleteBook={handleDeleteBook}
-                  onUpdateNote={handleUpdateNote}
-                  onDeleteNote={handleDeleteNote}
+                  onDeleteBook={deleteBook}
+                  onUpdateNote={updateNote}
+                  onDeleteNote={deleteNote}
                 />;
       default:
         return <Dashboard 
@@ -375,36 +159,51 @@ const deleteHabit = (habitId: string) => {
                     projects={projects}
                     habits={habits} 
                     goals={goals}
-                    developmentGraph={development}
+                    developmentGraph={developmentGraph}
                     allTasks={allTasks}
                 />;
     }
   };
 
+  if (!isAuthReady) {
+    return (
+        <div className="flex h-screen w-screen bg-black/10 items-center justify-center">
+            <svg className="animate-spin h-8 w-8 text-[#00A9FF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+      return <Login onSignIn={signIn} onSignUp={signUp} />;
+  }
+
   return (
     <div className="flex h-screen w-screen text-white">
-      {showCheckinModal && <DailyCheckinModal onConfirm={handleCheckinConfirm} isProcessing={isProcessingCheckin}/>}
+      {showCheckinModal && <DailyCheckinModal onConfirm={onCheckinConfirm} isProcessing={isProcessingCheckin}/>}
       {isAddHabitModalOpen && <AddHabitModal onClose={() => setIsAddHabitModalOpen(false)} onAdd={addHabit} />}
       {isAddProjectModalOpen && <AddProjectModal onClose={() => setIsAddProjectModalOpen(false)} onAdd={addProject} />}
       {isGoalModalOpen && <GoalModal 
                             onClose={() => { setEditingGoal(null); setIsGoalModalOpen(false); }} 
-                            onSave={handleSaveGoal} 
+                            onSave={saveGoal} 
                             goalToEdit={editingGoal}
-                            developmentNodes={development.nodes}
+                            developmentNodes={developmentGraph.nodes}
                             projects={projects}
                           />}
       {isDevelopmentAreaModalOpen && <DevelopmentAreaModal 
                             onClose={() => { setEditingDevelopmentNode(null); setIsDevelopmentAreaModalOpen(false); }}
-                            onSave={handleSaveDevelopmentNode}
+                            onSave={saveDevelopmentNode}
                             nodeToEdit={editingDevelopmentNode}
                           />}
       {isBookModalOpen && <BookModal
                             onClose={() => { setEditingBook(null); setIsBookModalOpen(false); }}
-                            onSave={handleSaveBook}
+                            onSave={saveBook}
                             bookToEdit={editingBook}
-                            developmentNodes={development.nodes}
+                            developmentNodes={developmentGraph.nodes}
                           />}
-      <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
+      <Sidebar currentView={currentView} setCurrentView={setCurrentView} onSignOut={signOut} />
       <main className="flex-1 bg-black/10">
         {renderView()}
       </main>

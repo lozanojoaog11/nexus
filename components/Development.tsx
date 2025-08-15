@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { DevelopmentGraph, DevelopmentNode, DevelopmentNodeType, Goal, Task, Book } from '../types';
 import { ACCENT_COLOR, ICON_MAP, PlusIcon } from '../constants';
@@ -16,7 +15,7 @@ interface DevelopmentProps {
 const getNodeColor = (type: DevelopmentNodeType) => {
     const colors: Record<DevelopmentNodeType, string> = {
         'Ponto de Fuga': 'border-amber-400 text-amber-400',
-        'Objetivo': `border-[${ACCENT_COLOR}] text-[${ACCENT_COLOR}]`,
+        'Objetivo': `border-[#00A9FF] text-[#00A9FF]`,
         'Skill': 'border-green-400 text-green-400',
         'Recurso': 'border-purple-400 text-purple-400',
         'Hábito': 'border-sky-400 text-sky-400',
