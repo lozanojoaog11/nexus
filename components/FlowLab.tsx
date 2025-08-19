@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Task, DailyCheckin, FlowSession, EnvironmentSettings } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
@@ -7,7 +6,7 @@ interface FlowLabProps {
   tasks: Task[];
   checkin: DailyCheckin | null;
   sessionHistory: FlowSession[];
-  onSessionSave: (session: FlowSession) => void;
+  onSessionSave: (session: FlowSession, earnedXp: number) => void;
 }
 
 const FlowLab: React.FC<FlowLabProps> = ({ tasks, checkin, sessionHistory, onSessionSave }) => {
@@ -177,7 +176,7 @@ const FlowLab: React.FC<FlowLabProps> = ({ tasks, checkin, sessionHistory, onSes
   }
 
   if (sessionMode === 'complete' && currentSession) {
-    return <SessionCompletionView session={currentSession} onSave={(updatedSession) => { onSessionSave(updatedSession); setSessionMode('setup'); setCurrentSession(null); }} onDiscard={() => { setSessionMode('setup'); setCurrentSession(null); }} />;
+    return <SessionCompletionView session={currentSession} onSave={(updatedSession, earnedXp) => { onSessionSave(updatedSession, earnedXp); setSessionMode('setup'); setCurrentSession(null); }} onDiscard={() => { setSessionMode('setup'); setCurrentSession(null); }} />;
   }
 
   return null;
@@ -243,12 +242,15 @@ const SessionHistoryCard: React.FC<{ session: FlowSession }> = ({ session }) => 
     );
 };
 
-const SessionCompletionView: React.FC<{ session: FlowSession; onSave: (session: FlowSession) => void; onDiscard: () => void; }> = ({ session, onSave, onDiscard }) => {
+const SessionCompletionView: React.FC<{ session: FlowSession; onSave: (session: FlowSession, earnedXp: number) => void; onDiscard: () => void; }> = ({ session, onSave, onDiscard }) => {
   const { t } = useTranslation();
   const [flowRating, setFlowRating] = useState(7);
   const [focusQuality, setFocusQuality] = useState(7);
   const [notes, setNotes] = useState('');
-  const handleSave = () => { onSave({ ...session, flowRating, focusQuality, notes }); };
+  const handleSave = () => { 
+    const earnedXp = Math.round(session.duration * (flowRating / 10) * Math.max(0, (1 - (session.distractionCount / 10))));
+    onSave({ ...session, flowRating, focusQuality, notes }, earnedXp); 
+  };
   return (
     <div className="p-8 text-white w-full h-full overflow-y-auto">
       <div className="max-w-2xl mx-auto">

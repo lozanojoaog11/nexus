@@ -1,9 +1,8 @@
-
-
 import React, { useState } from 'react';
 import { Book, BookNote } from '../types';
 import { PlusIcon } from '../constants';
 import { useTranslation } from '../hooks/useTranslation';
+import LinkedNoteRenderer from './shared/LinkedNoteRenderer';
 
 const EditIcon = ({ className }: { className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" /></svg>
@@ -15,6 +14,7 @@ const TrashIcon = ({ className }: { className?: string }) => (
 
 interface LibraryProps {
   books: Book[];
+  backlinks: Record<string, { bookId: string; bookTitle: string; note: BookNote }[]>;
   addNoteToBook: (bookId: string, noteContent: string) => void;
   onAddBook: () => void;
   onEditBook: (book: Book) => void;
@@ -23,11 +23,15 @@ interface LibraryProps {
   onDeleteNote: (bookId: string, noteId: string) => void;
 }
 
-const NoteItem: React.FC<{
+interface NoteItemProps {
     note: BookNote;
     onUpdate: (note: BookNote) => void;
     onDelete: (noteId: string) => void;
-}> = ({ note, onUpdate, onDelete }) => {
+    books: Book[];
+    onLinkClick: (bookId: string) => void;
+}
+
+const NoteItem: React.FC<NoteItemProps> = ({ note, onUpdate, onDelete, books, onLinkClick }) => {
     const { t, language } = useTranslation();
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(note.content);
@@ -49,7 +53,9 @@ const NoteItem: React.FC<{
                 </div>
             ) : (
                 <>
-                    <p className="text-white whitespace-pre-wrap">{note.content}</p>
+                    <div className="text-white whitespace-pre-wrap">
+                      <LinkedNoteRenderer content={note.content} books={books} onLinkClick={onLinkClick} />
+                    </div>
                     <div className="flex justify-between items-center mt-2">
                         <p className="text-xs text-gray-500">{new Date(note.createdAt).toLocaleString(language)}</p>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
@@ -64,7 +70,7 @@ const NoteItem: React.FC<{
 }
 
 
-const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEditBook, onDeleteBook, onUpdateNote, onDeleteNote }) => {
+const Library: React.FC<LibraryProps> = ({ books, backlinks, addNoteToBook, onAddBook, onEditBook, onDeleteBook, onUpdateNote, onDeleteNote }) => {
   const { t } = useTranslation();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [noteInput, setNoteInput] = useState('');
@@ -95,6 +101,15 @@ const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEd
         }
     }
   }, [books, selectedBook?.id]);
+  
+  const handleLinkClick = (bookId: string) => {
+      const bookToSelect = books.find(b => b.id === bookId);
+      if (bookToSelect) {
+          setSelectedBook(bookToSelect);
+      }
+  };
+
+  const currentBacklinks = selectedBook ? backlinks[selectedBook.id] || [] : [];
 
   const bookStatuses: { key: 'Lendo' | 'Lido' | 'Quero Ler', tKey: 'library.status.reading' | 'library.status.read' | 'library.status.toRead' }[] = [
       { key: 'Lendo', tKey: 'library.status.reading' },
@@ -155,12 +170,30 @@ const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEd
                                 note={note}
                                 onUpdate={(updatedNote) => onUpdateNote(selectedBook.id, updatedNote)}
                                 onDelete={(noteId) => onDeleteNote(selectedBook.id, noteId)}
+                                books={books}
+                                onLinkClick={handleLinkClick}
                             />
                         ))
                     ) : (
                         <p className="text-gray-500">{t('library.noNotes')}</p>
                     )}
                 </div>
+
+                {currentBacklinks.length > 0 && (
+                <div className="mt-6">
+                    <h3 className="text-lg font-semibold mb-3">{t('library.mentions')}</h3>
+                    <div className="space-y-2 max-h-40 overflow-y-auto bg-black/20 p-2 rounded-lg">
+                        {currentBacklinks.map(({ bookId, bookTitle, note }) => (
+                            <div key={`${bookId}-${note.id}`} className="bg-gray-800 p-3 rounded-md border border-gray-700">
+                                <button onClick={() => handleLinkClick(bookId)} className="text-sm font-semibold text-blue-400 hover:underline">
+                                    {t('library.backlinkSource', { bookTitle: bookTitle })}
+                                </button>
+                                <p className="text-xs text-gray-400 mt-1 italic truncate">"...{note.content}..."</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+              )}
             </div>
             <div className="flex-shrink-0 flex gap-2">
               <input

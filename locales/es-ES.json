@@ -66,6 +66,7 @@
     "startCheckin": "Iniciar Check-in Diario",
     "neuralEfficiency": "Puntuación de Eficiencia Neural",
     "progressProtocol": "Protocolo de Progreso Sobrehumano",
+    "efficiencyPenalty": "Eficiencia impactada por protocolos incompletos de ayer.",
     "neuralActivity": "Actividad Neural de Hoy",
     "protocolsActive": "Protocolos Activos",
     "deepWorkMin": "Min de Trabajo Profundo",
@@ -172,7 +173,9 @@
     "noNotes": "No hay notas para este libro.",
     "addNotePlaceholder": "Añadir una nota rápida...",
     "save": "Guardar",
-    "noBookSelected": "Selecciona un libro para ver detalles y notas."
+    "noBookSelected": "Selecciona un libro para ver detalles y notas.",
+    "mentions": "Menciones (Backlinks)",
+    "backlinkSource": "De: {bookTitle}"
   },
   "bookModal": {
     "editTitle": "Editar Libro",
@@ -193,7 +196,8 @@
     "currentStreak": "Racha Actual",
     "bestStreak": "Mejor Racha",
     "noHabits": "No hay hábitos seguidos.",
-    "noHabitsCta": "Haz clic en \"Nuevo Hábito\" para empezar."
+    "noHabitsCta": "Haz clic en \"Nuevo Hábito\" para empezar.",
+    "keystoneTooltip": "Hábito Clave: No completarlo impacta el rendimiento de mañana."
   },
   "addHabitModal": {
     "title": "Añadir Nuevo Hábito",
@@ -247,7 +251,11 @@
     "linkedTasks": "Tareas Vinculadas",
     "linkedBooks": "Libros Vinculados",
     "noNodes": "No hay áreas de desarrollo definidas.",
-    "selectNode": "Selecciona un área para ver los detalles."
+    "selectNode": "Selecciona un área para ver los detalles.",
+    "view": {
+      "list": "Lista",
+      "graph": "Gráfico"
+    }
   },
   "devAreaModal": {
     "editTitle": "Editar Área",
@@ -845,7 +853,7 @@
         "title": "Patrón de Maestría de Hábito Identificado",
         "description": "\"{habit}\" muestra tu racha más larga ({streak} días), indicando una fuerte formación de vías neurales.",
         "recommendation": "Aplica las mismas estrategias de consistencia a otros hábitos para un crecimiento compuesto.",
-        "science": "La formación de hábitos requiere un promedio de 66+ días para la automatización basada en la neuroplasticidad."
+        "science": "La formación de hábitos requiere un promedio de 66+ días para la automoción basada en la neuroplasticidad."
       },
       "flowOptimization": {
         "title": "Punto Óptimo del Estado de Flow Identificado",

@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData, TaskStatus } from './types';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData, TaskStatus, BookNote } from './types';
 import useDatabase from './hooks/useDatabase';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
@@ -31,13 +31,16 @@ const MainApp: React.FC = () => {
   
   const {
     loading,
+    profile,
     isAuthenticated, isAuthReady,
     signIn, signUp, signOut, signInAnonymously,
     dailyCheckin, allDailyCheckins, handleCheckinConfirm,
-    habits, addHabit, deleteHabit, toggleHabitCompletion,
+    habits, addHabit, deleteHabit, toggleHabitCompletion, addXp,
+    yesterdaysIncompleteKeystoneHabits,
     projects, addProject, deleteProject, selectedProjectId, setSelectedProjectId,
     tasks, addTask, updateTask, updateTaskStatus,
     books, saveBook, deleteBook, addNoteToBook, updateNote, deleteNote,
+    backlinks,
     developmentGraph, saveDevelopmentNode, deleteDevelopmentNode,
     agendaEvents,
     goals, saveGoal, deleteGoal,
@@ -83,18 +86,33 @@ const MainApp: React.FC = () => {
       return { ...definition, progress, unlockedAt: isUnlocked ? new Date().toISOString() : undefined };
     });
   }, [achievementDefinitions, allTasks, flowSessions, cognitiveSessions, biohackingMetrics]);
+  
+  const prevAchievementsRef = useRef<Achievement[]>([]);
+  useEffect(() => {
+    const newlyUnlocked = achievements.filter(current => {
+        const prev = prevAchievementsRef.current.find(p => p.id === current.id);
+        return current.unlockedAt && !prev?.unlockedAt;
+    });
+
+    if (newlyUnlocked.length > 0) {
+        const xpFromAchievements = newlyUnlocked.reduce((sum, ach) => sum + ach.xpReward, 0);
+        addXp(xpFromAchievements);
+    }
+
+    prevAchievementsRef.current = achievements;
+  }, [achievements, addXp]);
+
 
   const userLevel = useMemo(() => {
-    const unlocked = achievements.filter(a => a.unlockedAt);
-    const totalXP = unlocked.reduce((sum, a) => sum + a.xpReward, 0);
+    const totalXP = profile?.totalXp || 0;
     const currentLevel = Math.floor(Math.sqrt(totalXP / 100)) + 1;
     const xpForCurrentLevel = Math.pow(currentLevel - 1, 2) * 100;
     const xpForNextLevel = Math.pow(currentLevel, 2) * 100;
     const currentXP = totalXP - xpForCurrentLevel;
     const xpToNextLevel = xpForNextLevel - xpForCurrentLevel;
     const levelData = evolutionTitles.reduce((prev, curr) => currentLevel >= curr.level ? curr : prev, evolutionTitles[0]);
-    return { currentLevel, currentXP, xpToNextLevel: xpToNextLevel - currentXP, totalXP, title: levelData.title, evolutionStage: levelData.stage, capabilities: [] };
-  }, [achievements, evolutionTitles]);
+    return { currentLevel, currentXP, xpToNextLevel: xpToNextLevel, totalXP, title: levelData.title, evolutionStage: levelData.stage, capabilities: [] };
+  }, [profile, evolutionTitles]);
   
   const activeStreaks = useMemo((): StreakData[] => [
     { type: t('achievements.streaks.checkin'), count: 15, bestStreak: 23, lastUpdate: new Date().toISOString() }, { type: t('achievements.streaks.habits'), count: 8, bestStreak: 12, lastUpdate: new Date().toISOString() }, { type: t('achievements.streaks.flow'), count: flowSessions.length, bestStreak: 5, lastUpdate: new Date().toISOString() }
@@ -132,7 +150,7 @@ const MainApp: React.FC = () => {
     const hasCheckedInToday = !!dailyCheckin && dailyCheckin.date === today;
 
     switch (currentView) {
-      case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} />;
+      case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
       case 'today': return <TodayView 
                                 dailyCheckin={dailyCheckin}
                                 tasks={allTasks}
@@ -149,11 +167,11 @@ const MainApp: React.FC = () => {
       case 'cognitive': return <CognitiveTraining sessions={cognitiveSessions} onSessionComplete={saveCognitiveSession} />;
       case 'flowlab': return <FlowLab tasks={allTasks} checkin={dailyCheckin} sessionHistory={flowSessions} onSessionSave={saveFlowSession} />;
       case 'biohacking': return <BiohackingSuite checkin={dailyCheckin} habits={habits} metricsHistory={biohackingMetrics} onMetricsSave={saveBiohackingMetrics} />;
-      case 'achievements': return <AchievementConstellation achievements={achievements} userLevel={userLevel} activeStreaks={activeStreaks} />;
+      case 'achievements': return <AchievementConstellation achievements={achievements} userLevel={userLevel} activeStreaks={activeStreaks} totalXP={profile?.totalXp || 0} />;
       case 'analytics': return <NeuralAnalytics checkins={allDailyCheckins} habits={habits} tasks={allTasks} goals={goals} flowSessions={flowSessions} cognitiveSessions={cognitiveSessions} biohackingData={biohackingMetrics} achievements={achievements} />;
       case 'guardian': return <NeuralArchitectAI checkin={dailyCheckin} habits={habits} goals={goals} tasks={allTasks} developmentNodes={developmentGraph.nodes} />;
-      case 'library': return <Library books={books} addNoteToBook={addNoteToBook} onAddBook={() => openBookModal(null)} onEditBook={(book) => openBookModal(book)} onDeleteBook={deleteBook} onUpdateNote={updateNote} onDeleteNote={deleteNote} />;
-      default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} />;
+      case 'library': return <Library books={books} backlinks={backlinks} addNoteToBook={addNoteToBook} onAddBook={() => openBookModal(null)} onEditBook={(book) => openBookModal(book)} onDeleteBook={deleteBook} onUpdateNote={updateNote} onDeleteNote={deleteNote} />;
+      default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
     }
   };
 

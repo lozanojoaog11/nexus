@@ -4,6 +4,7 @@ export type UserProfile = {
   email: string;
   createdAt: string; // ISO 8601
   name?: string;
+  totalXp?: number;
 };
 
 export type DailyCheckin = {
@@ -27,6 +28,7 @@ export type Habit = {
     completed: boolean;
   }[];
   bestStreak: number;
+  isKeystone?: boolean;
 };
 
 export type TaskStatus = 'A Fazer' | 'Em Progresso' | 'Concluído';

@@ -8,10 +8,11 @@ interface ConstellationProps {
   achievements: Achievement[];
   userLevel: UserLevel;
   activeStreaks: StreakData[];
+  totalXP: number;
 }
 
 const AchievementConstellation: React.FC<ConstellationProps> = ({
-  achievements, userLevel, activeStreaks
+  achievements, userLevel, activeStreaks, totalXP
 }) => {
   const { t, language } = useTranslation();
   const [activeTab, setActiveTab] = useState<'overview' | 'achievements' | 'analytics' | 'streaks'>('overview');
@@ -31,16 +32,16 @@ const AchievementConstellation: React.FC<ConstellationProps> = ({
               <p className="text-sm text-gray-400 mt-2">{t('achievements.level')} {userLevel.currentLevel} {t('achievements.architect')}</p>
             </div>
             <div className="text-right">
-              <div className="text-4xl font-bold text-yellow-400">{userLevel.totalXP}</div>
+              <div className="text-4xl font-bold text-yellow-400">{totalXP}</div>
               <div className="text-gray-400 text-sm">{t('achievements.totalXp')}</div>
             </div>
           </div>
           <div className="mt-6">
             <div className="flex justify-between text-sm text-gray-400 mb-2">
               <span>{t('achievements.progressToLevel', { level: userLevel.currentLevel + 1 })}</span>
-              <span>{userLevel.currentXP} / {userLevel.currentXP + userLevel.xpToNextLevel} XP</span>
+              <span>{userLevel.currentXP} / {userLevel.xpToNextLevel} XP</span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-3"><div className="bg-gradient-to-r from-yellow-400 to-purple-500 h-3 rounded-full transition-all duration-1000" style={{ width: `${(userLevel.currentXP / (userLevel.currentXP + userLevel.xpToNextLevel)) * 100}%` }}></div></div>
+            <div className="w-full bg-gray-700 rounded-full h-3"><div className="bg-gradient-to-r from-yellow-400 to-purple-500 h-3 rounded-full transition-all duration-1000" style={{ width: `${(userLevel.currentXP / userLevel.xpToNextLevel) * 100}%` }}></div></div>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">

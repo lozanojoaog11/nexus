@@ -66,6 +66,7 @@
     "startCheckin": "Start Daily Check-in",
     "neuralEfficiency": "Neural Efficiency Score",
     "progressProtocol": "Super-Human Progress Protocol",
+    "efficiencyPenalty": "Efficiency impacted by yesterday's incomplete protocols.",
     "neuralActivity": "Today's Neural Activity",
     "protocolsActive": "Protocols Active",
     "deepWorkMin": "Deep Work Min",
@@ -172,7 +173,9 @@
     "noNotes": "No notes for this book.",
     "addNotePlaceholder": "Add a quick note...",
     "save": "Save",
-    "noBookSelected": "Select a book to see details and notes."
+    "noBookSelected": "Select a book to see details and notes.",
+    "mentions": "Mentions (Backlinks)",
+    "backlinkSource": "From: {bookTitle}"
   },
   "bookModal": {
     "editTitle": "Edit Book",
@@ -193,7 +196,8 @@
     "currentStreak": "Current Streak",
     "bestStreak": "Best Streak",
     "noHabits": "No habits tracked.",
-    "noHabitsCta": "Click \"New Habit\" to begin."
+    "noHabitsCta": "Click \"New Habit\" to begin.",
+    "keystoneTooltip": "Keystone Habit: Failure to complete impacts tomorrow's performance."
   },
   "addHabitModal": {
     "title": "Add New Habit",
@@ -247,7 +251,11 @@
     "linkedTasks": "Linked Tasks",
     "linkedBooks": "Linked Books",
     "noNodes": "No development areas defined.",
-    "selectNode": "Select an area to see details."
+    "selectNode": "Select an area to see details.",
+    "view": {
+      "list": "List",
+      "graph": "Graph"
+    }
   },
   "devAreaModal": {
     "editTitle": "Edit Area",

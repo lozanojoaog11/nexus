@@ -66,6 +66,7 @@
     "startCheckin": "Iniciar Check-in Diário",
     "neuralEfficiency": "Neural Efficiency Score",
     "progressProtocol": "Protocolo de Progresso Super-Humano",
+    "efficiencyPenalty": "Eficiência impactada por protocolos não concluídos ontem.",
     "neuralActivity": "Atividade Neural de Hoje",
     "protocolsActive": "Protocolos Ativos",
     "deepWorkMin": "Min de Foco Profundo",
@@ -172,7 +173,9 @@
     "noNotes": "Nenhuma nota para este livro.",
     "addNotePlaceholder": "Adicionar nota rápida...",
     "save": "Salvar",
-    "noBookSelected": "Selecione um livro para ver os detalhes e notas."
+    "noBookSelected": "Selecione um livro para ver os detalhes e notas.",
+    "mentions": "Menções (Backlinks)",
+    "backlinkSource": "De: {bookTitle}"
   },
   "bookModal": {
     "editTitle": "Editar Livro",
@@ -193,7 +196,8 @@
     "currentStreak": "Sequência Atual",
     "bestStreak": "Melhor Sequência",
     "noHabits": "Nenhum hábito rastreado.",
-    "noHabitsCta": "Clique em \"Novo Hábito\" para começar."
+    "noHabitsCta": "Clique em \"Novo Hábito\" para começar.",
+    "keystoneTooltip": "Hábito Angular: Não completar impacta a performance de amanhã."
   },
   "addHabitModal": {
     "title": "Adicionar Novo Hábito",
@@ -247,7 +251,11 @@
     "linkedTasks": "Tarefas Vinculadas",
     "linkedBooks": "Livros Vinculados",
     "noNodes": "Nenhuma área de desenvolvimento definida.",
-    "selectNode": "Selecione uma área para ver os detalhes."
+    "selectNode": "Selecione uma área para ver os detalhes.",
+    "view": {
+      "list": "Lista",
+      "graph": "Grafo"
+    }
   },
   "devAreaModal": {
     "editTitle": "Editar Área",
@@ -364,11 +372,11 @@
     "yourScore": "Sua Pontuação",
     "average": "Média",
     "attempts": "Tentativas",
-    "saveSession": "Salvar Sessão",
-    "tryAgain": "Tentar de Novo",
-    "tooSoon": "Muito cedo! Clique apenas quando a caixa estiver verde.",
-    "getReady": "Prepare-se...",
-    "click": "CLIQUE!",
+    "saveSession": "Salvar Sesión",
+    "tryAgain": "Intentar de Nuevo",
+    "tooSoon": "¡Demasiado pronto! Haz clic solo cuando la caja esté verde.",
+    "getReady": "Prepárate...",
+    "click": "¡CLIC!",
     "ms": "ms"
   },
   "speedReading": {
@@ -412,7 +420,7 @@
       "discipline": { "name": "Arquitetura da Disciplina", "description": "Sistemas sustentáveis para execução consistente.", "prompt": "NEURAL ARCHITECT - MÓDULO DE ARQUITETURA DA DISCIPLina\nPerfil do Usuário: ENFP com dificuldade de consistência, alto potencial, precisa de estrutura sustentável.\nContexto Atual: {{CONTEXT}}\nBase Científica: Intenções de implementação, Design de ambiente, Hábitos angulares.\n\nProjete sistemas de disciplina que honrem a natureza ENFP:\n- Estrutura flexível (não rígida)\n- Rastreamento visual de progresso\n- Micro-hábitos que se acumulam\n- Sistemas de recompensa que motivam\n- Protocolos de recuperação de falhas\n\nEstilo de resposta: Compreensivo, sistemático, constrói confiança." },
       "performance": { "name": "Performance de Pico", "description": "Protocolos de biohacking e otimização.", "prompt": "NEURAL ARCHITECT - MÓDULO DE PERFORMANCE DE PICO\nPerfil do Usuário: ENFP buscando otimização sobre-humana, orientado pela ciência.\nContexto Atual: {{CONTEXT}}\nBase Científica: Otimização circadiana, Neuroplasticidade, Efeitos compostos.\n\nOtimize o desempenho em todas as dimensões:\n- Otimização do sono/energia\n- Protocolos de aprimoramento cognitivo\n- Correlação do desempenho físico\n- Recuperação e regeneração\n- Sustentabilidade a longo prazo\n\nEstilo de resposta: Orientado por dados, ambicioso, consciente da saúde." },
       "strategic": { "name": "Clareza Estratégica", "description": "Alinhamento de metas e framework de decisão.", "prompt": "NEURAL ARCHITECT - MÓDULO DE CLAREZA ESTRATÉGICA\nPerfil do Usuário: ENFP com múltiplos interesses, precisa de priorização de direção.\nContexto Atual: {{CONTEXT}}\nBase Científica: Pensamento sistêmico, Hierarquia de metas, Planejamento estratégico.\n\nForneça clareza estratégica:\n- Framework de priorização de metas\n- Sistemas de tomada de decisão\n- Critérios de avaliação de projetos\n- Alinhamento da visão de longo prazo\n- Otimização da alocação de recursos\n\nEstilo de resposta: Claro, decisivo, visionário mas prático." },
-      "flowOptimization": { "name": "Otimização de Flow", "description": "Aprimoramento do trabalho profundo e estado de flow.", "prompt": "NEURAL ARCHITECT - MÓDULO DE OTIMIZAÇÃO DE FLOW\nPerfil do Usuário: ENFP buscando estados de performance de pico.\nContexto Atual: {{CONTEXT}}\nBase Científica: Gatilhos de estado de Flow, Equilíbrio desafio-habilidade, Otimização ambiental.\n\nAnalise o estado atual e forneça orientação para otimização do flow:\n- Duração ótima da sessão com base nos níveis de energia\n- Recomendações de configuração do ambiente\n- Equilíbrio desafio-habilidade para a tarefa selecionada\n- Técnicas de entrada em estado de flow\n- Estratégias de gerenciamento de distração\n- Protocolos de recuperação entre sessões\n\nEstilo de resposta: Preciso, focado em performance, com base científica." }
+      "flowOptimization": { "name": "Otimização de Flow", "description": "Aprimoramento do trabalho profundo e estado de flow.", "prompt": "NEURAL ARCHITECT - MÓDULO DE OPTIMIZAÇÃO DE FLOW\nPerfil do Usuário: ENFP buscando estados de performance de pico.\nContexto Atual: {{CONTEXT}}\nBase Científica: Gatilhos de estado de Flow, Equilíbrio desafio-habilidade, Otimização ambiental.\n\nAnalise o estado atual e forneça orientação para otimização do flow:\n- Duração ótima da sessão com base nos níveis de energia\n- Recomendações de configuração do ambiente\n- Equilíbrio desafio-habilidade para a tarefa selecionada\n- Técnicas de entrada em estado de flow\n- Estratégias de gerenciamento de distração\n- Protocolos de recuperação entre sessões\n\nEstilo de resposta: Preciso, focado em performance, com base científica." }
     },
     "askPlaceholder": "Pergunte ao seu Arquiteto Neural...",
     "quickActions": {
@@ -585,9 +593,9 @@
       "efficiency": "Eficiência",
       "circadian": {
         "sync": "Sinc. Circadiana",
-        "optimal": "Ótima",
-        "good": "Boa",
-        "suboptimal": "Subótima"
+        "optimal": "Óptima",
+        "good": "Buena",
+        "suboptimal": "Subóptima"
       },
       "timing": {
         "title": "Timing do Sono",
@@ -845,7 +853,7 @@
       },
       "habit": {
         "title": "Arquitetura de Consistência de Hábitos",
-        "description": "Consistência de hábitos ({consistency}%) precisa de melhoria para efeitos de crescimento composto.",
+        "description": "Consistência de hábitos ({consistency}%) needs improvement for compound growth effects.",
         "implementation": "Começar com versões de 2 minutos dos hábitos|Usar intenções de implementação (\"Se X, então Y\")|Empilhar novos hábitos em rotinas existentes|Registrar a conclusão imediatamente após fazer|Focar na consistência sobre a perfeição",
         "science": "Hábitos pequenos e consistentes criam automação neural; consistência importa mais que intensidade (Clear, 2018)"
       }

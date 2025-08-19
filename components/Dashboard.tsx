@@ -22,6 +22,7 @@ interface DashboardProps {
   habits: Habit[];
   goals: Goal[];
   tasks: Task[];
+  yesterdaysIncompleteKeystoneHabits: number;
 }
 
 // --- HELPER FUNCTIONS ---
@@ -71,7 +72,7 @@ const calculatePhysicalScore = (habits: Habit[], checkin: DailyCheckin | null): 
     return Math.round(Math.min(score, 100));
 }
 
-const calculateNeuralEfficiency = (panels: NeuralPanelData[]): number => {
+const calculateBaseNeuralEfficiency = (panels: NeuralPanelData[]): number => {
     if (panels.length === 0) return 0;
     const totalScore = panels.reduce((sum, panel) => sum + panel.currentScore, 0);
     return Math.round(totalScore / panels.length);
@@ -144,7 +145,7 @@ const NeuralPanel: React.FC<{panel: NeuralPanelData}> = ({ panel }) => {
     );
 };
 
-const NeuralEfficiencyScore: React.FC<{score: number}> = ({ score }) => {
+const NeuralEfficiencyScore: React.FC<{score: number; penaltyApplied: boolean}> = ({ score, penaltyApplied }) => {
   const { t } = useTranslation();
   return (
     <div className="bg-gradient-to-tr from-[#121212] via-gray-900 to-black p-6 rounded-2xl border border-purple-500/20 shadow-2xl shadow-black/50">
@@ -154,6 +155,9 @@ const NeuralEfficiencyScore: React.FC<{score: number}> = ({ score }) => {
           {score}
         </div>
         <p className="text-gray-500 text-sm mt-2">{t('dashboard.progressProtocol')}</p>
+        {penaltyApplied && (
+            <p className="text-yellow-500 text-xs mt-2 animate-pulse">{t('dashboard.efficiencyPenalty')}</p>
+        )}
       </div>
     </div>
   );
@@ -161,7 +165,7 @@ const NeuralEfficiencyScore: React.FC<{score: number}> = ({ score }) => {
 
 
 // --- MAIN DASHBOARD COMPONENT ---
-const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onStartCheckin, habits, goals, tasks }) => {
+const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onStartCheckin, habits, goals, tasks, yesterdaysIncompleteKeystoneHabits }) => {
     const { t } = useTranslation();
     
     const neuralDimensions = useMemo<NeuralPanelData[]>(() => {
@@ -206,7 +210,11 @@ const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onSta
         ];
     }, [habits, tasks, checkin, goals, t]);
     
-    const neuralEfficiency = useMemo(() => calculateNeuralEfficiency(neuralDimensions), [neuralDimensions]);
+    const neuralEfficiency = useMemo(() => {
+        const baseScore = calculateBaseNeuralEfficiency(neuralDimensions);
+        const penaltyMultiplier = 1 - (yesterdaysIncompleteKeystoneHabits * 0.05);
+        return Math.round(baseScore * penaltyMultiplier);
+    }, [neuralDimensions, yesterdaysIncompleteKeystoneHabits]);
 
     const { completedHabitsToday, focusMinutesToday, learningPointsToday } = useMemo(() => {
         const todayStr = new Date().toISOString().split('T')[0];
@@ -246,7 +254,7 @@ const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onSta
             </header>
 
             <div className="mb-8">
-                <NeuralEfficiencyScore score={neuralEfficiency} />
+                <NeuralEfficiencyScore score={neuralEfficiency} penaltyApplied={yesterdaysIncompleteKeystoneHabits > 0}/>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

@@ -51,9 +51,12 @@ const HabitRow: React.FC<{
 
     return (
         <div className="grid grid-cols-12 items-center gap-4 p-4 bg-[#1C1C1C] rounded-lg border border-white/10 group">
-            <div className="col-span-5">
-                <p className="font-semibold text-white">{habit.name}</p>
-                <p className="text-xs text-gray-400">{translatedCategory}</p>
+            <div className="col-span-5 flex items-center gap-3">
+                {habit.isKeystone && <span title={t('habits.keystoneTooltip')}>🔑</span>}
+                <div>
+                    <p className="font-semibold text-white">{habit.name}</p>
+                    <p className="text-xs text-gray-400">{translatedCategory}</p>
+                </div>
             </div>
             <div className="col-span-2 text-center">
                 <p className="font-bold text-lg text-white">{completionRate}%</p>
