@@ -8,6 +8,7 @@
   },
   "sidebar": {
     "dashboard": "Panel",
+    "today": "Hoy",
     "habits": "Hábitos",
     "projects": "Proyectos",
     "goals": "Metas",
@@ -22,6 +23,10 @@
     "analytics": "Análisis Neural",
     "signOut": "Cerrar Sesión",
     "stableAxis": "El eje permanece estable."
+  },
+  "todayView": {
+    "title": "Panel de Hoy",
+    "subtitle": "Tu enfoque para máxima eficacia."
   },
   "login": {
     "accessSystem": "Accede a tu sistema",
@@ -339,6 +344,55 @@
     "trainAgain": "Entrenar de Nuevo",
     "completeSession": "Completar Sesión"
   },
+  "reactionTime": {
+    "title": "Entrenamiento de Tiempo de Reacción",
+    "description": "Prueba y mejora tu velocidad de procesamiento neural.",
+    "instructionsTitle": "Instrucciones",
+    "instruction1": "Cuando la caja se ponga roja, prepárate.",
+    "instruction2": "Haz clic tan rápido como puedas cuando se ponga verde.",
+    "instruction3": "Tendrás 5 intentos. El promedio será tu puntuación.",
+    "start": "Empezar Prueba",
+    "resultsTitle": "Resultados",
+    "yourScore": "Tu Puntuación",
+    "average": "Promedio",
+    "attempts": "Intentos",
+    "saveSession": "Guardar Sesión",
+    "tryAgain": "Intentar de Nuevo",
+    "tooSoon": "¡Demasiado pronto! Haz clic solo cuando la caja esté verde.",
+    "getReady": "Prepárate...",
+    "click": "¡CLIC!",
+    "ms": "ms"
+  },
+  "speedReading": {
+    "title": "Entrenador de Lectura Rápida",
+    "description": "Aumenta tu velocidad de lectura manteniendo la comprensión.",
+    "wpm": "PPM (Palabras por Minuto)",
+    "start": "Empezar a Leer",
+    "comprehensionQuiz": "Cuestionario de Comprensión",
+    "question": "Pregunta",
+    "submit": "Enviar",
+    "resultsTitle": "Resultados",
+    "yourWPM": "Tus PPM",
+    "comprehension": "Comprensión",
+    "finalScore": "Puntuación Final",
+    "trainAgain": "Entrenar de Nuevo",
+    "saveSession": "Guardar Sesión"
+  },
+  "memoryPalace": {
+    "title": "Constructor de Palacio de la Memoria",
+    "description": "Entrena tu capacidad para memorizar y recordar información.",
+    "memorizeTitle": "Memoriza la Lista",
+    "memorizeInstructions": "Tienes {seconds} segundos para memorizar estas palabras:",
+    "timeRemaining": "Tiempo Restante",
+    "recallTitle": "Recuerda las Palabras",
+    "recallInstructions": "Escribe tantas palabras como recuerdes, una por línea.",
+    "checkAnswers": "Comprobar Respuestas",
+    "resultsTitle": "Resultados",
+    "yourScore": "Tu Puntuación",
+    "correctWords": "Palabras Correctas",
+    "trainAgain": "Entrenar de Nuevo",
+    "saveSession": "Guardar Sesión"
+  },
   "neuralArchitect": {
     "title": "Arquitecto Neural IA",
     "subtitle": "Asesoramiento avanzado de optimización del rendimiento",
@@ -408,4 +462,419 @@
       "title": "Configuración de Sesión Personalizada",
       "focusTask": "Tarea Enfocada",
       "selectTask": "Selecciona una tarea...",
-      "duration": "Duración de la Sesión
+      "duration": "Duración de la Sesión"
+    },
+    "env": {
+      "musicType": "Tipo de Música",
+      "music": { "none": "Ninguna", "focus": "Música de Enfoque", "ambient": "Ambiente", "binaural": "Sonidos Binaurales", "nature": "Sonidos de la Naturaleza" },
+      "noiseLevel": "Nivel de Ruido",
+      "noise": { "silent": "Silencioso", "minimal": "Mínimo", "moderate": "Moderado" },
+      "blockDistractions": "Bloquear distracciones"
+    },
+    "history": {
+      "untitled": "Sin título",
+      "distractions": "distracciones"
+    },
+    "active": {
+      "title": "Estado de Flow Activo",
+      "task": "Tarea Enfocada",
+      "distractions": "Distracciones",
+      "elapsed": "Minutos Transcurridos",
+      "progress": "Progreso",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "distraction": "Distracción",
+      "complete": "Completar",
+      "environment": "Entorno",
+      "distractionsBlocked": "distracciones bloqueadas",
+      "distractionsAllowed": "distracciones permitidas"
+    },
+    "break": {
+      "title": "Tiempo de Descanso"
+    },
+    "complete": {
+      "title": "Sesión de Flow Completada",
+      "summary": "Resumen de la Sesión",
+      "duration": "Duración",
+      "distractions": "Distracciones",
+      "task": "Tarea",
+      "environment": "Entorno",
+      "flowQuality": "Calidad del Estado de Flow (1-10)",
+      "focusQuality": "Calidad del Enfoque (1-10)",
+      "notes": "Notas de la Sesión",
+      "notesPlaceholder": "¿Cómo fue la sesión? ¿Qué funcionó bien? ¿Qué se podría mejorar?",
+      "discard": "Descartar Sesión",
+      "save": "Guardar y Continuar"
+    }
+  },
+  "biohacking": {
+    "title": "Suite de Biohacking",
+    "subtitle": "Optimización fisiológica para un rendimiento sobrehumano",
+    "optimizationScore": "Puntuación de Optimización Biológica",
+    "performanceIndex": "Índice de Rendimiento Fisiológico",
+    "todayProtocols": "Protocolos de Optimización de Hoy",
+    "overview": {
+      "sleep": "Calidad del Sueño",
+      "hrv": "Puntuación VFC",
+      "energy": "Estabilidad Energética",
+      "hydration": "Hidratación"
+    },
+    "metrics": {
+      "quality": "Calidad",
+      "duration": "Duración",
+      "environment": "Entorno",
+      "macros": "Macros",
+      "timing": "Timing",
+      "stability": "Estabilidad",
+      "hrv": "VFC",
+      "stress": "Estrés",
+      "readiness": "Preparación",
+      "effectiveness": "Efectividad",
+      "stack": "Stack"
+    },
+    "module": {
+      "score": "puntuación",
+      "target": "Objetivo",
+      "optimize": "Optimizar Ahora"
+    },
+    "status": {
+      "optimal": "Óptimo",
+      "good": "Bueno",
+      "fair": "Regular",
+      "needs-attention": "Requiere Atención"
+    },
+    "protocols": {
+      "status": {
+        "pending": "Pendiente",
+        "active": "Activo",
+        "completed": "Completado"
+      },
+      "sunlight": { "name": "Exposición a la Luz Solar Matutina", "benefit": "Alineación del ritmo circadiano" },
+      "coldShower": { "name": "Protocolo de Ducha Fría", "benefit": "Resiliencia al estrés y alerta" },
+      "fasting": { "name": "Ayuno Intermitente", "benefit": "Optimización metabólica" },
+      "breathing": { "name": "Sesión de Respiración VFC", "benefit": "Equilibrio del sistema nervioso autónomo" }
+    },
+    "modules": {
+      "sleep": { "name": "Optimización del Sueño", "description": "Optimización del ritmo circadiano y recuperación", "target": "8h, 90%+ calidad" },
+      "nutrition": { "name": "Combustible Metabólico", "description": "Nutrición óptima para el rendimiento cognitivo", "target": "AI 16:8, energía estable" },
+      "recovery": { "name": "Sistemas de Recuperación", "description": "VFC, gestión del estrés y restauración", "target": "VFC >50, Estrés <4" },
+      "supplements": { "name": "Stack Nootrópico", "description": "Mejora cognitiva basada en evidencia", "target": "Timing y dosificación óptimos" }
+    },
+    "sleep": {
+      "score": "Puntuación del Sueño",
+      "efficiency": "Eficiencia",
+      "circadian": { "sync": "Sinc. Circadiana", "optimal": "Óptima", "good": "Buena", "suboptimal": "Subóptima" },
+      "timing": { "title": "Timing del Sueño", "bedtime": "Hora de Dormir", "wakeTime": "Hora de Despertar", "duration": "Duración del Sueño" },
+      "quality": { "title": "Evaluación de Calidad del Sueño", "overall": "Calidad General", "restfulness": "Sensación de Descanso", "latency": "Latencia del Sueño", "awakenings": "Despertares Nocturnos" },
+      "environment": { "title": "Entorno del Sueño", "temperature": "Temperatura", "darkness": "Oscuridad", "quietness": "Silencio", "airQuality": "Calidad del Aire" },
+      "recommendations": {
+        "title": "Recomendaciones de Optimización",
+        "env": { "title": "Optimizar Entorno del Sueño", "desc": "Temperatura 18-20°C, oscuridad total, ruido mínimo" },
+        "hygiene": { "title": "Mejorar Higiene del Sueño", "desc": "Sin pantallas 1h antes de dormir, rutina consistente" },
+        "alignment": { "title": "Alineación Circadiana", "desc": "Exposición a la luz solar matutina, horario de sueño consistente" }
+      },
+      "save": "Guardar Datos del Sueño"
+    },
+    "nutrition": {
+      "title": "Seguimiento Nutricional",
+      "description": "Optimiza tu combustible para un rendimiento máximo.",
+      "dailyTotals": "Totales Diarios",
+      "calories": "Calorías",
+      "protein": "Proteína (g)",
+      "carbs": "Carbohidratos (g)",
+      "fat": "Grasa (g)",
+      "energyStability": "Estabilidad Energética",
+      "fasting": "Ayuno",
+      "fastingWindow": "Ventana de Ayuno (horas)",
+      "logMeal": "Registrar Comida",
+      "meals": "Comidas de Hoy",
+      "noMeals": "No hay comidas registradas hoy.",
+      "meal": {
+        "add": "Añadir Comida",
+        "type": "Tipo",
+        "types": { "breakfast": "Desayuno", "lunch": "Almuerzo", "dinner": "Cena", "snack": "Snack" },
+        "description": "Descripción",
+        "descriptionPlaceholder": "Ej: Salmón, brócoli, batata",
+        "portion": "Porción",
+        "portions": { "small": "Pequeña", "medium": "Mediana", "large": "Grande" },
+        "satisfaction": "Satisfacción"
+      },
+      "save": "Guardar Datos de Nutrición"
+    },
+    "recovery": {
+      "title": "Centro de Recuperación",
+      "description": "Gestiona el estrés y optimiza la preparación.",
+      "readiness": "Puntuación de Preparación",
+      "metrics": "Métricas Clave",
+      "hrv": "VFC (Variabilidad Frecuencia Cardíaca)",
+      "restingHR": "Frecuencia Cardíaca en Reposo",
+      "stressLevel": "Nivel de Estrés",
+      "activities": "Actividades de Recuperación de Hoy",
+      "noActivities": "No hay actividades registradas hoy.",
+      "logActivity": "Registrar Actividad",
+      "activity": {
+        "add": "Añadir Actividad",
+        "type": "Tipo",
+        "types": { "meditation": "Meditación", "breathing": "Respiración", "stretching": "Estiramiento", "massage": "Masaje", "nap": "Siesta" },
+        "duration": "Duración (minutos)",
+        "quality": "Calidad"
+      },
+      "save": "Guardar Datos de Recuperación"
+    },
+    "supplements": {
+      "title": "Seguimiento de Suplementos",
+      "description": "Gestiona tu stack de mejora cognitiva.",
+      "todaysLog": "Registro de Hoy",
+      "noSupplements": "No hay suplementos registrados para hoy.",
+      "manageStack": "Gestionar Stack",
+      "logSupplement": "Registrar Suplemento",
+      "addSupplement": "Añadir Suplemento",
+      "name": "Nombre",
+      "dosage": "Dosis",
+      "timing": "Horario",
+      "purpose": "Propósito",
+      "effectiveness": "Efectividad"
+    },
+    "priority": { "high": "Alta", "medium": "Media", "low": "Baja" }
+  },
+  "achievements": {
+    "title": "Constelación de Logros",
+    "subtitle": "Seguimiento de la evolución neural y progresión gamificada",
+    "level": "Nivel",
+    "architect": "Arquitecto Neural",
+    "totalXp": "XP Total",
+    "progressToLevel": "Progreso para Nivel {level}",
+    "recent": "Logros Recientes",
+    "progress": "Progreso",
+    "unlocked": "Desbloqueado",
+    "complete": "Completo",
+    "streaks": {
+      "checkin": "Check-ins Diarios",
+      "habits": "Finalización de Hábitos",
+      "flow": "Sesiones de Flow"
+    },
+    "categories": {
+      "cognitive": "Cognitivo",
+      "physical": "Físico",
+      "mastery": "Maestría",
+      "social": "Social",
+      "spiritual": "Espiritual"
+    },
+    "gallery": {
+      "title": "Galería de Logros",
+      "subtitle": "{unlocked}/{total} logros desbloqueados",
+      "category": "Categoría",
+      "tier": "Nivel",
+      "categories": {
+        "all": "Todas las Categorías",
+        "cognitive": "Cognitivo",
+        "physical": "Físico",
+        "social": "Social",
+        "spiritual": "Espiritual",
+        "mastery": "Maestría"
+      },
+      "tiers": {
+        "all": "Todos los Niveles",
+        "bronze": "Bronce",
+        "silver": "Plata",
+        "gold": "Oro",
+        "platinum": "Platino",
+        "diamond": "Diamante"
+      },
+      "scientificBasis": "Base Científica",
+      "requirements": "Requisitos",
+      "timeframes": {
+        "per": "por",
+        "daily": "día",
+        "weekly": "semana",
+        "monthly": "mes",
+        "total": "total"
+      }
+    },
+    "levels": {
+      "1": { "title": "Iniciado Neural", "stage": "Constructor de Cimientos" },
+      "5": { "title": "Aprendiz Cognitivo", "stage": "Reconocimiento de Patrones" },
+      "10": { "title": "Buscador del Estado de Flow", "stage": "Optimización del Rendimiento" },
+      "15": { "title": "Adepto del Biohacking", "stage": "Maestría Fisiológica" },
+      "20": { "title": "Arquitecto Neural", "stage": "Integración de Sistemas" },
+      "25": { "title": "Sabio del Rendimiento Máximo", "stage": "Excelencia Constante" },
+      "30": { "title": "Catalizador Sobrehumano", "stage": "Impacto Trascendente" },
+      "40": { "title": "Maestro de la Evolución", "stage": "Escultor de la Realidad" },
+      "50": { "title": "Hacker de la Conciencia", "stage": "Potencial Ilimitado" }
+    },
+    "defs": {
+      "first_flow": { "name": "Iniciado en el Estado de Flow", "desc": "Entra en tu primer estado de flow documentado", "science": "Los estados de flow aumentan el rendimiento en un 300-500% (McKinsey)" },
+      "flow_master": { "name": "Maestro del Estado de Flow", "desc": "Completa 50 sesiones de flow de alta calidad", "science": "La práctica constante de flow reconfigura las redes neuronales para un rendimiento máximo" },
+      "cognitive_breakthrough": { "name": "Avance Cognitivo", "desc": "Alcanza un 90%+ de precisión en Dual N-Back Nivel 4", "science": "El rendimiento en 4-back indica una capacidad de memoria de trabajo superior" },
+      "sleep_champion": { "name": "Campeón de la Optimización del Sueño", "desc": "Mantén una calidad de sueño de 8+ durante 30 días consecutivos", "science": "Un sueño de calidad es la base de toda mejora cognitiva" },
+      "habit_architect": { "name": "Maestro de la Arquitectura de Hábitos", "desc": "Mantén un 90%+ de finalización de hábitos durante 90 días", "science": "90 días crean cambios permanentes en las vías neuronales" },
+      "consistency_king": { "name": "Soberano de la Consistencia", "desc": "Completa los protocolos diarios durante 365 días consecutivos", "science": "La consistencia anual crea una transformación conductual permanente" }
+    }
+  },
+  "neuralAnalytics": {
+    "title": "Análisis Neural",
+    "subtitle": "Reconocimiento avanzado de patrones e ideas de optimización",
+    "timeRange": {
+      "week": "Semana",
+      "month": "Mes",
+      "quarter": "Trimestre",
+      "year": "Año"
+    },
+    "performance": {
+      "target": "Objetivo",
+      "mentalClarity": { "name": "Claridad Mental" },
+      "energyLevel": { "name": "Nivel de Energía" },
+      "habitConsistency": { "name": "Consistencia de Hábitos" },
+      "flowStateQuality": { "name": "Calidad del Estado de Flow" },
+      "flowFrequency": { "name": "Frecuencia de Flow", "unit": "/semana" },
+      "cognitiveTraining": { "name": "Entrenamiento Cognitivo" },
+      "statuses": {
+        "optimal": "Óptimo",
+        "good": "Bueno",
+        "declining": "En Declive",
+        "critical": "Crítico"
+      }
+    },
+    "overview": {
+      "keyInsights": "Ideas Clave Descubiertas",
+      "viewAllInsights": "Ver todas las {count} ideas →",
+      "priorityActions": "Acciones de Optimización Prioritarias",
+      "viewAllRecommendations": "Ver todas las {count} recomendaciones →",
+      "summary": {
+        "title": "Resumen del Análisis",
+        "checkins": "Check-ins Analizados",
+        "patterns": "Patrones Encontrados",
+        "optimizations": "Optimizaciones",
+        "confidence": "Confianza Promedio"
+      }
+    },
+    "insight": {
+      "types": {
+        "correlation": "Correlación",
+        "trend": "Tendencia",
+        "anomaly": "Anomalía",
+        "optimization": "Optimización"
+      },
+      "confidence": "Confianza",
+      "recommendation": "RECOMENDACIÓN"
+    },
+    "recommendations": {
+      "expectedImpact": "Impacto Esperado",
+      "implementationSteps": "Pasos de Implementación:",
+      "timeframe": "Plazo",
+      "priorities": {
+        "critical": "Crítico",
+        "high": "Alto",
+        "medium": "Medio",
+        "low": "Bajo"
+      },
+      "timeframes": {
+        "immediate": "Inmediato",
+        "weekly": "Semanal",
+        "monthly": "Mensual"
+      },
+      "categories": {
+        "foundation": "Fundamento Físico",
+        "enhancement": "Mejora Cognitiva",
+        "performance": "Optimización del Rendimiento",
+        "system": "Construcción de Sistemas"
+      },
+      "sleep": {
+        "title": "Se Requiere Mejora de la Calidad del Sueño",
+        "description": "La calidad del sueño actual ({quality}/10) está por debajo del umbral óptimo (7.5+). El sueño es la base de toda mejora cognitiva.",
+        "implementation": "Mantener hora de dormir constante ±15 minutos|Temperatura de la habitación 18-20°C|Oscuridad total (cortinas opacas)|Sin pantallas 1 hora antes de dormir|Exposición a la luz solar matutina 30 minutos después de despertar",
+        "science": "La calidad del sueño impacta directamente la consolidación de la memoria, la capacidad de aprendizaje y la regulación emocional (Walker, 2017)"
+      },
+      "cognitive": {
+        "title": "Aumentar Frecuencia del Entrenamiento Cognitivo",
+        "description": "La frecuencia de entrenamiento actual ({frequency}/semana) está por debajo de lo óptimo para la activación de la neuroplasticidad (3-5x/semana).",
+        "implementation": "Programar entrenamiento cognitivo a horas constantes|Empezar con sesiones de 15 minutos si el tiempo es limitado|Enfocarse en dual n-back 3x/semana mínimo|Seguir las mejoras semanales para mantener la motivación",
+        "science": "La neuroplasticidad requiere estimulación constante; 3-5x entrenamientos semanales muestran ganancias óptimas en la memoria de trabajo (Jaeggi et al.)"
+      },
+      "flow": {
+        "title": "Control de Distracciones en el Estado de Flow",
+        "description": "El promedio de distracciones ({distractions}) excede el umbral óptimo de flow (≤2). Reducir distracciones puede aumentar el rendimiento en un 300-500%.",
+        "implementation": "Teléfono en modo avión durante las sesiones de flow|Usar bloqueadores de sitios web no esenciales|Informar a otros de tu horario de trabajo profundo|Preparar todos los materiales antes de empezar la sesión|Usar auriculares con cancelación de ruido si es necesario",
+        "science": "Los estados de flow requieren atención ininterrumpida; las interrupciones pueden tardar 23 minutos en recuperarse (Mark et al.)"
+      },
+      "habit": {
+        "title": "Arquitectura de Consistencia de Hábitos",
+        "description": "La consistencia de hábitos ({consistency}%) necesita mejorar para los efectos de crecimiento compuesto.",
+        "implementation": "Empezar con versiones de 2 minutos de los hábitos|Usar intenciones de implementación (\"Si X, entonces Y\")|Apilar nuevos hábitos sobre rutinas existentes|Registrar la finalización inmediatamente después de hacerlo|Enfocarse en la consistencia sobre la perfección",
+        "science": "Hábitos pequeños y consistentes crean automatización neural; la consistencia importa más que la intensidad (Clear, 2018)"
+      }
+    },
+    "patterns": {
+      "title": "Análisis de Patrones",
+      "subtitle": "Ideas profundas de tus datos de {timeRange}",
+      "filterType": "Tipo de Patrón",
+      "sortBy": "Ordenar Por",
+      "types": {
+        "all": "Todos los Tipos",
+        "correlation": "Correlación",
+        "trend": "Tendencia",
+        "anomaly": "Anomalía",
+        "optimization": "Optimización"
+      },
+      "sortOptions": {
+        "confidence": "Confianza",
+        "impact": "Impacto"
+      },
+      "noResults": "No se encontraron patrones para los filtros seleccionados.",
+      "noResultsHint": "Intenta ajustar tus criterios de filtro o rango de datos."
+    },
+    "insights": {
+      "positive": "positiva",
+      "negative": "negativa",
+      "energySleep": {
+        "title": "Fuerte Conexión Energía-Sueño",
+        "description": "Tus niveles de energía muestran una correlación {direction} ({correlation}%) con la calidad del sueño.",
+        "recommendationPositive": "Enfócate en la optimización del sueño para mantener altos niveles de energía.",
+        "recommendationNegative": "Investiga posibles disruptores del sueño que afectan tu energía.",
+        "science": "La calidad del sueño impacta directamente la energía a través de la regulación hormonal y la recuperación neural."
+      },
+      "habitMastery": {
+        "title": "Patrón de Maestría de Hábito Identificado",
+        "description": "\"{habit}\" muestra tu racha más larga ({streak} días), indicando una fuerte formación de vías neurales.",
+        "recommendation": "Aplica las mismas estrategias de consistencia a otros hábitos para un crecimiento compuesto.",
+        "science": "La formación de hábitos requiere un promedio de 66+ días para la automatización basada en la neuroplasticidad."
+      },
+      "flowOptimization": {
+        "title": "Punto Óptimo del Estado de Flow Identificado",
+        "description": "Tus sesiones de mayor flow promedian {duration} minutos con {distractions} distracciones.",
+        "recommendation": "Estructura sesiones de {duration} minutos con un control estricto de las distracciones.",
+        "science": "El estado de Flow requiere un equilibrio entre desafío y habilidad y atención sostenida sin interrupción."
+      },
+      "cognitiveBreakthrough": {
+        "title": "Avance en el Rendimiento Cognitivo",
+        "description": "Las puntuaciones recientes de entrenamiento cognitivo ({recentAvg}%) exceden significativamente tu línea de base ({mean}%).",
+        "recommendation": "Aumenta la frecuencia de entrenamiento para capitalizar esta ventana de neuroplasticidad.",
+        "science": "Los avances en el rendimiento indican períodos óptimos de activación de la neuroplasticidad."
+      },
+      "impacts": {
+        "high": "Alto Impacto",
+        "medium": "Medio Impacto",
+        "low": "Bajo Impacto"
+      },
+      "recommendation": "Recomendación Accionable",
+      "scientificBasis": "Base Científica",
+      "showDetails": "Mostrar Detalles Técnicos",
+      "hideDetails": "Ocultar Detalles Técnicos",
+      "rawData": "Datos Crudos"
+    },
+    "optimizationCenter": {
+      "title": "Centro de Optimización",
+      "subtitle": "Tus recomendaciones de alta prioridad para un crecimiento acelerado.",
+      "filterPriority": "Prioridad",
+      "filterCategory": "Categoría",
+      "priorities": { "all": "Todas las Prioridades" },
+      "categories": { "all": "Todas las Categorías" }
+    },
+    "dataExport": {
+      "title": "Centro de Exportación de Datos",
+      "subtitle": "Exporta tus datos de Eixo OS en formato JSON.",
+      "description": "Esto generará un archivo JSON que contiene todos tus datos, incluyendo check-ins, hábitos, tareas, metas, ideas y recomendaciones. Puedes usar este archivo para una copia de seguridad personal o para importar en otras herramientas.",
+      "exportButton": "Exportar Todos los Datos"
+    }
+  }
+}

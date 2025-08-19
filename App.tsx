@@ -22,6 +22,7 @@ import FlowLab from './components/FlowLab';
 import BiohackingSuite from './components/BiohackingSuite';
 import AchievementConstellation from './components/AchievementConstellation';
 import NeuralAnalytics from './components/NeuralAnalytics';
+import TodayView from './components/TodayView';
 import { LanguageProvider, useTranslation } from './contexts/LanguageContext';
 
 const MainApp: React.FC = () => {
@@ -132,6 +133,7 @@ const MainApp: React.FC = () => {
 
     switch (currentView) {
       case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} />;
+      case 'today': return <TodayView />;
       case 'habits': return <Habits habits={habits} toggleHabitCompletion={toggleHabitCompletion} onAddHabit={() => setIsAddHabitModalOpen(true)} onDeleteHabit={deleteHabit} />;
       case 'projects': return <KanbanBoard projects={projects} selectedProjectId={selectedProjectId} setSelectedProjectId={setSelectedProjectId} updateTaskStatus={updateTaskStatus} updateTask={updateTask} addTask={addTask} onAddProject={() => setIsAddProjectModalOpen(true)} deleteProject={deleteProject} developmentNodes={developmentGraph.nodes} />;
       case 'goals': return <Goals goals={goals} onAddGoal={() => openGoalModal(null)} onEditGoal={(goal) => openGoalModal(goal)} onDeleteGoal={deleteGoal} />;

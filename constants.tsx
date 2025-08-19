@@ -168,6 +168,13 @@ export const DashboardIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+export const TodayIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+        <circle cx="12" cy="12" r="10"></circle>
+        <circle cx="12" cy="12" r="3"></circle>
+    </svg>
+);
+
 export const KanbanIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
         <path d="M7 3V21" stroke="currentColor" strokeWidth="1.5" />
@@ -270,6 +277,7 @@ export const FlowLabIcon = ({ className }: { className?: string }) => (
 
 export const NAV_ITEMS = [
   { view: 'dashboard' as View, labelKey: 'sidebar.dashboard', icon: <DashboardIcon className="w-6 h-6" /> },
+  { view: 'today' as View, labelKey: 'sidebar.today', icon: <TodayIcon className="w-6 h-6" /> },
   { view: 'habits' as View, labelKey: 'sidebar.habits', icon: <HabitsIcon className="w-6 h-6" /> },
   { view: 'projects' as View, labelKey: 'sidebar.projects', icon: <KanbanIcon className="w-6 h-6" /> },
   { view: 'goals' as View, labelKey: 'sidebar.goals', icon: <GoalsIcon className="w-6 h-6" /> },

@@ -8,6 +8,7 @@
   },
   "sidebar": {
     "dashboard": "Painel",
+    "today": "Hoje",
     "habits": "Hábitos",
     "projects": "Projetos",
     "goals": "Metas",
@@ -22,6 +23,10 @@
     "analytics": "Análise Neural",
     "signOut": "Sair",
     "stableAxis": "O eixo permanece estável."
+  },
+  "todayView": {
+    "title": "Painel de Hoje",
+    "subtitle": "Seu foco para máxima eficácia."
   },
   "login": {
     "accessSystem": "Acesse seu sistema",
@@ -92,7 +97,7 @@
     "good": "Bom",
     "canImprove": "Pode Melhorar",
     "testAgain": "Testar Novamente",
-    "mentalClarity": "Clareza Mental",
+    "mentalClarity": "Claridade Mental",
     "focusCapacity": "Capacidade de Foco",
     "creativeState": "Estado Criativo",
     "intentionTitle": "Definição de Intenção",
@@ -189,7 +194,7 @@
     "namePlaceholder": "Ex: Leitura Focada",
     "category": "Categoria",
     "mind": "Mente",
-    "body": "Cuerpo",
+    "body": "Corpo",
     "execution": "Execução",
     "frequency": "Frequência Semanal (1-7)",
     "cancel": "Cancelar",
@@ -278,7 +283,7 @@
       "levelSuffix": " nível",
       "msSuffix": "ms avg",
       "itemsSuffix": " itens",
-      "wpmSuffix": " WPM"
+      "wpmSuffix": " PPM"
     },
     "recentSessions": "Sessões de Treinamento Recentes",
     "noSessions": "Nenhuma sessão de treinamento ainda. Selecione um módulo para iniciar o aprimoramento cognitivo.",
@@ -338,6 +343,55 @@
     "readyForNext": "Pronto para o {level}-Back",
     "trainAgain": "Treinar Novamente",
     "completeSession": "Completar Sessão"
+  },
+  "reactionTime": {
+    "title": "Treino de Tempo de Reação",
+    "description": "Teste e melhore sua velocidade de processamento neural.",
+    "instructionsTitle": "Instruções",
+    "instruction1": "Quando a caixa ficar vermelha, prepare-se.",
+    "instruction2": "Clique o mais rápido que puder quando ficar verde.",
+    "instruction3": "Você terá 5 tentativas. A média será sua pontuação.",
+    "start": "Iniciar Teste",
+    "resultsTitle": "Resultados",
+    "yourScore": "Sua Pontuação",
+    "average": "Média",
+    "attempts": "Tentativas",
+    "saveSession": "Salvar Sessão",
+    "tryAgain": "Tentar Novamente",
+    "tooSoon": "Muito cedo! Clique apenas quando a caixa estiver verde.",
+    "getReady": "Prepare-se...",
+    "click": "CLIQUE!",
+    "ms": "ms"
+  },
+  "speedReading": {
+    "title": "Treinador de Leitura Dinâmica",
+    "description": "Aumente sua velocidade de leitura mantendo a compreensão.",
+    "wpm": "PPM (Palavras por Minuto)",
+    "start": "Iniciar Leitura",
+    "comprehensionQuiz": "Questionário de Compreensão",
+    "question": "Questão",
+    "submit": "Enviar",
+    "resultsTitle": "Resultados",
+    "yourWPM": "Sua PPM",
+    "comprehension": "Compreensão",
+    "finalScore": "Pontuação Final",
+    "trainAgain": "Treinar Novamente",
+    "saveSession": "Salvar Sessão"
+  },
+  "memoryPalace": {
+    "title": "Construtor de Palácio da Memória",
+    "description": "Treine sua capacidade de memorizar e recordar informações.",
+    "memorizeTitle": "Memorize a Lista",
+    "memorizeInstructions": "Você tem {seconds} segundos para memorizar estas palavras:",
+    "timeRemaining": "Tempo Restante",
+    "recallTitle": "Recorde as Palavras",
+    "recallInstructions": "Digite o máximo de palavras que você conseguir lembrar, uma por linha.",
+    "checkAnswers": "Verificar Respostas",
+    "resultsTitle": "Resultados",
+    "yourScore": "Sua Pontuação",
+    "correctWords": "Palavras Corretas",
+    "trainAgain": "Treinar Novamente",
+    "saveSession": "Salvar Sessão"
   },
   "neuralArchitect": {
     "title": "Neural Architect AI",
@@ -554,6 +608,66 @@
         "alignment": { "title": "Alinhamento Circadiano", "desc": "Exposição à luz solar matinal, horário de sono consistente" }
       },
       "save": "Salvar Dados do Sono"
+    },
+    "nutrition": {
+      "title": "Rastreador Nutricional",
+      "description": "Otimize seu combustível para performance máxima.",
+      "dailyTotals": "Totais Diários",
+      "calories": "Calorias",
+      "protein": "Proteína (g)",
+      "carbs": "Carboidratos (g)",
+      "fat": "Gordura (g)",
+      "energyStability": "Estabilidade Energética",
+      "fasting": "Jejum",
+      "fastingWindow": "Janela de Jejum (horas)",
+      "logMeal": "Registrar Refeição",
+      "meals": "Refeições de Hoje",
+      "noMeals": "Nenhuma refeição registrada hoje.",
+      "meal": {
+        "add": "Adicionar Refeição",
+        "type": "Tipo",
+        "types": { "breakfast": "Café da manhã", "lunch": "Almoço", "dinner": "Jantar", "snack": "Lanche" },
+        "description": "Descrição",
+        "descriptionPlaceholder": "Ex: Salmão, brócolis, batata doce",
+        "portion": "Porção",
+        "portions": { "small": "Pequena", "medium": "Média", "large": "Grande" },
+        "satisfaction": "Satisfação"
+      },
+      "save": "Salvar Dados Nutricionais"
+    },
+    "recovery": {
+      "title": "Centro de Recuperação",
+      "description": "Gerencie o estresse e otimize a prontidão.",
+      "readiness": "Pontuação de Prontidão",
+      "metrics": "Métricas Chave",
+      "hrv": "VFC (Variação da Frequência Cardíaca)",
+      "restingHR": "Frequência Cardíaca em Reposo",
+      "stressLevel": "Nível de Estresse",
+      "activities": "Atividades de Recuperação de Hoje",
+      "noActivities": "Nenhuma atividade registrada hoje.",
+      "logActivity": "Registrar Atividade",
+      "activity": {
+        "add": "Adicionar Atividade",
+        "type": "Tipo",
+        "types": { "meditation": "Meditação", "breathing": "Respiração", "stretching": "Alongamento", "massage": "Massagem", "nap": "Soneca" },
+        "duration": "Duração (minutos)",
+        "quality": "Qualidade"
+      },
+      "save": "Salvar Dados de Recuperação"
+    },
+    "supplements": {
+      "title": "Rastreador de Suplementos",
+      "description": "Gerencie seu stack de aprimoramento cognitivo.",
+      "todaysLog": "Registro de Hoje",
+      "noSupplements": "Nenhum suplemento registrado para hoje.",
+      "manageStack": "Gerenciar Stack",
+      "logSupplement": "Registrar Suplemento",
+      "addSupplement": "Adicionar Suplemento",
+      "name": "Nome",
+      "dosage": "Dosagem",
+      "timing": "Horário",
+      "purpose": "Propósito",
+      "effectiveness": "Efetividade"
     },
     "priority": {
       "high": "Alta",
@@ -785,6 +899,20 @@
       "showDetails": "Mostrar Detalhes Técnicos",
       "hideDetails": "Ocultar Detalhes Técnicos",
       "rawData": "Dados Brutos"
+    },
+    "optimizationCenter": {
+      "title": "Centro de Otimização",
+      "subtitle": "Suas recomendações de alta prioridade para crescimento acelerado.",
+      "filterPriority": "Prioridade",
+      "filterCategory": "Categoria",
+      "priorities": { "all": "Todas as Prioridades" },
+      "categories": { "all": "Todas as Categorias" }
+    },
+    "dataExport": {
+      "title": "Centro de Exportação de Dados",
+      "subtitle": "Exporte seus dados do Eixo OS em formato JSON.",
+      "description": "Isto irá gerar um arquivo JSON contendo todos os seus dados, incluindo check-ins, hábitos, tarefas, metas, insights e recomendações. Você pode usar este arquivo para backup pessoal ou para importar em outras ferramentas.",
+      "exportButton": "Exportar Todos os Dados"
     }
   }
 }

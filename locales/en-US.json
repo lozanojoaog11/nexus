@@ -8,6 +8,7 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "today": "Today",
     "habits": "Habits",
     "projects": "Projects",
     "goals": "Goals",
@@ -22,6 +23,10 @@
     "analytics": "Neural Analytics",
     "signOut": "Sign Out",
     "stableAxis": "The axis remains stable."
+  },
+  "todayView": {
+    "title": "Today Panel",
+    "subtitle": "Your focus for maximum effectiveness."
   },
   "login": {
     "accessSystem": "Access your system",
@@ -339,6 +344,55 @@
     "trainAgain": "Train Again",
     "completeSession": "Complete Session"
   },
+  "reactionTime": {
+    "title": "Reaction Time Training",
+    "description": "Test and improve your neural processing speed.",
+    "instructionsTitle": "Instructions",
+    "instruction1": "When the box turns red, get ready.",
+    "instruction2": "Click as fast as you can when it turns green.",
+    "instruction3": "You will have 5 attempts. The average will be your score.",
+    "start": "Start Test",
+    "resultsTitle": "Results",
+    "yourScore": "Your Score",
+    "average": "Average",
+    "attempts": "Attempts",
+    "saveSession": "Save Session",
+    "tryAgain": "Try Again",
+    "tooSoon": "Too soon! Click only when the box is green.",
+    "getReady": "Get Ready...",
+    "click": "CLICK!",
+    "ms": "ms"
+  },
+  "speedReading": {
+    "title": "Speed Reading Trainer",
+    "description": "Increase your reading speed while maintaining comprehension.",
+    "wpm": "WPM (Words Per Minute)",
+    "start": "Start Reading",
+    "comprehensionQuiz": "Comprehension Quiz",
+    "question": "Question",
+    "submit": "Submit",
+    "resultsTitle": "Results",
+    "yourWPM": "Your WPM",
+    "comprehension": "Comprehension",
+    "finalScore": "Final Score",
+    "trainAgain": "Train Again",
+    "saveSession": "Save Session"
+  },
+  "memoryPalace": {
+    "title": "Memory Palace Builder",
+    "description": "Train your ability to memorize and recall information.",
+    "memorizeTitle": "Memorize the List",
+    "memorizeInstructions": "You have {seconds} seconds to memorize these words:",
+    "timeRemaining": "Time Remaining",
+    "recallTitle": "Recall the Words",
+    "recallInstructions": "Type as many words as you can remember, one per line.",
+    "checkAnswers": "Check Answers",
+    "resultsTitle": "Results",
+    "yourScore": "Your Score",
+    "correctWords": "Correct Words",
+    "trainAgain": "Train Again",
+    "saveSession": "Save Session"
+  },
   "neuralArchitect": {
     "title": "Neural Architect AI",
     "subtitle": "Advanced performance optimization counsel",
@@ -520,6 +574,66 @@
         "alignment": { "title": "Circadian Alignment", "desc": "Morning sunlight exposure, consistent sleep schedule" }
       },
       "save": "Save Sleep Data"
+    },
+     "nutrition": {
+      "title": "Nutrition Tracker",
+      "description": "Optimize your fuel for peak performance.",
+      "dailyTotals": "Daily Totals",
+      "calories": "Calories",
+      "protein": "Protein (g)",
+      "carbs": "Carbs (g)",
+      "fat": "Fat (g)",
+      "energyStability": "Energy Stability",
+      "fasting": "Fasting",
+      "fastingWindow": "Fasting Window (hours)",
+      "logMeal": "Log Meal",
+      "meals": "Today's Meals",
+      "noMeals": "No meals logged today.",
+      "meal": {
+        "add": "Add Meal",
+        "type": "Type",
+        "types": { "breakfast": "Breakfast", "lunch": "Lunch", "dinner": "Dinner", "snack": "Snack" },
+        "description": "Description",
+        "descriptionPlaceholder": "Ex: Salmon, broccoli, sweet potato",
+        "portion": "Portion",
+        "portions": { "small": "Small", "medium": "Medium", "large": "Large" },
+        "satisfaction": "Satisfaction"
+      },
+      "save": "Save Nutrition Data"
+    },
+    "recovery": {
+      "title": "Recovery Center",
+      "description": "Manage stress and optimize readiness.",
+      "readiness": "Readiness Score",
+      "metrics": "Key Metrics",
+      "hrv": "HRV (Heart Rate Variability)",
+      "restingHR": "Resting Heart Rate",
+      "stressLevel": "Stress Level",
+      "activities": "Today's Recovery Activities",
+      "noActivities": "No activities logged today.",
+      "logActivity": "Log Activity",
+      "activity": {
+        "add": "Add Activity",
+        "type": "Type",
+        "types": { "meditation": "Meditation", "breathing": "Breathing", "stretching": "Stretching", "massage": "Massage", "nap": "Nap" },
+        "duration": "Duration (minutes)",
+        "quality": "Quality"
+      },
+      "save": "Save Recovery Data"
+    },
+    "supplements": {
+      "title": "Supplement Tracker",
+      "description": "Manage your cognitive enhancement stack.",
+      "todaysLog": "Today's Log",
+      "noSupplements": "No supplements logged for today.",
+      "manageStack": "Manage Stack",
+      "logSupplement": "Log Supplement",
+      "addSupplement": "Add Supplement",
+      "name": "Name",
+      "dosage": "Dosage",
+      "timing": "Timing",
+      "purpose": "Purpose",
+      "effectiveness": "Effectiveness"
     },
     "priority": { "high": "High", "medium": "Medium", "low": "Low" }
   },
@@ -747,6 +861,20 @@
       "showDetails": "Show Technical Details",
       "hideDetails": "Hide Technical Details",
       "rawData": "Raw Data"
+    },
+    "optimizationCenter": {
+      "title": "Optimization Center",
+      "subtitle": "Your high-priority recommendations for accelerated growth.",
+      "filterPriority": "Priority",
+      "filterCategory": "Category",
+      "priorities": { "all": "All Priorities" },
+      "categories": { "all": "All Categories" }
+    },
+    "dataExport": {
+      "title": "Data Export Center",
+      "subtitle": "Export your Eixo OS data in JSON format.",
+      "description": "This will generate a JSON file containing all of your data, including check-ins, habits, tasks, goals, insights, and recommendations. You can use this file for personal backup or to import into other tools.",
+      "exportButton": "Export All Data"
     }
   }
 }

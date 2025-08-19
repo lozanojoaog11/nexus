@@ -1,4 +1,5 @@
 
+
 export type UserProfile = {
   email: string;
   createdAt: string; // ISO 8601
@@ -295,7 +296,7 @@ export interface StreakData {
   lastUpdate: string;
 }
 
-export type View = 'dashboard' | 'projects' | 'guardian' | 'library' | 'development' | 'habits' | 'agenda' | 'goals' | 'cognitive' | 'flowlab' | 'biohacking' | 'achievements' | 'analytics';
+export type View = 'today' | 'dashboard' | 'projects' | 'guardian' | 'library' | 'development' | 'habits' | 'agenda' | 'goals' | 'cognitive' | 'flowlab' | 'biohacking' | 'achievements' | 'analytics';
 
 // --- NEURAL ANALYTICS TYPES ---
 
