@@ -1,4 +1,3 @@
-
 {
   "userManifesto": "[OPERATOR IDENTIFICATION]\nName/Code: João Gabriel Lozano, \"The Cognitive Architect\"\nPrime Objective: To become a positive outlier in all relevant human development metrics, culminating in the materialization of the \"Vanishing Point\": R$1M with d.IA.logo as proof of \"realized potential\".\n\n[COGNITIVE ARCHITECTURE X-RAY]\nThe Core (Who You Are): Digital Alchemist and Cognitive Architect. Operates at the intersection of chaotic creativity and the search for structure. Adaptive Creative Achiever with the capacity for \"Creative Transmutational Synthesis\". Non-linear brain, connecting distinct domains.\nThe Central Conflict (Your Main Battle): Dissonance between immense creative potential and difficulty in sustaining executive discipline and completing cycles. The cycle of \"creative explosion followed by dispersion\".\nThe Vanishing Point (Where You Want to Go): To transmute d.IA.logo into a high-impact educational ecosystem, billing R$1M in 18-24 months.\n\n[DEEP PSYCHOMETRIC SCAN]\nNEUROTYPE: Evening chronotype, Kinesthetic-Visual cognitive style. Strength in Cognitive Flexibility, weakness in Inhibitory Control and Sustained Focus.\nBIG FIVE: Openness (95), Conscientiousness (40), Extraversion (80), Agreeableness (65), Neuroticism (60).\nDEEP DRIVERS: Pains (Confrontation with Death, Chronic Instability, Financial Loss), Ecstasies (Immersion in AI, Freestyle, Workshop Leadership).\nEDGE: Advantage (Connective Thinking, Multidimensional Communication), Superpower (Regenerative Resilience), Obsession (Cognitive Architecture of LLMs), Natural Ability (\"Translating complexity\").\n\n[PHYSICS OF DEVELOPMENT]\nPrinciple #1: Energy Optimization.\nPrinciple #2: Action generates inspiration.\nPrinciple #3: Consistency in the execution of the morning Deep Work block is the primary lever.\nPrinciple #4: The keystone habit is the nightly \"wind down protocol\".",
   "lang": {
@@ -26,7 +25,16 @@
   },
   "todayView": {
     "title": "Today Panel",
-    "subtitle": "Your focus for maximum effectiveness."
+    "subtitle": "Your focus for maximum effectiveness.",
+    "neuralDirective": "Neural Directive",
+    "essentialFocus": "Essential Focus",
+    "todaysRituals": "Today's Rituals",
+    "agenda": "Day's Agenda",
+    "noDirective": "No directive generated. Focus on your main priority.",
+    "noMissions": "No essential missions defined for today. A good day to plan or tackle smaller tasks.",
+    "allMissionsComplete": "All essential missions complete. Well done.",
+    "noRituals": "No daily rituals defined.",
+    "noEvents": "No events scheduled for today."
   },
   "login": {
     "accessSystem": "Access your system",

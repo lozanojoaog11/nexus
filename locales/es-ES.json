@@ -1,4 +1,3 @@
-
 {
   "userManifesto": "[IDENTIFICACIÓN DEL OPERADOR]\nNombre/Código: João Gabriel Lozano, \"El Arquitecto Cognitivo\"\nObjetivo Primordial: Convertirse en un caso atípico positivo en todas las métricas relevantes de desarrollo humano, culminando en la materialización del \"Punto de Fuga\": 1M de R$ con d.IA.logo como prueba de \"potencial realizado\".\n\n[RADIOGRAFÍA DE LA ARQUITECTURA COGNITIVA]\nEl Núcleo (Quién Eres): Alquimista Digital y Arquitecto Cognitivo. Opera en la intersección entre la creatividad caótica y la búsqueda de estructura. Realizador Creativo Adaptativo con capacidad de \"Síntesis Transmutacional Creativa\". Cerebro no lineal, conectando dominios distintos.\nEl Conflicto Central (Tu Batalla Principal): Disonancia entre el inmenso potencial creativo y la dificultad para mantener la disciplina ejecutiva y finalizar ciclos. El ciclo de \"explosión creativa seguida de dispersión\".\nEl Punto de Fuga (A Dónde Quieres Llegar): Transmutar d.IA.logo en un ecosistema educativo de altísimo impacto, facturando 1M de R$ en 18-24 meses.\n\n[ESCANEO PSICOMÉTRICO PROFUNDO]\nNEUROTIPO: Cronotipo vespertino, estilo cognitivo Cinestésico-Visual. Fortaleza en Flexibilidad Cognitiva, debilidad en Control Inhibitorio y Enfoque Sostenido.\nBIG FIVE: Apertura (95), Responsabilidad (40), Extraversión (80), Amabilidad (65), Neuroticismo (60).\nIMPULSORES PROFUNDOS: Dolores (Confrontación con la Muerte, Inestabilidad Crónica, Pérdida Financiera), Éxtasis (Inmersión en IA, Freestyle, Liderazgo de Talleres).\nVENTAJA: Ventaja (Pensamiento Conectivo, Comunicación Multidimensional), Superpoder (Resiliencia Regenerativa), Obsesión (Arquitectura Cognitiva de LLMs), Habilidad Natural (\"Traducir complejidad\").\n\n[FÍSICA DEL DESARROLLO]\nPrincipio #1: Optimización de la Energía.\nPrincipio #2: La acción genera la inspiración.\nPrincipio #3: La consistencia en la ejecución del bloque de Deep Work matutino es la palanca principal.\nPrincipio #4: El hábito clave es el \"protocolo de relajación\" nocturno.",
   "lang": {
@@ -26,7 +25,16 @@
   },
   "todayView": {
     "title": "Panel de Hoy",
-    "subtitle": "Tu enfoque para máxima eficacia."
+    "subtitle": "Tu enfoque para máxima eficacia.",
+    "neuralDirective": "Directiva Neural",
+    "essentialFocus": "Enfoque Esencial",
+    "todaysRituals": "Rituales de Hoy",
+    "agenda": "Agenda del Día",
+    "noDirective": "No se ha generado ninguna directiva. Concéntrate en tu principal prioridad.",
+    "noMissions": "No hay misiones esenciales definidas para hoy. Un buen día para planificar o abordar tareas más pequeñas.",
+    "allMissionsComplete": "Todas las misiones esenciales completadas. Bien hecho.",
+    "noRituals": "No hay rituales diarios definidos.",
+    "noEvents": "No hay eventos programados para hoy."
   },
   "login": {
     "accessSystem": "Accede a tu sistema",

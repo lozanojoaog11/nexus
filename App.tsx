@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData } from './types';
+import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData, TaskStatus } from './types';
 import useDatabase from './hooks/useDatabase';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
@@ -133,7 +133,14 @@ const MainApp: React.FC = () => {
 
     switch (currentView) {
       case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} />;
-      case 'today': return <TodayView />;
+      case 'today': return <TodayView 
+                                dailyCheckin={dailyCheckin}
+                                tasks={allTasks}
+                                habits={habits}
+                                agendaEvents={agendaEvents}
+                                updateTaskStatus={updateTaskStatus}
+                                toggleHabitCompletion={toggleHabitCompletion}
+                            />;
       case 'habits': return <Habits habits={habits} toggleHabitCompletion={toggleHabitCompletion} onAddHabit={() => setIsAddHabitModalOpen(true)} onDeleteHabit={deleteHabit} />;
       case 'projects': return <KanbanBoard projects={projects} selectedProjectId={selectedProjectId} setSelectedProjectId={setSelectedProjectId} updateTaskStatus={updateTaskStatus} updateTask={updateTask} addTask={addTask} onAddProject={() => setIsAddProjectModalOpen(true)} deleteProject={deleteProject} developmentNodes={developmentGraph.nodes} />;
       case 'goals': return <Goals goals={goals} onAddGoal={() => openGoalModal(null)} onEditGoal={(goal) => openGoalModal(goal)} onDeleteGoal={deleteGoal} />;

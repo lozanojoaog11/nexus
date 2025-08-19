@@ -1,4 +1,3 @@
-
 {
   "userManifesto": "[IDENTIFICAÇÃO DO OPERADOR]\nNome/Código: João Gabriel Lozano, \"O Arquiteto Cognitivo\"\nObjetivo Prime: Tornar-se um outlier positivo em todas as métricas relevantes de desenvolvimento humano, culminando na materialização do \"Ponto de Fuga\": R$1M com a d.IA.logo como prova de \"potência realizada\".\n\n[RAIO-X DA ARQUITETURA COGNITIVA]\nO Núcleo (Quem Você É): Alquimista Digital e Arquiteto Cognitivo. Opera na intersecção entre criatividade caótica e busca por estrutura. Realizador Criativo Adaptativo com capacidade de \"Síntese Transmutacional Criativa\". Cérebro não-linear, conectando domínios distintos.\nO Conflito Central (Sua Principal Batalha): Dissonância entre o imenso potencial criativo e a dificuldade na sustentação da disciplina executiva e finalização de ciclos. O ciclo de \"explosão criativa seguida de dispersão\".\nO Ponto de Fuga (Onde Você Quer Chegar): Transmutar a d.IA.logo em um ecossistema educacional de altíssimo impacto, faturando R$1M em 18-24 meses.\n\n[DEEP SCAN PSICOMÉTRICO]\nNEUROTYPE: Cronotipo vespertino, estilo cognitivo Cinestésico-Visual. Força em Flexibilidade Cognitiva, fraqueza em Controle Inibitório e Foco Sustentado.\nBIG FIVE: Openness (95), Conscientiousness (40), Extraversion (80), Agreeableness (65), Neuroticism (60).\nDEEP DRIVERS: Dores (Confronto com a Morte, Instabilidade Crônica, Perda Financeira), Êxtases (Imersão em IA, Freestyle, Liderança de Workshops).\nEDGE: Vantagem (Pensamento Conectivo, Comunicação Multidimensional), Superpoder (Resiliência Regenerativa), Obsessão (Arquitetura Cognitiva de LLMs), Habilidade Natural (\"Traduzir complexidade\").\n\n[FÍSICA DO DESENVOLVIMENTO]\nPrincípio #1: Otimização da Energia.\nPrincípio #2: A ação gera a inspiração.\nPrincípio #3: Consistência na execução do bloco de Deep Work matinal é a alavanca primária.\nPrincípio #4: O hábito keystone é o \"wind down protocol\" noturno.",
   "lang": {
@@ -26,7 +25,16 @@
   },
   "todayView": {
     "title": "Painel de Hoje",
-    "subtitle": "Seu foco para máxima eficácia."
+    "subtitle": "Seu foco para máxima eficácia.",
+    "neuralDirective": "Diretriz Neural",
+    "essentialFocus": "Foco Essencial",
+    "todaysRituals": "Rituais de Hoje",
+    "agenda": "Agenda do Dia",
+    "noDirective": "Nenhuma diretriz gerada. Foque em sua principal prioridade.",
+    "noMissions": "Nenhuma missão essencial definida para hoje. Um bom dia para planejar ou atacar tarefas menores.",
+    "allMissionsComplete": "Todas as missões essenciais completas. Muito bem.",
+    "noRituals": "Nenhum ritual diário definido.",
+    "noEvents": "Nenhum evento agendado para hoje."
   },
   "login": {
     "accessSystem": "Acesse seu sistema",
@@ -357,7 +365,7 @@
     "average": "Média",
     "attempts": "Tentativas",
     "saveSession": "Salvar Sessão",
-    "tryAgain": "Tentar Novamente",
+    "tryAgain": "Tentar de Novo",
     "tooSoon": "Muito cedo! Clique apenas quando a caixa estiver verde.",
     "getReady": "Prepare-se...",
     "click": "CLIQUE!",
