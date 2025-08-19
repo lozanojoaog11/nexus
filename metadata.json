@@ -1,5 +1,7 @@
 {
   "name": "Eixo OS - Sacole",
   "description": "Eixo OS is a cognitive ecosystem designed to channel raw potential into realized power, operating under the philosophy of 'deliberate intention, fluid execution'. It serves as a cognitive exoskeleton for its operator, amplifying strength and focus.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [
+    "microphone"
+  ]
 }

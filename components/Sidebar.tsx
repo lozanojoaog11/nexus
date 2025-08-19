@@ -1,6 +1,8 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { View } from '../types';
 import { NAV_ITEMS, ACCENT_COLOR } from '../constants';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface SidebarProps {
   currentView: View;
@@ -28,8 +30,48 @@ const SignOutIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+const LanguageSwitcher: React.FC = () => {
+    const { language, setLanguage, t } = useTranslation();
+    const [isOpen, setIsOpen] = useState(false);
+    const languages = {
+        'pt-BR': { flag: '🇧🇷', name: t('lang.pt-BR') },
+        'en-US': { flag: '🇺🇸', name: t('lang.en-US') },
+        'es-ES': { flag: '🇪🇸', name: t('lang.es-ES') },
+    };
+
+    return (
+        <div className="relative">
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-gray-300 transition-colors"
+            >
+                <span>{languages[language].flag} {languages[language].name}</span>
+                <svg className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            {isOpen && (
+                <div className="absolute bottom-full mb-2 w-full bg-[#2a2a2a] border border-white/10 rounded-lg shadow-xl py-1">
+                    {Object.entries(languages).map(([code, { flag, name }]) => (
+                        <button
+                            key={code}
+                            onClick={() => {
+                                setLanguage(code as 'pt-BR' | 'en-US' | 'es-ES');
+                                setIsOpen(false);
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-white/10"
+                        >
+                            {flag} {name}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, onSignOut }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="w-64 bg-black/20 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col flex-shrink-0">
       <div className="flex items-center space-x-3 mb-16">
@@ -48,21 +90,22 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, onSignOu
             }`}
           >
             {item.icon}
-            <span>{item.label}</span>
+            <span>{t(item.labelKey)}</span>
           </button>
         ))}
       </nav>
       <div className="mt-auto flex flex-col space-y-4">
+        <LanguageSwitcher />
         <button
             onClick={onSignOut}
             className="flex items-center space-x-4 p-3 rounded-xl text-sm font-semibold transition-all duration-200 text-gray-500 hover:bg-red-500/10 hover:text-red-400"
         >
             <SignOutIcon className="w-5 h-5" />
-            <span>Sair</span>
+            <span>{t('sidebar.signOut')}</span>
         </button>
         <div className="text-center text-gray-600 text-xs">
-          <p>v1.1</p>
-          <p>O eixo permanece estável.</p>
+          <p>v1.2</p>
+          <p>{t('sidebar.stableAxis')}</p>
         </div>
       </div>
     </div>

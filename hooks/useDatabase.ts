@@ -1,12 +1,10 @@
-
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { dataService } from '../services/firebase';
 import { generateDailyDirective } from '../services/geminiService';
-import { USER_MANIFESTO } from '../constants';
-import { Habit, Task, Project, Book, BookNote, Goal, Milestone, DevelopmentGraph, DailyCheckin, TaskStatus, DevelopmentNode } from '../types';
+import { Habit, Task, Project, Book, BookNote, Goal, Milestone, DevelopmentGraph, DailyCheckin, TaskStatus, DevelopmentNode, FlowSession, CognitiveSession, BiohackingMetrics } from '../types';
 
 interface AppState {
-  dailyCheckin: DailyCheckin | null;
+  dailyCheckins: Record<string, DailyCheckin>;
   habits: Record<string, Habit>;
   tasks: Record<string, Task>;
   projects: Record<string, Project>;
@@ -16,10 +14,13 @@ interface AppState {
   milestones: Record<string, Record<string, Milestone>>;
   developmentGraph: DevelopmentGraph;
   agendaEvents: Record<string, any>; // Simplified for now
+  flowSessions: Record<string, FlowSession>;
+  cognitiveSessions: Record<string, CognitiveSession>;
+  biohackingMetrics: Record<string, BiohackingMetrics>;
 }
 
 const initialState: AppState = {
-  dailyCheckin: null,
+  dailyCheckins: {},
   habits: {},
   tasks: {},
   projects: {},
@@ -29,6 +30,9 @@ const initialState: AppState = {
   milestones: {},
   developmentGraph: { nodes: [], edges: [] },
   agendaEvents: {},
+  flowSessions: {},
+  cognitiveSessions: {},
+  biohackingMetrics: {},
 };
 
 const calculateCurrentStreak = (history: { date: string, completed: boolean }[]) => {
@@ -66,7 +70,7 @@ const calculateCurrentStreak = (history: { date: string, completed: boolean }[])
     return streak;
 };
 
-export default function useDatabase() {
+export default function useDatabase(language: string, userManifesto: string) {
   const [data, setData] = useState<AppState>(initialState);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any | null>(null);
@@ -93,7 +97,7 @@ export default function useDatabase() {
     setLoading(true);
     const unsubscribe = dataService.onDataChange('/', (allUserData: any) => {
       setData({
-        dailyCheckin: allUserData?.dailyCheckins?.[new Date().toISOString().split('T')[0]] || null,
+        dailyCheckins: allUserData?.dailyCheckins || {},
         habits: allUserData?.habits || {},
         tasks: allUserData?.tasks || {},
         projects: allUserData?.projects || {},
@@ -103,6 +107,9 @@ export default function useDatabase() {
         milestones: allUserData?.milestones || {},
         developmentGraph: allUserData?.developmentGraph || { nodes: {}, edges: {} },
         agendaEvents: allUserData?.calendarEvents || {},
+        flowSessions: allUserData?.flowSessions || {},
+        cognitiveSessions: allUserData?.cognitiveSessions || {},
+        biohackingMetrics: allUserData?.biohackingMetrics || {},
       });
       setLoading(false);
     });
@@ -119,6 +126,12 @@ export default function useDatabase() {
   }, [data.projects, selectedProjectId]);
   
   // --- Memoized Data Transformations ---
+  const allDailyCheckins = useMemo(() => Object.values(data.dailyCheckins), [data.dailyCheckins]);
+  const dailyCheckin = useMemo(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    return allDailyCheckins.find(c => c.date === todayStr) || null;
+  }, [allDailyCheckins]);
+  
   const habits = useMemo(() => {
     return Object.values(data.habits).map(h => ({
         ...h,
@@ -155,10 +168,15 @@ export default function useDatabase() {
   
   const agendaEvents = useMemo(() => Object.values(data.agendaEvents), [data.agendaEvents]);
 
+  const flowSessions = useMemo(() => Object.values(data.flowSessions), [data.flowSessions]);
+  const cognitiveSessions = useMemo(() => Object.values(data.cognitiveSessions), [data.cognitiveSessions]);
+  const biohackingMetrics = useMemo(() => Object.values(data.biohackingMetrics), [data.biohackingMetrics]);
+
   // --- Auth Handlers ---
   const signIn = (email: string, password: string) => dataService.signInWithEmailAndPassword(email, password);
   const signUp = (email: string, password: string) => dataService.signUpWithEmailAndPassword(email, password);
   const signOut = () => dataService.signOut();
+  const signInAnonymously = () => dataService.signInAnonymously();
 
   // --- Data Handlers ---
   const handleCheckinConfirm = async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>) => {
@@ -166,11 +184,11 @@ export default function useDatabase() {
     const todayStr = today.toISOString().split('T')[0];
     
     try {
-        const directive = await generateDailyDirective(checkinData, USER_MANIFESTO);
+        const directive = await generateDailyDirective(checkinData, userManifesto, language);
         await dataService.setData(`dailyCheckins/${todayStr}`, { date: todayStr, timestamp: today.toISOString(), ...checkinData, directive });
     } catch (error) {
         console.error("Failed to generate directive:", error);
-        await dataService.setData(`dailyCheckins/${todayStr}`, { date: todayStr, timestamp: today.toISOString(), ...checkinData, directive: "Diretriz indisponível. Foque no essencial." });
+        await dataService.setData(`dailyCheckins/${todayStr}`, { date: todayStr, timestamp: today.toISOString(), ...checkinData, directive: "Directive unavailable. Focus on the essential." });
     }
   };
 
@@ -180,7 +198,6 @@ export default function useDatabase() {
   
   const deleteHabit = (habitId: string) => {
     dataService.removeData(`habits/${habitId}`);
-    // No need to delete history separately if it's under the habit
   };
 
   const toggleHabitCompletion = async (habitId: string, date: string, isCompleted: boolean) => {
@@ -203,7 +220,6 @@ export default function useDatabase() {
   };
 
   const deleteProject = (projectId: string) => {
-      // Also delete related tasks
       const tasksToDelete = Object.values(data.tasks).filter(t => t.projectId === projectId);
       const updates: Record<string, null> = {};
       tasksToDelete.forEach(t => { updates[`/tasks/${t.id}`] = null; });
@@ -226,9 +242,9 @@ export default function useDatabase() {
 
   const saveBook = (bookToSave: Book) => {
       const { notes, ...bookData } = bookToSave;
-      if (bookData.id) { // Editing
+      if (bookData.id) {
           dataService.setData(`library/${bookData.id}`, bookData);
-      } else { // Adding
+      } else {
           dataService.addToList('library', bookData);
       }
   };
@@ -253,12 +269,12 @@ export default function useDatabase() {
   
   const saveGoal = (goalToSave: Goal) => {
       const { milestones, ...goalData } = goalToSave;
-      if (goalData.id) { // Editing
+      if (goalData.id) {
           dataService.setData(`goals/${goalData.id}`, goalData);
           const milestonesUpdate: Record<string, Milestone> = {};
           milestones.forEach(m => { milestonesUpdate[m.id] = m; });
           dataService.setData(`milestones/${goalData.id}`, milestonesUpdate);
-      } else { // Adding
+      } else {
           const newGoalId = dataService.getNewId('goals');
           if (newGoalId) {
             goalData.id = newGoalId;
@@ -288,7 +304,6 @@ export default function useDatabase() {
   const deleteDevelopmentNode = (nodeId: string) => {
       const updates: Record<string, null> = {};
       updates[`developmentGraph/nodes/${nodeId}`] = null;
-      // Also remove related edges
       Object.values(data.developmentGraph.edges || {}).forEach(edge => {
           if (edge.source === nodeId || edge.target === nodeId) {
               updates[`developmentGraph/edges/${edge.id}`] = null;
@@ -296,13 +311,28 @@ export default function useDatabase() {
       });
       dataService.updateData('/', updates);
   };
+  
+  const saveFlowSession = (session: FlowSession) => {
+      dataService.setData(`flowSessions/${session.id}`, session);
+  };
+
+  const saveCognitiveSession = (session: CognitiveSession) => {
+      dataService.setData(`cognitiveSessions/${session.id}`, session);
+  };
+  
+  const saveBiohackingMetrics = (metrics: BiohackingMetrics) => {
+      dataService.setData(`biohackingMetrics/${metrics.date}`, metrics);
+  };
+
 
   return {
     loading,
     isAuthenticated: !!user,
     isAuthReady,
-    signIn, signUp, signOut,
-    dailyCheckin: data.dailyCheckin, handleCheckinConfirm,
+    signIn, signUp, signOut, signInAnonymously,
+    dailyCheckin,
+    allDailyCheckins,
+    handleCheckinConfirm,
     habits, addHabit, deleteHabit, toggleHabitCompletion,
     projects, addProject, deleteProject, selectedProjectId, setSelectedProjectId,
     tasks: data.tasks, addTask, updateTask, updateTaskStatus,
@@ -310,5 +340,8 @@ export default function useDatabase() {
     developmentGraph, saveDevelopmentNode, deleteDevelopmentNode,
     agendaEvents,
     goals, saveGoal, deleteGoal,
+    flowSessions, saveFlowSession,
+    cognitiveSessions, saveCognitiveSession,
+    biohackingMetrics, saveBiohackingMetrics
   };
 }

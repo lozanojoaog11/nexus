@@ -1,7 +1,9 @@
 
+
 import React, { useState } from 'react';
 import { Book, BookNote } from '../types';
 import { PlusIcon } from '../constants';
+import { useTranslation } from '../hooks/useTranslation';
 
 const EditIcon = ({ className }: { className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" /></svg>
@@ -26,6 +28,7 @@ const NoteItem: React.FC<{
     onUpdate: (note: BookNote) => void;
     onDelete: (noteId: string) => void;
 }> = ({ note, onUpdate, onDelete }) => {
+    const { t, language } = useTranslation();
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(note.content);
 
@@ -40,15 +43,15 @@ const NoteItem: React.FC<{
                 <div className="flex flex-col gap-2">
                     <textarea value={editText} onChange={e => setEditText(e.target.value)} rows={3} className="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:outline-none focus:ring-1 focus:ring-[#00A9FF]"/>
                     <div className="flex justify-end gap-2">
-                        <button onClick={() => setIsEditing(false)} className="text-xs px-2 py-1 rounded bg-gray-600 hover:bg-gray-500">Cancelar</button>
-                        <button onClick={handleSave} className="text-xs px-2 py-1 rounded bg-[#00A9FF] text-black hover:bg-opacity-80">Salvar</button>
+                        <button onClick={() => setIsEditing(false)} className="text-xs px-2 py-1 rounded bg-gray-600 hover:bg-gray-500">{t('taskModal.cancel')}</button>
+                        <button onClick={handleSave} className="text-xs px-2 py-1 rounded bg-[#00A9FF] text-black hover:bg-opacity-80">{t('library.save')}</button>
                     </div>
                 </div>
             ) : (
                 <>
                     <p className="text-white whitespace-pre-wrap">{note.content}</p>
                     <div className="flex justify-between items-center mt-2">
-                        <p className="text-xs text-gray-500">{new Date(note.createdAt).toLocaleString('pt-BR')}</p>
+                        <p className="text-xs text-gray-500">{new Date(note.createdAt).toLocaleString(language)}</p>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
                             <button onClick={() => setIsEditing(true)} className="text-gray-400 hover:text-white"><EditIcon className="w-4 h-4" /></button>
                             <button onClick={() => onDelete(note.id)} className="text-gray-400 hover:text-red-400"><TrashIcon className="w-4 h-4" /></button>
@@ -62,6 +65,7 @@ const NoteItem: React.FC<{
 
 
 const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEditBook, onDeleteBook, onUpdateNote, onDeleteNote }) => {
+  const { t } = useTranslation();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [noteInput, setNoteInput] = useState('');
 
@@ -92,20 +96,26 @@ const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEd
     }
   }, [books, selectedBook?.id]);
 
+  const bookStatuses: { key: 'Lendo' | 'Lido' | 'Quero Ler', tKey: 'library.status.reading' | 'library.status.read' | 'library.status.toRead' }[] = [
+      { key: 'Lendo', tKey: 'library.status.reading' },
+      { key: 'Lido', tKey: 'library.status.read' },
+      { key: 'Quero Ler', tKey: 'library.status.toRead' },
+  ];
+
   return (
     <div className="p-8 text-white w-full h-full flex gap-8 animate-fade-in">
       <div className="w-1/3 flex flex-col">
         <div className="flex justify-between items-center mb-2">
-            <h1 className="text-3xl font-bold">Biblioteca</h1>
+            <h1 className="text-3xl font-bold">{t('library.title')}</h1>
              <button onClick={onAddBook} className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors"><PlusIcon className="w-5 h-5"/></button>
         </div>
-        <p className="text-gray-400 mb-6">Seu arsenal de conhecimento.</p>
+        <p className="text-gray-400 mb-6">{t('library.subtitle')}</p>
         <div className="flex-grow overflow-y-auto bg-gray-900/50 rounded-lg p-2 border border-gray-700">
-          {['Lendo', 'Lido', 'Quero Ler'].map(status => (
-            <div key={status} className="mb-4">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2 mb-2">{status}</h2>
+          {bookStatuses.map(statusInfo => (
+            <div key={statusInfo.key} className="mb-4">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2 mb-2">{t(statusInfo.tKey)}</h2>
               <div className="space-y-1">
-                {books.filter(b => b.status === status).map(book => (
+                {books.filter(b => b.status === statusInfo.key).map(book => (
                   <div
                     key={book.id}
                     onClick={() => setSelectedBook(book)}
@@ -136,7 +146,7 @@ const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEd
               <p className="text-gray-400">{selectedBook.author}</p>
             </div>
             <div className="flex-grow overflow-y-auto mb-4 pr-2">
-                <h3 className="text-lg font-semibold mb-3">Notas</h3>
+                <h3 className="text-lg font-semibold mb-3">{t('library.notes')}</h3>
                 <div className="space-y-4">
                     {selectedBook.notes.length > 0 ? (
                         selectedBook.notes.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map(note => (
@@ -148,7 +158,7 @@ const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEd
                             />
                         ))
                     ) : (
-                        <p className="text-gray-500">Nenhuma nota para este livro.</p>
+                        <p className="text-gray-500">{t('library.noNotes')}</p>
                     )}
                 </div>
             </div>
@@ -158,15 +168,15 @@ const Library: React.FC<LibraryProps> = ({ books, addNoteToBook, onAddBook, onEd
                 value={noteInput}
                 onChange={(e) => setNoteInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleAddNote()}
-                placeholder="Adicionar nota rápida..."
+                placeholder={t('library.addNotePlaceholder')}
                 className="w-full bg-gray-700 text-white p-2 rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#00A9FF]"
               />
-              <button onClick={handleAddNote} className="bg-[#00A9FF] text-black font-bold px-4 rounded-md hover:bg-opacity-80 transition">Salvar</button>
+              <button onClick={handleAddNote} className="bg-[#00A9FF] text-black font-bold px-4 rounded-md hover:bg-opacity-80 transition">{t('library.save')}</button>
             </div>
           </>
         ) : (
           <div className="flex items-center justify-center h-full text-gray-500">
-            <p>Selecione um livro para ver os detalhes e notas.</p>
+            <p>{t('library.noBookSelected')}</p>
           </div>
         )}
       </div>

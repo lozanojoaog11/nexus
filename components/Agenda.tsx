@@ -1,7 +1,8 @@
 
+
 import React from 'react';
 import { CalendarEvent, Task } from '../types';
-import { ACCENT_COLOR } from '../constants';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface AgendaProps {
   events: CalendarEvent[];
@@ -9,6 +10,8 @@ interface AgendaProps {
 }
 
 const Agenda: React.FC<AgendaProps> = ({ events, tasks }) => {
+  const { t, language } = useTranslation();
+
   const agendaItems = React.useMemo(() => {
     const taskItems = tasks
       .filter(task => task.deadline)
@@ -17,7 +20,7 @@ const Agenda: React.FC<AgendaProps> = ({ events, tasks }) => {
         date: task.deadline!,
         id: task.id,
         title: task.content,
-        time: 'Prazo Final',
+        time: t('agenda.deadline'),
       }));
 
     const eventItems = events.map(event => ({
@@ -29,7 +32,7 @@ const Agenda: React.FC<AgendaProps> = ({ events, tasks }) => {
     }));
 
     return [...taskItems, ...eventItems].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  }, [events, tasks]);
+  }, [events, tasks, t]);
 
   const groupedItems = agendaItems.reduce((acc, item) => {
     const date = item.date;
@@ -45,8 +48,8 @@ const Agenda: React.FC<AgendaProps> = ({ events, tasks }) => {
   return (
     <div className="p-8 text-white w-full h-full flex flex-col animate-fade-in-up">
       <header className="mb-8 flex-shrink-0">
-        <h1 className="text-3xl font-bold">Agenda</h1>
-        <p className="text-gray-400 mt-1">Sua visão unificada do tempo.</p>
+        <h1 className="text-3xl font-bold">{t('agenda.title')}</h1>
+        <p className="text-gray-400 mt-1">{t('agenda.subtitle')}</p>
       </header>
 
       <div className="flex-grow overflow-y-auto pr-4">
@@ -54,8 +57,8 @@ const Agenda: React.FC<AgendaProps> = ({ events, tasks }) => {
           Object.entries(groupedItems).map(([date, items]) => (
             <div key={date} className="mb-8">
               <h2 className={`text-xl font-semibold mb-4 border-b pb-2 ${date === today ? `border-[#00A9FF] text-[#00A9FF]` : 'border-gray-700 text-gray-300'}`}>
-                {new Date(date + 'T12:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                {date === today && <span className="text-sm ml-2 font-normal">(Hoje)</span>}
+                {new Date(date + 'T12:00:00').toLocaleDateString(language, { weekday: 'long', day: 'numeric', month: 'long' })}
+                {date === today && <span className="text-sm ml-2 font-normal">{t('agenda.today')}</span>}
               </h2>
               <div className="space-y-4">
                 {items.sort((a,b) => a.time.localeCompare(b.time)).map(item => (
@@ -68,7 +71,7 @@ const Agenda: React.FC<AgendaProps> = ({ events, tasks }) => {
                     <div className={`w-1 flex-shrink-0 h-10 rounded-full ${item.type === 'task' ? `bg-[#00A9FF]` : 'bg-purple-400'}`}></div>
                     <div>
                       <p className="font-medium text-white">{item.title}</p>
-                      <p className="text-sm text-gray-400">{item.type === 'task' ? 'Prazo de Tarefa' : 'Evento'}</p>
+                      <p className="text-sm text-gray-400">{item.type === 'task' ? t('agenda.task') : t('agenda.event')}</p>
                     </div>
                   </div>
                 ))}
@@ -77,8 +80,8 @@ const Agenda: React.FC<AgendaProps> = ({ events, tasks }) => {
           ))
         ) : (
           <div className="text-center text-gray-500 pt-16">
-            <p>Sua agenda está vazia.</p>
-            <p className="mt-2">Adicione eventos ou prazos às suas tarefas para visualizá-los aqui.</p>
+            <p>{t('agenda.empty')}</p>
+            <p className="mt-2">{t('agenda.emptyCta')}</p>
           </div>
         )}
       </div>

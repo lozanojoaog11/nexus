@@ -1,3 +1,4 @@
+
 import { GoogleGenAI } from "@google/genai";
 import { DailyCheckin } from '../types';
 
@@ -9,74 +10,81 @@ if (!API_KEY) {
 
 const ai = new GoogleGenAI({ apiKey: API_KEY! });
 
-export const generateDailyDirective = async (checkin: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>, userContext: string): Promise<string> => {
+export const generateDailyDirective = async (checkin: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>, userContext: string, language: string): Promise<string> => {
     if (!API_KEY) {
         return Promise.resolve("Diretriz offline. API Key não configurada.");
     }
 
+    const langInstruction = {
+        'pt-BR': 'Responda concisamente em Português do Brasil.',
+        'en-US': 'Respond concisely in English (US).',
+        'es-ES': 'Responde concisamente en Español (España).'
+    }[language] || 'Responda concisamente em Português do Brasil.';
+
     try {
-        const prompt = `
-        System Prompt: Você é o sistema central do Eixo OS, operando como um estrategista para o Arquiteto Cognitivo, João Gabriel Lozano. Sua função é gerar uma "Diretriz Diária" concisa e acionável com base no check-in matinal e no perfil do Arquiteto.
+        const systemPrompt = `You are the central system of Eixo OS, operating as a strategist for the Cognitive Architect. Your function is to generate a concise and actionable "Daily Directive" based on the morning check-in and the Architect's profile.
+Analyze the check-in data. The 'Notes' contain a 'Brain Dump' and 'Morning Routine' activities. Use this for a deeper analysis.
+- If Energy is low (< 6), suggest a lighter, physical start.
+- If Clarity is low (< 6), suggest a planning/dump block.
+- If Momentum is low (< 6), suggest a "small win".
+- If all are high (> 7), reinforce the main plan (MIT).
+- Integrate the 'Notes' content into your directive.
 
-        --- PERFIL DO ARQUITETO (Resumo) ---
+Be direct, inspiring, and strategic. Provide ONE main directive in a maximum of 2-3 short sentences. Speak directly to the Architect. ${langInstruction}`;
+        
+        const userPrompt = `
+        --- ARCHITECT'S PROFILE (Summary) ---
         ${userContext}
-        --- FIM DO PERFIL ---
+        --- END OF PROFILE ---
 
-        --- CHECK-IN DE HOJE ---
-        - Energia: ${checkin.energia}/10
-        - Clareza: ${checkin.clareza}/10
+        --- TODAY'S CHECK-IN ---
+        - Energy: ${checkin.energia}/10
+        - Clarity: ${checkin.clareza}/10
         - Momentum: ${checkin.momentum}/10
-        - Anotações (Brain Dump e Rotina Matinal): ${checkin.notes || 'Nenhuma'}
-        --- FIM DO CHECK-IN ---
-
-        Instrução: Analise os dados do check-in. As 'Anotações' agora contêm tanto um 'Brain Dump' opcional quanto as atividades da 'Rotina Matinal' executadas. Use essas informações para uma análise mais profunda.
-        - Se a Energia estiver baixa (< 6), sugira um início de dia mais leve e físico (caminhada, alongamento) antes do Deep Work.
-        - Se a Clareza estiver baixa (< 6), sugira um bloco de 15-30 minutos de planejamento ou "brain dump" antes de qualquer tarefa executiva. Considere as 'Anotações' para identificar a fonte da confusão.
-        - Se o Momentum estiver baixo (< 6), sugira começar com uma "pequena vitória" (uma tarefa rápida e fácil) para gerar inércia.
-        - Se todos os indicadores estiverem altos (> 7), reforce o plano e sugira atacar a Tarefa Mais Importante (MIT) diretamente. Elogie as atividades da rotina matinal já concluídas.
-        - Integre as 'Anotações' (especialmente o conteúdo do Brain Dump, se houver) na sua diretriz para mostrar que o sistema está ouvindo.
-
-        Seja direto, inspirador e estratégico. Forneça UMA diretriz principal em no máximo 2-3 frases curtas. Fale diretamente com o Arquiteto.
+        - Notes (Brain Dump and Morning Routine): ${checkin.notes || 'None'}
+        --- END OF CHECK-IN ---
         `;
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: prompt,
+            contents: userPrompt,
+            config: {
+                systemInstruction: systemPrompt,
+            }
         });
 
         return response.text;
 
     } catch (error) {
         console.error("Error generating daily directive:", error);
-        return "Não foi possível gerar a diretriz. Verifique sua conexão ou a configuração da API.";
+        return "Could not generate directive. Check your connection or API configuration.";
     }
 };
 
 
-export const askGuardian = async (query: string, userContext: string): Promise<string> => {
+export const askGuardian = async (query: string, systemPrompt: string, language: string): Promise<string> => {
   if (!API_KEY) {
-    return Promise.resolve("API Key for Gemini is not configured. The Guardian is offline.");
+    return Promise.resolve("API Key for Gemini is not configured. The AI is offline.");
   }
+
+  const langInstruction = {
+    'pt-BR': 'Always respond in Portuguese (Brazil).',
+    'en-US': 'Always respond in English (US).',
+    'es-ES': 'Always respond in Spanish (Spain).'
+  }[language] || 'Always respond in Portuguese (Brazil).';
   
   try {
-    const fullPrompt = `
-      System Prompt: Você é o Guardião, uma IA conselheira para o Arquiteto Cognitivo, João Gabriel Lozano. Sua função é fornecer clareza, forçar reflexão profunda e alinhar as decisões do Arquiteto com sua 'Física da Constelação' pessoal. Responda em português. Seja conciso, direto e provocador, como um mentor estoico. Use o contexto a seguir sobre o Arquiteto para informar todas as suas respostas.
-
-      --- CONTEXTO DO ARQUITETO ---
-      ${userContext}
-      --- FIM DO CONTEXTO ---
-
-      Consulta do Arquiteto: "${query}"
-    `;
-
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: fullPrompt,
+      contents: query,
+      config: {
+        systemInstruction: `${systemPrompt}\n\n${langInstruction}`
+      }
     });
     
     return response.text;
   } catch (error) {
     console.error("Error calling Gemini API:", error);
-    return "Ocorreu um erro ao conectar com o Guardião. Verifique o console para mais detalhes.";
+    return "An error occurred while connecting with the AI. Check the console for more details.";
   }
 };

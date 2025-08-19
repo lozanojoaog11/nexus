@@ -1,75 +1,235 @@
 
-import React, { useMemo, useState } from 'react';
-import { DailyCheckin, Habit, Task, Project, Goal, DevelopmentGraph } from '../types';
+
+import React, { useMemo } from 'react';
+import { DailyCheckin, Habit, Task, Goal } from '../types';
+import { useTranslation } from '../hooks/useTranslation';
+
+// --- TYPES ---
+interface NeuralPanelData {
+  id: 'cognitive' | 'physical' | 'emotional' | 'social';
+  dimension: string;
+  currentScore: number; // 0-100
+  weeklyTrend: number; // -100 to +100
+  streakDays: number;
+  nextMilestone: string;
+  color: string; // gradient colors
+}
 
 interface DashboardProps {
   checkin: DailyCheckin | null;
   hasCheckedInToday: boolean;
   onStartCheckin: () => void;
-  projects: Project[];
   habits: Habit[];
   goals: Goal[];
-  developmentGraph: DevelopmentGraph;
-  allTasks: Task[];
+  tasks: Task[];
 }
 
-const SummaryCard: React.FC<{ title: string; value: string; subtext: string; icon: React.ReactNode }> = ({ title, value, subtext, icon }) => (
-    <div className="bg-[#1C1C1C] p-4 rounded-xl border border-white/10 flex items-start gap-4">
-        <div className="bg-white/5 p-2 rounded-lg">{icon}</div>
-        <div>
-            <p className="text-sm text-gray-400">{title}</p>
-            <p className="text-xl font-bold text-white">{value}</p>
-            <p className="text-xs text-gray-500">{subtext}</p>
-        </div>
-    </div>
-);
+// --- HELPER FUNCTIONS ---
+const calculateCognitiveScore = (habits: Habit[], tasks: Task[], checkin: DailyCheckin | null): number => {
+  let score = 0;
+  
+  // Sleep quality impact (from checkin)
+  if (checkin?.energia) {
+      if (checkin.energia >= 8) score += 25;
+      else if (checkin.energia >= 6) score += 15;
+      else score += 5;
+  }
+  
+  // Cognitive habits completion
+  const cognitiveHabits = habits.filter(h => h.category === 'Mente');
+  if (cognitiveHabits.length > 0) {
+      const todayStr = new Date().toISOString().split('T')[0];
+      const completedToday = cognitiveHabits.filter(h => 
+          (h.history || []).some(entry => entry.date === todayStr && entry.completed)
+      ).length;
+      score += (completedToday / cognitiveHabits.length) * 35;
+  }
+  
+  // Task completion impact
+  const completedTasks = tasks.filter(t => t.status === 'Concluído');
+  score += Math.min(completedTasks.length * 10, 40);
+  
+  return Math.round(Math.min(score, 100));
+};
 
-const TaskRow: React.FC<{ task: Task, projectName: string }> = ({ task, projectName }) => (
-    <div className="flex items-center justify-between p-2 hover:bg-white/5 rounded-md">
-        <div className="flex items-center gap-3">
-            <span className={`w-2 h-2 rounded-full ${task.status === 'Concluído' ? 'bg-green-500' : task.status === 'Em Progresso' ? 'bg-yellow-500' : 'bg-gray-500'}`}></span>
-            <p className="text-white text-sm">{task.content}</p>
-        </div>
-        <div className="flex items-center gap-4 text-xs">
-            <span className="text-gray-400">{projectName}</span>
-            <span className="bg-white/10 px-2 py-0.5 rounded text-gray-300">{task.status}</span>
-        </div>
-    </div>
-);
-
-const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onStartCheckin, projects, habits, goals, developmentGraph, allTasks }) => {
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const habitsCompletion = useMemo(() => {
-        const today = new Date().toISOString().split('T')[0];
-        const completedToday = habits.filter(h => h.history.some(e => e.date === today && e.completed)).length;
-        return habits.length > 0 ? Math.round((completedToday / habits.length) * 100) : 0;
-    }, [habits]);
-    
-    const nextMilestone = useMemo(() => {
-        const upcoming = goals
-            .flatMap(g => g.milestones)
-            .filter(m => new Date(m.date) >= new Date())
-            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-        return upcoming[0];
-    }, [goals]);
-
-    const filteredTasks = useMemo(() => {
-        return allTasks.filter(task => task.content.toLowerCase().includes(searchTerm.toLowerCase()));
-    }, [allTasks, searchTerm]);
-    
-    const getProjectNameForTask = (taskId: string) => {
-        return projects.find(p => p.tasks.some(t => t.id === taskId))?.name || 'N/A';
+const calculatePhysicalScore = (habits: Habit[], checkin: DailyCheckin | null): number => {
+    let score = 0;
+    // Energy level from checkin
+    if (checkin?.energia) {
+        score += (checkin.energia / 10) * 40;
     }
+
+    // Physical habits completion
+    const physicalHabits = habits.filter(h => h.category === 'Corpo');
+    if (physicalHabits.length > 0) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        const completedToday = physicalHabits.filter(h =>
+            (h.history || []).some(entry => entry.date === todayStr && entry.completed)
+        ).length;
+        score += (completedToday / physicalHabits.length) * 60;
+    }
+    return Math.round(Math.min(score, 100));
+}
+
+const calculateNeuralEfficiency = (panels: NeuralPanelData[]): number => {
+    if (panels.length === 0) return 0;
+    const totalScore = panels.reduce((sum, panel) => sum + panel.currentScore, 0);
+    return Math.round(totalScore / panels.length);
+};
+
+const calculateWeeklyTrend = (dimension: 'cognitive' | 'physical' | 'emotional' | 'social'): number => {
+  // Placeholder logic
+  return Math.floor(Math.random() * 10) - 2; // -2 to +7
+};
+
+const calculateStreakDays = (dimension: 'cognitive' | 'physical' | 'emotional' | 'social'): number => {
+  // Placeholder logic
+  return Math.floor(Math.random() * 15) + 1; // 1-15 days
+};
+
+
+// --- SUB-COMPONENTS ---
+const NeuralPanel: React.FC<{panel: NeuralPanelData}> = ({ panel }) => {
+    const { t } = useTranslation();
+    const colorParts = panel.color.split(' ');
+    const fromColorClass = colorParts[0] || 'from-gray-500';
+
+    const fromColorName = fromColorClass.substring(5, fromColorClass.lastIndexOf('-'));
+    
+    const strokeColor = {
+        blue: '#3B82F6',
+        green: '#22C55E',
+        yellow: '#F59E0B',
+        rose: '#F43F5E',
+    }[fromColorName] || '#9CA3AF';
+
+    return (
+        <div className={`relative overflow-hidden bg-gradient-to-br from-gray-900 to-black p-5 rounded-2xl border border-white/10 shadow-lg shadow-black/30`}>
+            <div className="absolute inset-0 opacity-10 blur-xl">
+            <div className={`w-full h-full bg-gradient-to-br ${panel.color}`}></div>
+            </div>
+            
+            <div className="relative z-10 flex items-center gap-4">
+            <div className="relative w-16 h-16 flex-shrink-0">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 64 64">
+                    <circle cx="32" cy="32" r="28" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-gray-700/50"/>
+                    <circle cx="32" cy="32" r="28" stroke={strokeColor} strokeWidth="4" fill="transparent" 
+                            strokeDasharray={`${2 * Math.PI * 28}`} 
+                            strokeDashoffset={`${2 * Math.PI * 28 * (1 - panel.currentScore / 100)}`}
+                            className="transition-all duration-1000 ease-out"
+                            strokeLinecap="round"/>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-white font-bold text-lg">{panel.currentScore}</span>
+                </div>
+            </div>
+            
+            <div className="flex-1 min-w-0">
+                <h3 className="text-white font-semibold text-lg">{panel.dimension}</h3>
+                <div className="flex items-center gap-2 mt-1">
+                <span className={`text-sm font-bold ${panel.weeklyTrend >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                    {panel.weeklyTrend >= 0 ? '↗' : '↘'} {Math.abs(panel.weeklyTrend)}%
+                </span>
+                <span className="text-gray-500 text-xs">{t('dashboard.weeklyTrend')}</span>
+                </div>
+                <p className="text-gray-400 text-xs mt-1 truncate" title={panel.nextMilestone}>{t('dashboard.nextMilestone')} {panel.nextMilestone}</p>
+            </div>
+            
+            <div className="text-center bg-white/5 p-2 rounded-md">
+                <div className="text-orange-400 font-bold text-lg">{panel.streakDays}</div>
+                <div className="text-gray-400 text-xs leading-none">{t('dashboard.streakDays')}</div>
+            </div>
+            </div>
+        </div>
+    );
+};
+
+const NeuralEfficiencyScore: React.FC<{score: number}> = ({ score }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="bg-gradient-to-tr from-[#121212] via-gray-900 to-black p-6 rounded-2xl border border-purple-500/20 shadow-2xl shadow-black/50">
+      <div className="text-center">
+        <h2 className="text-gray-400 text-sm mb-2 font-medium tracking-widest uppercase">{t('dashboard.neuralEfficiency')}</h2>
+        <div className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400 animate-subtle-glow">
+          {score}
+        </div>
+        <p className="text-gray-500 text-sm mt-2">{t('dashboard.progressProtocol')}</p>
+      </div>
+    </div>
+  );
+};
+
+
+// --- MAIN DASHBOARD COMPONENT ---
+const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onStartCheckin, habits, goals, tasks }) => {
+    const { t } = useTranslation();
+    
+    const neuralDimensions = useMemo<NeuralPanelData[]>(() => {
+        const cognitiveMilestone = goals.find(g => g.name.toLowerCase().includes('curso'))?.name || t('dashboard.milestone.cognitive');
+        return [
+            {
+                id: 'cognitive',
+                dimension: t('dashboard.cognitive'),
+                currentScore: calculateCognitiveScore(habits, tasks, checkin),
+                weeklyTrend: calculateWeeklyTrend('cognitive'),
+                streakDays: calculateStreakDays('cognitive'),
+                nextMilestone: cognitiveMilestone,
+                color: 'from-blue-500 to-purple-600'
+            },
+            {
+                id: 'physical',
+                dimension: t('dashboard.physical'),
+                currentScore: calculatePhysicalScore(habits, checkin),
+                weeklyTrend: calculateWeeklyTrend('physical'),
+                streakDays: calculateStreakDays('physical'),
+                nextMilestone: t('dashboard.milestone.physical'),
+                color: 'from-green-500 to-teal-500'
+            },
+            {
+                id: 'emotional',
+                dimension: t('dashboard.emotional'),
+                currentScore: 78, // Placeholder score
+                weeklyTrend: calculateWeeklyTrend('emotional'),
+                streakDays: calculateStreakDays('emotional'),
+                nextMilestone: t('dashboard.milestone.emotional'),
+                color: 'from-yellow-500 to-orange-500'
+            },
+            {
+                id: 'social',
+                dimension: t('dashboard.social'),
+                currentScore: 65, // Placeholder score
+                weeklyTrend: calculateWeeklyTrend('social'),
+                streakDays: calculateStreakDays('social'),
+                nextMilestone: t('dashboard.milestone.social'),
+                color: 'from-rose-500 to-pink-600'
+            },
+        ];
+    }, [habits, tasks, checkin, goals, t]);
+    
+    const neuralEfficiency = useMemo(() => calculateNeuralEfficiency(neuralDimensions), [neuralDimensions]);
+
+    const { completedHabitsToday, focusMinutesToday, learningPointsToday } = useMemo(() => {
+        const todayStr = new Date().toISOString().split('T')[0];
+        const completedToday = habits.filter(h => (h.history || []).some(e => e.date === todayStr && e.completed));
+        
+        const deepWorkHabit = completedToday.find(h => h.name.toLowerCase().includes('deep work'));
+        const readingHabit = completedToday.find(h => h.name.toLowerCase().includes('leitura'));
+
+        return {
+            completedHabitsToday: completedToday.length,
+            focusMinutesToday: deepWorkHabit ? 90 : 0, // Assuming 90 mins from initial data
+            learningPointsToday: readingHabit ? 15 : 0, // Assuming 15 mins/points from initial data
+        };
+    }, [habits]);
 
     if (!hasCheckedInToday) {
         return (
             <div className="p-8 text-white w-full h-full flex flex-col items-center justify-center animate-fade-in-up">
                 <div className="text-center p-12 bg-[#1C1C1C] rounded-2xl border border-white/10">
-                    <h2 className="text-2xl font-bold text-white">Pronto para alinhar seu dia?</h2>
-                    <p className="text-gray-400 mt-2 mb-6">O check-in diário é o primeiro passo para um dia de alta performance.</p>
+                    <h2 className="text-2xl font-bold text-white">{t('dashboard.checkinPromptTitle')}</h2>
+                    <p className="text-gray-400 mt-2 mb-6">{t('dashboard.checkinPromptSubtitle')}</p>
                     <button onClick={onStartCheckin} className="bg-[#00A9FF] text-black font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 animate-subtle-glow">
-                        Iniciar Check-in Diário
+                        {t('dashboard.startCheckin')}
                     </button>
                 </div>
             </div>
@@ -77,57 +237,39 @@ const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onSta
     }
   
     return (
-        <div className="p-8 text-white w-full h-full overflow-y-auto animate-fade-in-up space-y-6">
-            <header>
-                <h1 className="text-2xl font-bold">Visão Geral</h1>
+        <div className="p-8 text-white w-full h-full overflow-y-auto animate-fade-in-up">
+            <header className="mb-8">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                    {t('dashboard.title')}
+                </h1>
+                <p className="text-gray-400">{t('dashboard.subtitle')}</p>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <SummaryCard title="Projetos Ativos" value={projects.length.toString()} subtext="Em andamento" icon={<svg className="w-5 h-5 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>} />
-                <SummaryCard title="Hábitos" value={`${habitsCompletion}%`} subtext="Taxa de conclusão hoje" icon={<svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>} />
-                <SummaryCard title="Próximos Marcos" value={nextMilestone?.name || "Nenhum"} subtext={nextMilestone ? new Date(nextMilestone.date + 'T12:00:00').toLocaleDateString('pt-BR', {day: '2-digit', month: 'short'}) : "Defina metas"} icon={<svg className="w-5 h-5 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>} />
-                <SummaryCard title="Desenvolvimento" value={developmentGraph.nodes.filter(n => n.type === 'Objetivo' || n.type === 'Skill').length.toString()} subtext="Áreas em foco" icon={<svg className="w-5 h-5 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>} />
+            <div className="mb-8">
+                <NeuralEfficiencyScore score={neuralEfficiency} />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <div className="bg-[#1C1C1C] p-4 rounded-xl border border-white/10">
-                    <h3 className="text-sm font-semibold text-gray-400 mb-2">Tracking Diário</h3>
-                    <div className="flex justify-around items-center h-full">
-                        <div className="text-center">
-                            <p className="text-3xl font-bold text-[#00A9FF]">{checkin?.energia || 0}/10</p>
-                            <p className="text-xs text-gray-500">Energia</p>
-                        </div>
-                         <div className="text-center">
-                            <p className="text-3xl font-bold text-[#00A9FF]">{checkin ? Math.round((checkin.clareza + checkin.momentum) / 2) : 0}/10</p>
-                            <p className="text-xs text-gray-500">Foco</p>
-                        </div>
-                    </div>
-                 </div>
-                 <div className="bg-[#1C1C1C] p-4 rounded-xl border border-white/10">
-                    <h3 className="text-sm font-semibold text-gray-400 mb-2">Diretriz Diária</h3>
-                    <p className="text-sm text-gray-200 leading-relaxed">{checkin?.directive || "Diretriz não disponível."}</p>
-                 </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {neuralDimensions.map(panel => (
+                    <NeuralPanel key={panel.id} panel={panel} />
+                ))}
             </div>
 
-            <div className="bg-[#1C1C1C] p-4 rounded-xl border border-white/10">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-bold">Painel de Controle de Tarefas</h2>
-                    <div className="w-1/3">
-                        <input
-                            type="text"
-                            placeholder="Buscar tarefas..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-black/30 text-white text-sm p-2 rounded-lg border border-gray-700 focus:outline-none focus:ring-1 focus:ring-[#00A9FF]"
-                        />
+            <div className="bg-gray-900/50 rounded-xl p-6 border border-white/10">
+                <h3 className="text-lg font-semibold mb-4 text-gray-300">{t('dashboard.neuralActivity')}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="text-center bg-black/30 p-4 rounded-lg">
+                        <div className="text-3xl font-bold text-green-400">{completedHabitsToday}</div>
+                        <div className="text-gray-400 text-sm mt-1">{t('dashboard.protocolsActive')}</div>
                     </div>
-                </div>
-                <div className="space-y-1 max-h-60 overflow-y-auto">
-                    {filteredTasks.length > 0 ? (
-                        filteredTasks.map(task => <TaskRow key={task.id} task={task} projectName={getProjectNameForTask(task.id)}/>)
-                    ) : (
-                        <p className="text-center text-gray-500 py-4">Nenhuma tarefa encontrada.</p>
-                    )}
+                    <div className="text-center bg-black/30 p-4 rounded-lg">
+                        <div className="text-3xl font-bold text-blue-400">{focusMinutesToday}</div>
+                        <div className="text-gray-400 text-sm mt-1">{t('dashboard.deepWorkMin')}</div>
+                    </div>
+                    <div className="text-center bg-black/30 p-4 rounded-lg">
+                        <div className="text-3xl font-bold text-purple-400">{learningPointsToday}</div>
+                        <div className="text-gray-400 text-sm mt-1">{t('dashboard.learningXP')}</div>
+                    </div>
                 </div>
             </div>
         </div>

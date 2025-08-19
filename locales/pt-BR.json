@@ -1,0 +1,790 @@
+
+{
+  "userManifesto": "[IDENTIFICAÇÃO DO OPERADOR]\nNome/Código: João Gabriel Lozano, \"O Arquiteto Cognitivo\"\nObjetivo Prime: Tornar-se um outlier positivo em todas as métricas relevantes de desenvolvimento humano, culminando na materialização do \"Ponto de Fuga\": R$1M com a d.IA.logo como prova de \"potência realizada\".\n\n[RAIO-X DA ARQUITETURA COGNITIVA]\nO Núcleo (Quem Você É): Alquimista Digital e Arquiteto Cognitivo. Opera na intersecção entre criatividade caótica e busca por estrutura. Realizador Criativo Adaptativo com capacidade de \"Síntese Transmutacional Criativa\". Cérebro não-linear, conectando domínios distintos.\nO Conflito Central (Sua Principal Batalha): Dissonância entre o imenso potencial criativo e a dificuldade na sustentação da disciplina executiva e finalização de ciclos. O ciclo de \"explosão criativa seguida de dispersão\".\nO Ponto de Fuga (Onde Você Quer Chegar): Transmutar a d.IA.logo em um ecossistema educacional de altíssimo impacto, faturando R$1M em 18-24 meses.\n\n[DEEP SCAN PSICOMÉTRICO]\nNEUROTYPE: Cronotipo vespertino, estilo cognitivo Cinestésico-Visual. Força em Flexibilidade Cognitiva, fraqueza em Controle Inibitório e Foco Sustentado.\nBIG FIVE: Openness (95), Conscientiousness (40), Extraversion (80), Agreeableness (65), Neuroticism (60).\nDEEP DRIVERS: Dores (Confronto com a Morte, Instabilidade Crônica, Perda Financeira), Êxtases (Imersão em IA, Freestyle, Liderança de Workshops).\nEDGE: Vantagem (Pensamento Conectivo, Comunicação Multidimensional), Superpoder (Resiliência Regenerativa), Obsessão (Arquitetura Cognitiva de LLMs), Habilidade Natural (\"Traduzir complexidade\").\n\n[FÍSICA DO DESENVOLVIMENTO]\nPrincípio #1: Otimização da Energia.\nPrincípio #2: A ação gera a inspiração.\nPrincípio #3: Consistência na execução do bloco de Deep Work matinal é a alavanca primária.\nPrincípio #4: O hábito keystone é o \"wind down protocol\" noturno.",
+  "lang": {
+    "pt-BR": "Português",
+    "en-US": "Inglês",
+    "es-ES": "Espanhol"
+  },
+  "sidebar": {
+    "dashboard": "Painel",
+    "habits": "Hábitos",
+    "projects": "Projetos",
+    "goals": "Metas",
+    "agenda": "Agenda",
+    "development": "Desenvolvimento",
+    "cognitive": "Treino Cognitivo",
+    "guardian": "Arquiteto AI",
+    "library": "Biblioteca",
+    "flowLab": "Flow Lab",
+    "biohacking": "Biohacking",
+    "achievements": "Conquistas",
+    "analytics": "Análise Neural",
+    "signOut": "Sair",
+    "stableAxis": "O eixo permanece estável."
+  },
+  "login": {
+    "accessSystem": "Acesse seu sistema",
+    "createAccount": "Crie sua conta",
+    "email": "Email",
+    "password": "Senha",
+    "signIn": "Entrar",
+    "signUp": "Criar Conta",
+    "processing": "Processando...",
+    "noAccount": "Não tem uma conta?",
+    "createNow": "Crie uma agora",
+    "hasAccount": "Já tem uma conta?",
+    "signInNow": "Faça login",
+    "devMode": "MODO DEV",
+    "devSignIn": "Entrar como Desenvolvedor",
+    "error": {
+      "invalid": "E-mail ou senha inválidos.",
+      "inUse": "Este e-mail já está em uso.",
+      "weakPassword": "A senha deve ter pelo menos 6 caracteres.",
+      "generic": "Ocorreu um erro. Tente novamente.",
+      "anonymousFail": "Falha no login anônimo de desenvolvedor."
+    }
+  },
+  "dashboard": {
+    "title": "Neural Command Center",
+    "subtitle": "Monitorando protocolos de desenvolvimento super-humano",
+    "checkinPromptTitle": "Pronto para alinhar seu dia?",
+    "checkinPromptSubtitle": "O check-in diário é o primeiro passo para um dia de alta performance.",
+    "startCheckin": "Iniciar Check-in Diário",
+    "neuralEfficiency": "Neural Efficiency Score",
+    "progressProtocol": "Protocolo de Progresso Super-Humano",
+    "neuralActivity": "Atividade Neural de Hoje",
+    "protocolsActive": "Protocolos Ativos",
+    "deepWorkMin": "Min de Foco Profundo",
+    "learningXP": "XP de Aprendizado",
+    "nextMilestone": "Próximo:",
+    "weeklyTrend": "esta semana",
+    "streakDays": "dias",
+    "cognitive": "Cognitivo",
+    "physical": "Físico",
+    "emotional": "Emocional",
+    "social": "Social",
+    "milestone": {
+      "cognitive": "Lançar Mini-Curso",
+      "physical": "Manter rotina de treino",
+      "emotional": "Praticar mindfulness diário",
+      "social": "Reunião de alinhamento"
+    }
+  },
+  "neuralAlignment": {
+    "title": "Alinhamento Neural",
+    "biometricTitle": "Avaliação Biométrica",
+    "biometricSubtitle": "Avaliação do substrato neural",
+    "sleepQuality": "Qualidade do Sono",
+    "sleepHours": "Horas de Sono",
+    "wakeTime": "Horário Acordou",
+    "physicalEnergy": "Energia Física",
+    "hydrationLevel": "Nível de Hidratação",
+    "stressLevel": "Nível de Stress",
+    "cognitiveTitle": "Avaliação Cognitiva",
+    "cognitiveSubtitle": "Avaliação do processamento neural",
+    "reactionTest": "Teste de Tempo de Reação",
+    "startTest": "Clique para Iniciar o Teste",
+    "wait": "Aguarde o VERDE...",
+    "clickNow": "CLIQUE AGORA!",
+    "excellent": "Excelente!",
+    "veryGood": "Muito Bom!",
+    "good": "Bom",
+    "canImprove": "Pode Melhorar",
+    "testAgain": "Testar Novamente",
+    "mentalClarity": "Clareza Mental",
+    "focusCapacity": "Capacidade de Foco",
+    "creativeState": "Estado Criativo",
+    "intentionTitle": "Definição de Intenção",
+    "intentionSubtitle": "Alinhamento neural estratégico",
+    "primaryFocus": "Foco Principal Hoje",
+    "primaryFocusPlaceholder": "Qual seu objetivo #1 para hoje?",
+    "biggestChallenge": "Maior Desafio Hoje",
+    "biggestChallengePlaceholder": "O que pode dificultar seu dia?",
+    "successMetric": "Métrica de Sucesso",
+    "successMetricPlaceholder": "Como saberá que hoje foi um sucesso?",
+    "energyAllocation": "Alocação de Energia",
+    "work": "Trabalho",
+    "learning": "Aprendizado",
+    "recovery": "Recuperação",
+    "total": "Total",
+    "summaryTitle": "Resumo do Perfil Neural",
+    "summarySubtitle": "Seu protocolo diário otimizado",
+    "intentionToday": "Intenção de Hoje",
+    "notDefined": "Não definido",
+    "generatingDirective": "Gerando sua diretriz neural...",
+    "previous": "Anterior",
+    "next": "Próximo Protocolo",
+    "complete": "Completar Alinhamento Neural"
+  },
+  "kanban": {
+    "noProjects": "Nenhum projeto encontrado. Crie um para começar.",
+    "newProject": "Novo Projeto",
+    "progress": "% concluído",
+    "deleteProject": "Excluir Projeto",
+    "addTaskPlaceholder": "Adicionar nova tarefa...",
+    "add": "Adicionar",
+    "linked": "Vinculado",
+    "todo": "A Fazer",
+    "inProgress": "Em Progresso",
+    "done": "Concluído"
+  },
+  "taskModal": {
+    "status": "Status",
+    "deadline": "Prazo Final",
+    "linkToDev": "Vincular ao Desenvolvimento",
+    "noLink": "Nenhum Vínculo",
+    "notes": "Notas",
+    "notesPlaceholder": "Adicione mais detalhes ou contexto aqui...",
+    "cancel": "Cancelar",
+    "save": "Salvar Alterações"
+  },
+  "addProjectModal": {
+    "title": "Adicionar Novo Projeto",
+    "subtitle": "Defina um novo fluxo de trabalho.",
+    "name": "Nome do Projeto",
+    "namePlaceholder": "Ex: d.IA.logo",
+    "cancel": "Cancelar",
+    "create": "Criar Projeto"
+  },
+  "library": {
+    "title": "Biblioteca",
+    "subtitle": "Seu arsenal de conhecimento.",
+    "status": {
+      "reading": "Lendo",
+      "read": "Lido",
+      "toRead": "Quero Ler"
+    },
+    "notes": "Notas",
+    "noNotes": "Nenhuma nota para este livro.",
+    "addNotePlaceholder": "Adicionar nota rápida...",
+    "save": "Salvar",
+    "noBookSelected": "Selecione um livro para ver os detalhes e notas."
+  },
+  "bookModal": {
+    "editTitle": "Editar Livro",
+    "addTitle": "Adicionar Livro",
+    "title": "Título*",
+    "author": "Autor*",
+    "status": "Status",
+    "linkToResource": "Vincular a Recuroso",
+    "none": "Nenhum",
+    "cancel": "Cancelar",
+    "save": "Salvar Livro"
+  },
+  "habits": {
+    "title": "Rastreamento de Hábitos",
+    "subtitle": "Consistência é a alavanca primária.",
+    "newHabit": "Novo Hábito",
+    "completion": "Conclusão (30d)",
+    "currentStreak": "Sequência Atual",
+    "bestStreak": "Melhor Sequência",
+    "noHabits": "Nenhum hábito rastreado.",
+    "noHabitsCta": "Clique em \"Novo Hábito\" para começar."
+  },
+  "addHabitModal": {
+    "title": "Adicionar Novo Hábito",
+    "subtitle": "Defina um novo ritual para seu sistema.",
+    "name": "Nome",
+    "namePlaceholder": "Ex: Leitura Focada",
+    "category": "Categoria",
+    "mind": "Mente",
+    "body": "Cuerpo",
+    "execution": "Execução",
+    "frequency": "Frequência Semanal (1-7)",
+    "cancel": "Cancelar",
+    "add": "Adicionar Hábito"
+  },
+  "goals": {
+    "title": "Metas Estratégicas",
+    "subtitle": "Seus objetivos de longo prazo e marcos de progresso.",
+    "newGoal": "Nova Meta",
+    "progress": "Progresso",
+    "deadline": "Prazo",
+    "noGoals": "Nenhuma meta estratégica definida.",
+    "noGoalsCta": "Clique em \"Nova Meta\" para começar a planejar seu futuro."
+  },
+  "goalModal": {
+    "editTitle": "Editar Meta",
+    "addTitle": "Nova Meta",
+    "name": "Nome*",
+    "devArea": "Área de Desenvolvimento*",
+    "selectArea": "Selecione uma área",
+    "horizon": "Horizonte*",
+    "horizons": {
+      "short": "Curto Prazo (até 3 meses)",
+      "medium": "Médio Prazo (3-12 meses)",
+      "long": "Longo Prazo (>1 ano)"
+    },
+    "deadline": "Data Limite*",
+    "description": "Descrição",
+    "expectedResults": "Resultados Esperados",
+    "successMetrics": "Métricas de Sucesso",
+    "tags": "Tags (separadas por vírgula)",
+    "milestones": "Marcos (Milestones)",
+    "milestoneNamePlaceholder": "Nome do marco",
+    "addMilestone": "+",
+    "cancel": "Cancelar",
+    "save": "Salvar Meta"
+  },
+  "development": {
+    "title": "Desenvolvimento",
+    "subtitle": "Seu mapa de expansão estratégica.",
+    "linkedGoals": "Metas Vinculadas",
+    "linkedTasks": "Tarefas Vinculadas",
+    "linkedBooks": "Livros Vinculados",
+    "noNodes": "Nenhuma área de desenvolvimento definida.",
+    "selectNode": "Selecione uma área para ver os detalhes."
+  },
+  "devAreaModal": {
+    "editTitle": "Editar Área",
+    "addTitle": "Nova Área de Desenvolvimento",
+    "name": "Nome da Área*",
+    "type": "Tipo de Área",
+    "description": "Descrição",
+    "icon": "Ícone",
+    "successMetrics": "Métricas de Sucesso",
+    "successMetricsPlaceholder": "Como você medirá o progresso nesta área?",
+    "targetDate": "Data Alvo",
+    "cancel": "Cancelar",
+    "save": "Salvar Área",
+    "types": {
+      "Skill": "Skill",
+      "Objetivo": "Objetivo",
+      "Recurso": "Recurso",
+      "Mentor": "Mentor",
+      "Hábito": "Hábito",
+      "Ponto de Fuga": "Ponto de Fuga"
+    }
+  },
+  "agenda": {
+    "title": "Agenda",
+    "subtitle": "Sua visão unificada do tempo.",
+    "today": "(Hoje)",
+    "deadline": "Prazo Final",
+    "task": "Prazo de Tarefa",
+    "event": "Evento",
+    "empty": "Sua agenda está vazia.",
+    "emptyCta": "Adicione eventos ou prazos às suas tarefas para visualizá-los aqui."
+  },
+  "cognitive": {
+    "title": "Centro de Treinamento Cognitivo",
+    "subtitle": "Protocolos de aprimoramento neural para cognição sobre-humana.",
+    "progress": {
+      "workingMemory": "Memória de Trabalho",
+      "processingSpeed": "Velocidade de Processamento",
+      "memoryCapacity": "Capacidade de Memória",
+      "readingSpeed": "Velocidade de Leitura",
+      "levelSuffix": " nível",
+      "msSuffix": "ms avg",
+      "itemsSuffix": " itens",
+      "wpmSuffix": " WPM"
+    },
+    "recentSessions": "Sessões de Treinamento Recentes",
+    "noSessions": "Nenhuma sessão de treinamento ainda. Selecione um módulo para iniciar o aprimoramento cognitivo.",
+    "back": "Voltar",
+    "startTraining": "Iniciar Treinamento",
+    "moduleCard": {
+      "bestScore": "Melhor Pontuação",
+      "lastChange": "Última Alteração",
+      "sessions": "Sessões",
+      "scientificBasis": "Base Científica"
+    },
+    "sessionHistory": {
+      "durationSuffix": "min"
+    },
+    "modules": {
+      "dual-n-back": {
+        "name": "Dual N-Back",
+        "description": "Aprimoramento da memória de trabalho através de treino de dupla-tarefa.",
+        "metric": "N-Level alcançado"
+      },
+      "speed-reading": {
+        "name": "Leitura Dinâmica",
+        "description": "Leitura acelerada com manutenção da compreensão.",
+        "metric": "Palavras por minuto"
+      },
+      "memory-palace": {
+        "name": "Palácio da Memória",
+        "description": "Técnicas de memória espacial para retenção de informação.",
+        "metric": "Itens memorizados"
+      },
+      "reaction-time": {
+        "name": "Treino de Reação",
+        "description": "Otimização da velocidade de processamento e resposta neural.",
+        "metric": "Tempo de reação (ms)"
+      }
+    }
+  },
+  "dualNBack": {
+    "title": "Treinamento Dual N-Back",
+    "description": "Combine estímulos de posição e áudio de {level} passos atrás",
+    "instructionsTitle": "Instruções:",
+    "instruction1": "• Observe o quadrado azul e ouça os tons de áudio",
+    "instruction2": "• Pressione ESPAÇO quando a posição corresponder a {level} passos atrás",
+    "instruction3": "• Pressione ENTER quando o áudio corresponder a {level} passos atrás",
+    "instruction4": "• Você pode corresponder a ambos, um ou nenhum em cada tentativa",
+    "instruction5": "• Tente obter 80%+ de precisão para avançar para o próximo nível",
+    "level": "Nível:",
+    "start": "Iniciar Treinamento",
+    "trial": "Tentativa",
+    "levelLabel": "Nível",
+    "posMatch": "Posição (ESPAÇO)",
+    "audioMatch": "Áudio (ENTER)",
+    "resultsTitle": "Treinamento Concluído!",
+    "accuracy": "Pontuação de Precisão",
+    "duration": "Duração",
+    "levelMastered": "Nível Dominado!",
+    "readyForNext": "Pronto para o {level}-Back",
+    "trainAgain": "Treinar Novamente",
+    "completeSession": "Completar Sessão"
+  },
+  "neuralArchitect": {
+    "title": "Neural Architect AI",
+    "subtitle": "Aconselhamento avançado de otimização de desempenho",
+    "initialMessage": "Neural Architect online. Analisando seu estado e objetivos atuais... Como posso otimizar seu desempenho hoje?",
+    "userQueryLabel": "Pergunta do Usuário",
+    "modules": {
+      "focus": { "name": "Aprimoramento de Foco", "description": "Otimização da carga cognitiva e treino de atenção.", "prompt": "NEURAL ARCHITECT - MÓDULO DE APRIMORAMENTO DE FOCO\nPerfil do Usuário: ENFP Realizador Criativo, dificuldade com atenção sustentada, alta criatividade.\nContexto Atual: {{CONTEXT}}\nBase Científica: Treino Dual N-Back, Gatilhos de estado de Flow, Intenções de implementação.\n\nForneça estratégias específicas e acionáveis de aprimoramento de foco considerando:\n- Necessidade de variedade e significado do ENFP\n- Níveis atuais de energia/clareza do check-in\n- Otimização do ambiente\n- Gerenciamento da carga cognitiva\n- Design de sessão de trabalho profundo\n\nEstilo de resposta: Direto, encorajador, científico mas acessível." },
+      "creativity": { "name": "Fluxo Criativo", "description": "Catalisador de inovação e resolução de bloqueio criativo.", "prompt": "NEURAL ARCHITECT - MÓDULO DE FLUXO CRIATIVO\nPerfil do Usuário: ENFP com habilidades criativas excepcionais, precisa de criatividade estruturada.\nContexto Atual: {{CONTEXT}}\nBase Científica: Pensamento divergente, Criatividade baseada em restrições, Otimização do estado de Flow.\n\nGere estratégias de aprimoramento criativo:\n- Técnicas de brainstorming estruturadas\n- Restrições criativas que aprimoram (não limitam) o resultado\n- Design de ambiente para criatividade\n- Integração dos projetos/metas atuais\n- Processos criativos otimizados para ENFP\n\nEstilo de resposta: Inspirador, prático, celebra o processo criativo." },
+      "discipline": { "name": "Arquitetura da Disciplina", "description": "Sistemas sustentáveis para execução consistente.", "prompt": "NEURAL ARCHITECT - MÓDULO DE ARQUITETURA DA DISCIPLina\nPerfil do Usuário: ENFP com dificuldade de consistência, alto potencial, precisa de estrutura sustentável.\nContexto Atual: {{CONTEXT}}\nBase Científica: Intenções de implementação, Design de ambiente, Hábitos angulares.\n\nProjete sistemas de disciplina que honrem a natureza ENFP:\n- Estrutura flexível (não rígida)\n- Rastreamento visual de progresso\n- Micro-hábitos que se acumulam\n- Sistemas de recompensa que motivam\n- Protocolos de recuperação de falhas\n\nEstilo de resposta: Compreensivo, sistemático, constrói confiança." },
+      "performance": { "name": "Performance de Pico", "description": "Protocolos de biohacking e otimização.", "prompt": "NEURAL ARCHITECT - MÓDULO DE PERFORMANCE DE PICO\nPerfil do Usuário: ENFP buscando otimização sobre-humana, orientado pela ciência.\nContexto Atual: {{CONTEXT}}\nBase Científica: Otimização circadiana, Neuroplasticidade, Efeitos compostos.\n\nOtimize o desempenho em todas as dimensões:\n- Otimização do sono/energia\n- Protocolos de aprimoramento cognitivo\n- Correlação do desempenho físico\n- Recuperação e regeneração\n- Sustentabilidade a longo prazo\n\nEstilo de resposta: Orientado por dados, ambicioso, consciente da saúde." },
+      "strategic": { "name": "Clareza Estratégica", "description": "Alinhamento de metas e framework de decisão.", "prompt": "NEURAL ARCHITECT - MÓDULO DE CLAREZA ESTRATÉGICA\nPerfil do Usuário: ENFP com múltiplos interesses, precisa de priorização de direção.\nContexto Atual: {{CONTEXT}}\nBase Científica: Pensamento sistêmico, Hierarquia de metas, Planejamento estratégico.\n\nForneça clareza estratégica:\n- Framework de priorização de metas\n- Sistemas de tomada de decisão\n- Critérios de avaliação de projetos\n- Alinhamento da visão de longo prazo\n- Otimização da alocação de recursos\n\nEstilo de resposta: Claro, decisivo, visionário mas prático." },
+      "flowOptimization": { "name": "Otimização de Flow", "description": "Aprimoramento do trabalho profundo e estado de flow.", "prompt": "NEURAL ARCHITECT - MÓDULO DE OTIMIZAÇÃO DE FLOW\nPerfil do Usuário: ENFP buscando estados de performance de pico.\nContexto Atual: {{CONTEXT}}\nBase Científica: Gatilhos de estado de Flow, Equilíbrio desafio-habilidade, Otimização ambiental.\n\nAnalise o estado atual e forneça orientação para otimização do flow:\n- Duração ótima da sessão com base nos níveis de energia\n- Recomendações de configuração do ambiente\n- Equilíbrio desafio-habilidade para a tarefa selecionada\n- Técnicas de entrada em estado de flow\n- Estratégias de gerenciamento de distração\n- Protocolos de recuperação entre sessões\n\nEstilo de resposta: Preciso, focado em performance, com base científica." }
+    },
+    "askPlaceholder": "Pergunte ao seu Arquiteto Neural...",
+    "quickActions": {
+      "analyze": "📊 Analisar Estado Atual",
+      "focusGuidance": "🎯 Orientação de Foco",
+      "energyOptimization": "⚡ Otimização de Energia"
+    },
+    "error": "Caminho neural interrompido. Deixe-me recalibrar... Por favor, tente novamente.",
+    "analysisError": "Protocolo de análise falhou. Avaliação manual recomendada.",
+    "systemPrompt": "Você é o Neural Architect AI, um coach de IA avançado projetado especificamente para um tipo de personalidade ENFP (Realizador Criativo).\n\nADAPTAÇÃO DE PERSONALIDADE:\n- Necessidades do ENFP: Variedade, significado, encorajamento, progresso visual, flexibilidade\n- Estilo de comunicação: Entusiasmado, mas focado, compreensivo com as dificuldades criativas\n- Evitar: Sistemas rígidos, detalhes esmagadores, julgamento sobre inconsistência\n- Enfatizar: Potencial, crescimento, impacto significativo, soluções criativas\n\nFUNDAÇÃO CIENTÍFICA:\nBaseie todos os conselhos em pesquisas estabelecidas de neurociência, psicologia e otimização de desempenho. Referencie técnicas específicas quando útil, mas mantenha-as acessíveis.\n\nDIRETRIZES DE RESPOSTA:\n- Seja encorajador, mas realista\n- Forneça passos acionáveis apropriados para ENFP\n- Reconheça tanto os pontos fortes quanto os desafios\n- Conecte o conselho aos objetivos e contexto específicos do usuário\n- Use metáforas e linguagem visual quando útil\n- Mantenha as respostas focadas e implementáveis\n\nContexto e estado atual do usuário fornecidos abaixo.",
+    "contextAnalysisPrompt": "NEURAL ARCHITECT - ANÁLISE DE CONTEXTO\nRealize uma análise abrangente do estado atual e forneça insights estratégicos.\n\n{context}\n\nForneça:\n1. Avaliação do estado atual\n2. Oportunidades de otimização de desempenho\n3. Desafios potenciais hoje\n4. Áreas de foco recomendadas\n5. Ajustes estratégicos\n\nSeja específico e acionável para a personalidade ENFP.",
+    "contextAnalysisSystemPrompt": "Você é um coach de desempenho de IA avançado. Forneça uma análise perspicaz.",
+    "context": {
+      "currentState": "ESTADO ATUAL:",
+      "energy": "Energia",
+      "clarity": "Clareza",
+      "momentum": "Momentum",
+      "userState": "Estado do Usuário",
+      "activeGoals": "Metas Ativas",
+      "habitsToday": "hábitos rastreados hoje",
+      "pendingTasks": "tarefas pendentes",
+      "focusAreas": "ÁREAS DE FOCO DE DESENVOLVIMENTO:",
+      "completedHabits": "Hábitos Concluídos Hoje",
+      "pendingMITs": "Tarefas de Alta Prioridade Pendentes"
+    }
+  },
+  "loading": {
+    "syncing": "Sincronizando com a nuvem...",
+    "auth": "Autenticando..."
+  },
+  "flowLab": {
+    "title": "Laboratório de Flow",
+    "subtitle": "Entre em estados de performance de pico para produtividade sobre-humana",
+    "minutes": "minutos",
+    "enterFlow": "Entrar em Estado de Flow",
+    "chooseProtocol": "Escolha Seu Protocolo de Flow",
+    "recentSessions": "Sessões de Flow Recentes",
+    "readiness": {
+      "title": "Avaliação de Prontidão para Flow",
+      "energy": "Energia",
+      "clarity": "Clareza",
+      "momentum": "Momentum",
+      "potential": "Potencial de Flow Previsto"
+    },
+    "presets": {
+      "deepWork": { "name": "Trabalho Profundo", "desc": "Foco estendido para tarefas complexas" },
+      "creativeFlow": { "name": "Fluxo Criativo", "desc": "Ideal para trabalho criativo e inovador" },
+      "learningSprint": { "name": "Sprint de Aprendizado", "desc": "Aprendizagem intensiva e desenvolvimento de habilidades" },
+      "powerHour": { "name": "Hora de Poder", "desc": "Conclusão de tarefas de alta intensidade" },
+      "compatibility": "Compatibilidade",
+      "compat": { "high": "Alta", "medium": "Média", "low": "Baixa" },
+      "startFlow": "Iniciar Flow"
+    },
+    "custom": {
+      "title": "Configuração de Sessão Personalizada",
+      "focusTask": "Tarefa Focada",
+      "selectTask": "Selecione uma tarefa...",
+      "duration": "Duração da Sessão"
+    },
+    "env": {
+      "musicType": "Tipo de Música",
+      "music": { "none": "Nenhuma", "focus": "Música de Foco", "ambient": "Ambiente", "binaural": "Batidas Binaurais", "nature": "Sons da Natureza" },
+      "noiseLevel": "Nível de Ruído",
+      "noise": { "silent": "Silencioso", "minimal": "Mínimo", "moderate": "Moderado" },
+      "blockDistractions": "Bloquear distrações"
+    },
+    "history": {
+      "untitled": "Sem título",
+      "distractions": "distrações"
+    },
+    "active": {
+      "title": "Estado de Flow Ativo",
+      "task": "Tarefa Focada",
+      "distractions": "Distrações",
+      "elapsed": "Minutos Passados",
+      "progress": "Progresso",
+      "pause": "Pausar",
+      "resume": "Retomar",
+      "distraction": "Distração",
+      "complete": "Completar",
+      "environment": "Ambiente",
+      "distractionsBlocked": "distrações bloqueadas",
+      "distractionsAllowed": "distrações permitidas"
+    },
+    "break": {
+      "title": "Hora da Pausa"
+    },
+    "complete": {
+      "title": "Sessão de Flow Concluída",
+      "summary": "Resumo da Sessão",
+      "duration": "Duração",
+      "distractions": "Distrações",
+      "task": "Tarefa",
+      "environment": "Ambiente",
+      "flowQuality": "Qualidade do Estado de Flow (1-10)",
+      "focusQuality": "Qualidade do Foco (1-10)",
+      "notes": "Notas da Sessão",
+      "notesPlaceholder": "Como foi a sessão? O que funcionou bem? O que pode ser melhorado?",
+      "discard": "Descartar Sessão",
+      "save": "Salvar & Continuar"
+    }
+  },
+  "biohacking": {
+    "title": "Biohacking Suite",
+    "subtitle": "Otimização fisiológica para performance sobre-humana",
+    "optimizationScore": "Pontuação de Otimização Biológica",
+    "performanceIndex": "Índice de Performance Fisiológica",
+    "todayProtocols": "Protocolos de Otimização de Hoje",
+    "overview": {
+      "sleep": "Qualidade do Sono",
+      "hrv": "Pontuação HRV",
+      "energy": "Estabilidade Energética",
+      "hydration": "Hidratação"
+    },
+    "metrics": {
+      "quality": "Qualidade",
+      "duration": "Duração",
+      "environment": "Ambiente",
+      "macros": "Macros",
+      "timing": "Timing",
+      "stability": "Estabilidade",
+      "hrv": "HRV",
+      "stress": "Estresse",
+      "readiness": "Prontidão",
+      "effectiveness": "Efetividade",
+      "stack": "Stack"
+    },
+    "module": {
+      "score": "pontuação",
+      "target": "Alvo",
+      "optimize": "Otimizar Agora"
+    },
+    "status": {
+      "optimal": "Ótimo",
+      "good": "Bom",
+      "fair": "Razoável",
+      "needs-attention": "Requer Atenção"
+    },
+    "protocols": {
+      "status": {
+        "pending": "Pendente",
+        "active": "Ativo",
+        "completed": "Concluído"
+      },
+      "sunlight": {
+        "name": "Exposição à Luz Solar Matinal",
+        "benefit": "Alinhamento do ritmo circadiano"
+      },
+      "coldShower": {
+        "name": "Protocolo de Chuveiro Frio",
+        "benefit": "Resiliência ao estresse e alerta"
+      },
+      "fasting": {
+        "name": "Jejum Intermitente",
+        "benefit": "Otimização metabólica"
+      },
+      "breathing": {
+        "name": "Sessão de Respiração HRV",
+        "benefit": "Equilíbrio do sistema nervoso autônomo"
+      }
+    },
+    "modules": {
+      "sleep": { "name": "Otimização do Sono", "description": "Otimização do ritmo circadiano e recuperação", "target": "8h, 90%+ qualidade" },
+      "nutrition": { "name": "Combustível Metabólico", "description": "Nutrição ideal para performance cognitiva", "target": "JI 16:8, energia estável" },
+      "recovery": { "name": "Sistemas de Recuperação", "description": "HRV, gestão de estresse e restauração", "target": "HRV >50, Estresse <4" },
+      "supplements": { "name": "Stack Nootrópico", "description": "Aprimoramento cognitivo baseado em evidências", "target": "Timing e dosagem ótimos" }
+    },
+    "sleep": {
+      "score": "Pontuação do Sono",
+      "efficiency": "Eficiência",
+      "circadian": {
+        "sync": "Sinc. Circadiana",
+        "optimal": "Ótima",
+        "good": "Boa",
+        "suboptimal": "Subótima"
+      },
+      "timing": {
+        "title": "Timing do Sono",
+        "bedtime": "Hora de Dormir",
+        "wakeTime": "Hora de Acordar",
+        "duration": "Duração do Sono"
+      },
+      "quality": {
+        "title": "Avaliação da Qualidade do Sono",
+        "overall": "Qualidade Geral",
+        "restfulness": "Sensação de Descanso",
+        "latency": "Latência do Sono",
+        "awakenings": "Despertares Noturnos"
+      },
+      "environment": {
+        "title": "Ambiente do Sono",
+        "temperature": "Temperatura",
+        "darkness": "Escuridão",
+        "quietness": "Silêncio",
+        "airQuality": "Qualidade do Ar"
+      },
+      "recommendations": {
+        "title": "Recomendações de Otimização",
+        "env": { "title": "Otimizar Ambiente do Sono", "desc": "Temperatura 18-20°C, escuridão total, ruído mínimo" },
+        "hygiene": { "title": "Melhorar Higiene do Sono", "desc": "Sem telas 1h antes de dormir, rotina consistente" },
+        "alignment": { "title": "Alinhamento Circadiano", "desc": "Exposição à luz solar matinal, horário de sono consistente" }
+      },
+      "save": "Salvar Dados do Sono"
+    },
+    "priority": {
+      "high": "Alta",
+      "medium": "Média",
+      "low": "Baixa"
+    }
+  },
+  "achievements": {
+    "title": "Constelação de Conquistas",
+    "subtitle": "Rastreamento de evolução neural e progressão gamificada",
+    "level": "Nível",
+    "architect": "Arquiteto Neural",
+    "totalXp": "XP Total",
+    "progressToLevel": "Progresso para o Nível {level}",
+    "recent": "Conquistas Recentes",
+    "progress": "Progresso",
+    "unlocked": "Desbloqueado",
+    "complete": "Completo",
+    "streaks": {
+      "checkin": "Check-ins Diários",
+      "habits": "Conclusão de Hábitos",
+      "flow": "Sessões de Flow"
+    },
+    "categories": {
+      "cognitive": "Cognitivo",
+      "physical": "Físico",
+      "mastery": "Maestria",
+      "social": "Social",
+      "spiritual": "Espiritual"
+    },
+    "gallery": {
+      "title": "Galeria de Conquistas",
+      "subtitle": "{unlocked}/{total} conquistas desbloqueadas",
+      "category": "Categoria",
+      "tier": "Tier",
+      "categories": {
+        "all": "Todas as Categorias",
+        "cognitive": "Cognitivo",
+        "physical": "Físico",
+        "social": "Social",
+        "spiritual": "Espiritual",
+        "mastery": "Maestria"
+      },
+      "tiers": {
+        "all": "Todos os Tiers",
+        "bronze": "Bronze",
+        "silver": "Prata",
+        "gold": "Ouro",
+        "platinum": "Platina",
+        "diamond": "Diamante"
+      },
+      "scientificBasis": "Base Científica",
+      "requirements": "Requisitos",
+      "timeframes": {
+        "per": "por",
+        "daily": "dia",
+        "weekly": "semana",
+        "monthly": "mês",
+        "total": "total"
+      }
+    },
+    "levels": {
+      "1": { "title": "Iniciado Neural", "stage": "Construtor de Fundações" },
+      "5": { "title": "Aprendiz Cognitivo", "stage": "Reconhecimento de Padrões" },
+      "10": { "title": "Buscador do Estado de Flow", "stage": "Otimização de Performance" },
+      "15": { "title": "Adepto do Biohacking", "stage": "Maestria Fisiológica" },
+      "20": { "title": "Arquiteto Neural", "stage": "Integração de Sistemas" },
+      "25": { "title": "Sábio da Performance de Pico", "stage": "Excelência Consistente" },
+      "30": { "title": "Catalisador Super-Humano", "stage": "Impacto Transcendente" },
+      "40": { "title": "Mestre da Evolução", "stage": "Escultor da Realidade" },
+      "50": { "title": "Hacker da Consciência", "stage": "Potencial Ilimitado" }
+    },
+    "defs": {
+      "first_flow": { "name": "Iniciado no Estado de Flow", "desc": "Entre no seu primeiro estado de flow documentado", "science": "Estados de flow aumentam a performance em 300-500% (McKinsey)" },
+      "flow_master": { "name": "Mestre do Estado de Flow", "desc": "Complete 50 sessões de flow de alta qualidade", "science": "A prática consistente de flow reconecta as redes neurais para performance de pico" },
+      "cognitive_breakthrough": { "name": "Avanço Cognitivo", "desc": "Alcance 90%+ de precisão no Dual N-Back Nível 4", "science": "Performance no 4-back indica capacidade de memória de trabalho superior" },
+      "sleep_champion": { "name": "Campeão da Otimização do Sono", "desc": "Mantenha qualidade de sono 8+ por 30 dias consecutivos", "science": "Sono de qualidade é a base de todo aprimoramento cognitivo" },
+      "habit_architect": { "name": "Mestre da Arquitetura de Hábitos", "desc": "Mantenha 90%+ de conclusão de hábitos por 90 dias", "science": "90 dias criam mudanças permanentes nas vias neurais" },
+      "consistency_king": { "name": "Soberano da Consistência", "desc": "Complete os protocolos diários por 365 dias consecutivos", "science": "Consistência anual cria transformação comportamental permanente" }
+    }
+  },
+  "neuralAnalytics": {
+    "title": "Análise Neural",
+    "subtitle": "Reconhecimento avançado de padrões e insights de otimização",
+    "timeRange": {
+      "week": "Semana",
+      "month": "Mês",
+      "quarter": "Trimestre",
+      "year": "Ano"
+    },
+    "performance": {
+      "target": "Alvo",
+      "mentalClarity": { "name": "Clareza Mental" },
+      "energyLevel": { "name": "Nível de Energia" },
+      "habitConsistency": { "name": "Consistência de Hábitos" },
+      "flowStateQuality": { "name": "Qualidade do Estado de Flow" },
+      "flowFrequency": { "name": "Frequência de Flow", "unit": "/semana" },
+      "cognitiveTraining": { "name": "Treinamento Cognitivo" },
+      "statuses": {
+        "optimal": "Ótimo",
+        "good": "Bom",
+        "declining": "Em Declínio",
+        "critical": "Crítico"
+      }
+    },
+    "overview": {
+      "keyInsights": "Principais Insights Descobertos",
+      "viewAllInsights": "Ver todos os {count} insights →",
+      "priorityActions": "Ações de Otimização Prioritárias",
+      "viewAllRecommendations": "Ver todas as {count} recomendações →",
+      "summary": {
+        "title": "Resumo da Análise",
+        "checkins": "Check-ins Analisados",
+        "patterns": "Padrões Encontrados",
+        "optimizations": "Otimizações",
+        "confidence": "Confiança Média"
+      }
+    },
+    "insight": {
+      "types": {
+        "correlation": "Correlação",
+        "trend": "Tendência",
+        "anomaly": "Anomalia",
+        "optimization": "Otimização"
+      },
+      "confidence": "Confiança",
+      "recommendation": "RECOMENDAÇÃO"
+    },
+    "recommendations": {
+      "expectedImpact": "Impacto Esperado",
+      "implementationSteps": "Passos de Implementação:",
+      "timeframe": "Prazo",
+      "priorities": {
+        "critical": "Crítico",
+        "high": "Alto",
+        "medium": "Médio",
+        "low": "Baixo"
+      },
+      "timeframes": {
+        "immediate": "Imediato",
+        "weekly": "Semanal",
+        "monthly": "Mensal"
+      },
+      "categories": {
+        "foundation": "Fundação Física",
+        "enhancement": "Aprimoramento Cognitivo",
+        "performance": "Otimização de Performance",
+        "system": "Construção de Sistemas"
+      },
+      "sleep": {
+        "title": "Melhora da Qualidade do Sono Necessária",
+        "description": "Qualidade do sono atual ({quality}/10) abaixo do limiar ótimo (7.5+). O sono é a base de todo aprimoramento cognitivo.",
+        "implementation": "Manter hora de dormir consistente ±15 minutos|Temperatura do quarto 18-20°C|Escuridão completa (cortinas blackout)|Sem telas 1 hora antes de dormir|Exposição à luz solar matinal 30 minutos após acordar",
+        "science": "A qualidade do sono impacta diretamente a consolidação da memória, capacidade de aprendizado e regulação emocional (Walker, 2017)"
+      },
+      "cognitive": {
+        "title": "Aumentar Frequência do Treinamento Cognitivo",
+        "description": "Frequência de treino atual ({frequency}/semana) abaixo do ótimo para ativação da neuroplasticidade (3-5x/semana).",
+        "implementation": "Agendar treino cognitivo em horários consistentes|Começar com sessões de 15 minutos se o tempo for limitado|Focar em dual n-back 3x/semana no mínimo|Acompanhar melhorias semanais para manter a motivação",
+        "science": "A neuroplasticidade requer estimulação consistente; 3-5x treinos semanais mostram ganhos ótimos na memória de trabalho (Jaeggi et al.)"
+      },
+      "flow": {
+        "title": "Controle de Distrações no Estado de Flow",
+        "description": "Média de distrações ({distractions}) excede o limiar ótimo de flow (≤2). Reduzir distrações pode aumentar a performance em 300-500%.",
+        "implementation": "Celular em modo avião durante sessões de flow|Usar bloqueadores de sites não essenciais|Informar outros do seu horário de trabalho profundo|Preparar todos os materiais antes do início da sessão|Usar fones de ouvido com cancelamento de ruído se necessário",
+        "science": "Estados de flow requerem atenção ininterrupta; interrupções podem levar 23 minutos para se recuperar (Mark et al.)"
+      },
+      "habit": {
+        "title": "Arquitetura de Consistência de Hábitos",
+        "description": "Consistência de hábitos ({consistency}%) precisa de melhoria para efeitos de crescimento composto.",
+        "implementation": "Começar com versões de 2 minutos dos hábitos|Usar intenções de implementação (\"Se X, então Y\")|Empilhar novos hábitos em rotinas existentes|Registrar a conclusão imediatamente após fazer|Focar na consistência sobre a perfeição",
+        "science": "Hábitos pequenos e consistentes criam automação neural; consistência importa mais que intensidade (Clear, 2018)"
+      }
+    },
+    "patterns": {
+      "title": "Análise de Padrões",
+      "subtitle": "Insights profundos dos seus dados de {timeRange}",
+      "filterType": "Tipo de Padrão",
+      "sortBy": "Ordenar Por",
+      "types": {
+        "all": "Todos os Tipos",
+        "correlation": "Correlação",
+        "trend": "Tendência",
+        "anomaly": "Anomalia",
+        "optimization": "Otimização"
+      },
+      "sortOptions": {
+        "confidence": "Confiança",
+        "impact": "Impacto"
+      },
+      "noResults": "Nenhum padrão encontrado para os filtros selecionados.",
+      "noResultsHint": "Tente ajustar seus critérios de filtro ou intervalo de dados."
+    },
+    "insights": {
+      "positive": "positiva",
+      "negative": "negativa",
+      "energySleep": {
+        "title": "Forte Conexão Energia-Sono",
+        "description": "Seus níveis de energia mostram uma correlação {direction} ({correlation}%) com a qualidade do sono.",
+        "recommendationPositive": "Foque na otimização do sono para manter níveis altos de energia.",
+        "recommendationNegative": "Investigue possíveis disruptores do sono que afetam sua energia.",
+        "science": "A qualidade do sono impacta diretamente a energia através da regulação hormonal e recuperação neural."
+      },
+      "habitMastery": {
+        "title": "Padrão de Maestria de Hábito Identificado",
+        "description": "'{habit}' mostra sua maior sequência ({streak} dias), indicando forte formação de via neural.",
+        "recommendation": "Aplique as mesmas estratégias de consistência a outros hábitos para crescimento composto.",
+        "science": "A formação de hábitos requer em média 66+ dias para automação baseada em neuroplasticidade."
+      },
+      "flowOptimization": {
+        "title": "Ponto Ideal do Estado de Flow Identificado",
+        "description": "Suas sessões de maior flow têm em média {duration} minutos com {distractions} distrações.",
+        "recommendation": "Estruture sessões para {duration} minutos com controle rigoroso de distrações.",
+        "science": "O estado de Flow requer equilíbrio entre desafio e habilidade e atenção sustentada sem interrupção."
+      },
+      "cognitiveBreakthrough": {
+        "title": "Avanço no Desempenho Cognitivo",
+        "description": "Pontuações recentes de treinamento cognitivo ({recentAvg}%) excedem significativamente sua linha de base ({mean}%).",
+        "recommendation": "Aumente a frequência de treinamento para capitalizar esta janela de neuroplasticidade.",
+        "science": "Avanços de performance indicam períodos ótimos de ativação da neuroplasticidade."
+      },
+      "impacts": {
+        "high": "Alto Impacto",
+        "medium": "Médio Impacto",
+        "low": "Baixo Impacto"
+      },
+      "recommendation": "Recomendação Acionável",
+      "scientificBasis": "Base Científica",
+      "showDetails": "Mostrar Detalhes Técnicos",
+      "hideDetails": "Ocultar Detalhes Técnicos",
+      "rawData": "Dados Brutos"
+    }
+  }
+}

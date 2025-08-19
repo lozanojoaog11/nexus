@@ -1,7 +1,9 @@
 
+
 import React, { useMemo } from 'react';
 import { Habit } from '../types';
 import { PlusIcon, ACCENT_COLOR } from '../constants';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface HabitsProps {
   habits: Habit[];
@@ -27,6 +29,7 @@ const HabitRow: React.FC<{
     onToggle: (habitId: string, date: string, isCompleted: boolean) => void;
     onDelete: (habitId: string) => void;
 }> = ({ habit, onToggle, onDelete }) => {
+    const { t } = useTranslation();
     
     const completionRate = useMemo(() => {
         const thirtyDaysAgo = new Date();
@@ -40,23 +43,29 @@ const HabitRow: React.FC<{
     const todayStr = new Date().toISOString().split('T')[0];
     const isCompletedToday = (habit.history || []).some(h => h.date === todayStr && h.completed);
 
+    const translatedCategory = {
+        'Mente': t('addHabitModal.mind'),
+        'Corpo': t('addHabitModal.body'),
+        'Execução': t('addHabitModal.execution'),
+    }[habit.category] || habit.category;
+
     return (
         <div className="grid grid-cols-12 items-center gap-4 p-4 bg-[#1C1C1C] rounded-lg border border-white/10 group">
             <div className="col-span-5">
                 <p className="font-semibold text-white">{habit.name}</p>
-                <p className="text-xs text-gray-400">{habit.category}</p>
+                <p className="text-xs text-gray-400">{translatedCategory}</p>
             </div>
             <div className="col-span-2 text-center">
                 <p className="font-bold text-lg text-white">{completionRate}%</p>
-                <p className="text-xs text-gray-500">Conclusão (30d)</p>
+                <p className="text-xs text-gray-500">{t('habits.completion')}</p>
             </div>
             <div className="col-span-2 text-center">
                 <p className="font-bold text-lg" style={{color: ACCENT_COLOR}}>{(habit as any).currentStreak || 0}</p>
-                <p className="text-xs text-gray-500">Sequência Atual</p>
+                <p className="text-xs text-gray-500">{t('habits.currentStreak')}</p>
             </div>
             <div className="col-span-2 text-center">
                 <p className="font-bold text-lg text-white">{habit.bestStreak || 0}</p>
-                <p className="text-xs text-gray-500">Melhor Sequência</p>
+                <p className="text-xs text-gray-500">{t('habits.bestStreak')}</p>
             </div>
             <div className="col-span-1 flex justify-end items-center">
                 <button
@@ -78,19 +87,20 @@ const HabitRow: React.FC<{
 }
 
 const Habits: React.FC<HabitsProps> = ({ habits, toggleHabitCompletion, onAddHabit, onDeleteHabit }) => {
+  const { t } = useTranslation();
   return (
     <div className="p-8 text-white w-full h-full flex flex-col animate-fade-in-up">
       <header className="mb-8 flex-shrink-0 flex justify-between items-center">
         <div>
-            <h1 className="text-3xl font-bold">Rastreamento de Hábitos</h1>
-            <p className="text-gray-400 mt-1">Consistência é a alavanca primária.</p>
+            <h1 className="text-3xl font-bold">{t('habits.title')}</h1>
+            <p className="text-gray-400 mt-1">{t('habits.subtitle')}</p>
         </div>
         <button
             onClick={onAddHabit}
             className="bg-[#00A9FF] text-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 flex items-center space-x-2"
         >
           <PlusIcon className="h-5 w-5" />
-          <span>Novo Hábito</span>
+          <span>{t('habits.newHabit')}</span>
         </button>
       </header>
 
@@ -105,8 +115,8 @@ const Habits: React.FC<HabitsProps> = ({ habits, toggleHabitCompletion, onAddHab
         ))}
         {habits.length === 0 && (
             <div className="text-center text-gray-500 pt-16">
-                <p>Nenhum hábito rastreado.</p>
-                <p className="mt-2">Clique em "Novo Hábito" para começar.</p>
+                <p>{t('habits.noHabits')}</p>
+                <p className="mt-2">{t('habits.noHabitsCta')}</p>
             </div>
         )}
       </div>

@@ -1,0 +1,752 @@
+
+{
+  "userManifesto": "[OPERATOR IDENTIFICATION]\nName/Code: João Gabriel Lozano, \"The Cognitive Architect\"\nPrime Objective: To become a positive outlier in all relevant human development metrics, culminating in the materialization of the \"Vanishing Point\": R$1M with d.IA.logo as proof of \"realized potential\".\n\n[COGNITIVE ARCHITECTURE X-RAY]\nThe Core (Who You Are): Digital Alchemist and Cognitive Architect. Operates at the intersection of chaotic creativity and the search for structure. Adaptive Creative Achiever with the capacity for \"Creative Transmutational Synthesis\". Non-linear brain, connecting distinct domains.\nThe Central Conflict (Your Main Battle): Dissonance between immense creative potential and difficulty in sustaining executive discipline and completing cycles. The cycle of \"creative explosion followed by dispersion\".\nThe Vanishing Point (Where You Want to Go): To transmute d.IA.logo into a high-impact educational ecosystem, billing R$1M in 18-24 months.\n\n[DEEP PSYCHOMETRIC SCAN]\nNEUROTYPE: Evening chronotype, Kinesthetic-Visual cognitive style. Strength in Cognitive Flexibility, weakness in Inhibitory Control and Sustained Focus.\nBIG FIVE: Openness (95), Conscientiousness (40), Extraversion (80), Agreeableness (65), Neuroticism (60).\nDEEP DRIVERS: Pains (Confrontation with Death, Chronic Instability, Financial Loss), Ecstasies (Immersion in AI, Freestyle, Workshop Leadership).\nEDGE: Advantage (Connective Thinking, Multidimensional Communication), Superpower (Regenerative Resilience), Obsession (Cognitive Architecture of LLMs), Natural Ability (\"Translating complexity\").\n\n[PHYSICS OF DEVELOPMENT]\nPrinciple #1: Energy Optimization.\nPrinciple #2: Action generates inspiration.\nPrinciple #3: Consistency in the execution of the morning Deep Work block is the primary lever.\nPrinciple #4: The keystone habit is the nightly \"wind down protocol\".",
+  "lang": {
+    "pt-BR": "Portuguese",
+    "en-US": "English",
+    "es-ES": "Spanish"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "habits": "Habits",
+    "projects": "Projects",
+    "goals": "Goals",
+    "agenda": "Agenda",
+    "development": "Development",
+    "cognitive": "Cognitive Training",
+    "guardian": "Architect AI",
+    "library": "Library",
+    "flowLab": "Flow Lab",
+    "biohacking": "Biohacking",
+    "achievements": "Achievements",
+    "analytics": "Neural Analytics",
+    "signOut": "Sign Out",
+    "stableAxis": "The axis remains stable."
+  },
+  "login": {
+    "accessSystem": "Access your system",
+    "createAccount": "Create your account",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "processing": "Processing...",
+    "noAccount": "Don't have an account?",
+    "createNow": "Create one now",
+    "hasAccount": "Already have an account?",
+    "signInNow": "Sign in",
+    "devMode": "DEV MODE",
+    "devSignIn": "Sign In as Developer",
+    "error": {
+      "invalid": "Invalid email or password.",
+      "inUse": "This email is already in use.",
+      "weakPassword": "Password should be at least 6 characters.",
+      "generic": "An error occurred. Please try again.",
+      "anonymousFail": "Developer anonymous sign-in failed."
+    }
+  },
+  "dashboard": {
+    "title": "Neural Command Center",
+    "subtitle": "Monitoring super-human development protocols",
+    "checkinPromptTitle": "Ready to align your day?",
+    "checkinPromptSubtitle": "The daily check-in is the first step towards a high-performance day.",
+    "startCheckin": "Start Daily Check-in",
+    "neuralEfficiency": "Neural Efficiency Score",
+    "progressProtocol": "Super-Human Progress Protocol",
+    "neuralActivity": "Today's Neural Activity",
+    "protocolsActive": "Protocols Active",
+    "deepWorkMin": "Deep Work Min",
+    "learningXP": "Learning XP",
+    "nextMilestone": "Next:",
+    "weeklyTrend": "this week",
+    "streakDays": "days",
+    "cognitive": "Cognitive",
+    "physical": "Physical",
+    "emotional": "Emotional",
+    "social": "Social",
+    "milestone": {
+      "cognitive": "Launch Mini-Course",
+      "physical": "Maintain workout routine",
+      "emotional": "Practice daily mindfulness",
+      "social": "Alignment meeting"
+    }
+  },
+  "neuralAlignment": {
+    "title": "Neural Alignment",
+    "biometricTitle": "Biometric Assessment",
+    "biometricSubtitle": "Neural substrate evaluation",
+    "sleepQuality": "Sleep Quality",
+    "sleepHours": "Sleep Hours",
+    "wakeTime": "Wake-up Time",
+    "physicalEnergy": "Physical Energy",
+    "hydrationLevel": "Hydration Level",
+    "stressLevel": "Stress Level",
+    "cognitiveTitle": "Cognitive Assessment",
+    "cognitiveSubtitle": "Neural processing evaluation",
+    "reactionTest": "Reaction Time Test",
+    "startTest": "Click to Start Test",
+    "wait": "Wait for GREEN...",
+    "clickNow": "CLICK NOW!",
+    "excellent": "Excellent!",
+    "veryGood": "Very Good!",
+    "good": "Good",
+    "canImprove": "Can Improve",
+    "testAgain": "Test Again",
+    "mentalClarity": "Mental Clarity",
+    "focusCapacity": "Focus Capacity",
+    "creativeState": "Creative State",
+    "intentionTitle": "Intention Setting",
+    "intentionSubtitle": "Strategic neural alignment",
+    "primaryFocus": "Today's Primary Focus",
+    "primaryFocusPlaceholder": "What is your #1 goal for today?",
+    "biggestChallenge": "Today's Biggest Challenge",
+    "biggestChallengePlaceholder": "What might make your day difficult?",
+    "successMetric": "Success Metric",
+    "successMetricPlaceholder": "How will you know today was a success?",
+    "energyAllocation": "Energy Allocation",
+    "work": "Work",
+    "learning": "Learning",
+    "recovery": "Recovery",
+    "total": "Total",
+    "summaryTitle": "Neural Profile Summary",
+    "summarySubtitle": "Your optimized daily protocol",
+    "intentionToday": "Today's Intention",
+    "notDefined": "Not set",
+    "generatingDirective": "Generating your neural directive...",
+    "previous": "Previous",
+    "next": "Next Protocol",
+    "complete": "Complete Neural Alignment"
+  },
+  "kanban": {
+    "noProjects": "No projects found. Create one to get started.",
+    "newProject": "New Project",
+    "progress": "% complete",
+    "deleteProject": "Delete Project",
+    "addTaskPlaceholder": "Add a new task...",
+    "add": "Add",
+    "linked": "Linked",
+    "todo": "To Do",
+    "inProgress": "In Progress",
+    "done": "Done"
+  },
+  "taskModal": {
+    "status": "Status",
+    "deadline": "Deadline",
+    "linkToDev": "Link to Development",
+    "noLink": "No Link",
+    "notes": "Notes",
+    "notesPlaceholder": "Add more details or context here...",
+    "cancel": "Cancel",
+    "save": "Save Changes"
+  },
+  "addProjectModal": {
+    "title": "Add New Project",
+    "subtitle": "Define a new workflow.",
+    "name": "Project Name",
+    "namePlaceholder": "Ex: d.IA.logo",
+    "cancel": "Cancel",
+    "create": "Create Project"
+  },
+  "library": {
+    "title": "Library",
+    "subtitle": "Your knowledge arsenal.",
+    "status": {
+      "reading": "Reading",
+      "read": "Read",
+      "toRead": "To Read"
+    },
+    "notes": "Notes",
+    "noNotes": "No notes for this book.",
+    "addNotePlaceholder": "Add a quick note...",
+    "save": "Save",
+    "noBookSelected": "Select a book to see details and notes."
+  },
+  "bookModal": {
+    "editTitle": "Edit Book",
+    "addTitle": "Add Book",
+    "title": "Title*",
+    "author": "Author*",
+    "status": "Status",
+    "linkToResource": "Link to Resource",
+    "none": "None",
+    "cancel": "Cancel",
+    "save": "Save Book"
+  },
+  "habits": {
+    "title": "Habit Tracking",
+    "subtitle": "Consistency is the primary lever.",
+    "newHabit": "New Habit",
+    "completion": "Completion (30d)",
+    "currentStreak": "Current Streak",
+    "bestStreak": "Best Streak",
+    "noHabits": "No habits tracked.",
+    "noHabitsCta": "Click \"New Habit\" to begin."
+  },
+  "addHabitModal": {
+    "title": "Add New Habit",
+    "subtitle": "Define a new ritual for your system.",
+    "name": "Name",
+    "namePlaceholder": "Ex: Focused Reading",
+    "category": "Category",
+    "mind": "Mind",
+    "body": "Body",
+    "execution": "Execution",
+    "frequency": "Weekly Frequency (1-7)",
+    "cancel": "Cancel",
+    "add": "Add Habit"
+  },
+  "goals": {
+    "title": "Strategic Goals",
+    "subtitle": "Your long-term objectives and progress milestones.",
+    "newGoal": "New Goal",
+    "progress": "Progress",
+    "deadline": "Deadline",
+    "noGoals": "No strategic goals defined.",
+    "noGoalsCta": "Click \"New Goal\" to start planning your future."
+  },
+  "goalModal": {
+    "editTitle": "Edit Goal",
+    "addTitle": "New Goal",
+    "name": "Name*",
+    "devArea": "Development Area*",
+    "selectArea": "Select an area",
+    "horizon": "Horizon*",
+    "horizons": {
+      "short": "Short-Term (up to 3 months)",
+      "medium": "Mid-Term (3-12 months)",
+      "long": "Long-Term (>1 year)"
+    },
+    "deadline": "Deadline*",
+    "description": "Description",
+    "expectedResults": "Expected Results",
+    "successMetrics": "Success Metrics",
+    "tags": "Tags (comma-separated)",
+    "milestones": "Milestones",
+    "milestoneNamePlaceholder": "Milestone name",
+    "addMilestone": "+",
+    "cancel": "Cancel",
+    "save": "Save Goal"
+  },
+  "development": {
+    "title": "Development",
+    "subtitle": "Your strategic expansion map.",
+    "linkedGoals": "Linked Goals",
+    "linkedTasks": "Linked Tasks",
+    "linkedBooks": "Linked Books",
+    "noNodes": "No development areas defined.",
+    "selectNode": "Select an area to see details."
+  },
+  "devAreaModal": {
+    "editTitle": "Edit Area",
+    "addTitle": "New Development Area",
+    "name": "Area Name*",
+    "type": "Area Type",
+    "description": "Description",
+    "icon": "Icon",
+    "successMetrics": "Success Metrics",
+    "successMetricsPlaceholder": "How will you measure progress in this area?",
+    "targetDate": "Target Date",
+    "cancel": "Cancel",
+    "save": "Save Area",
+    "types": {
+      "Skill": "Skill",
+      "Objetivo": "Objective",
+      "Recurso": "Resource",
+      "Mentor": "Mentor",
+      "Hábito": "Habit",
+      "Ponto de Fuga": "Vanishing Point"
+    }
+  },
+  "agenda": {
+    "title": "Agenda",
+    "subtitle": "Your unified view of time.",
+    "today": "(Today)",
+    "deadline": "Deadline",
+    "task": "Task Deadline",
+    "event": "Event",
+    "empty": "Your agenda is empty.",
+    "emptyCta": "Add events or deadlines to your tasks to see them here."
+  },
+  "cognitive": {
+    "title": "Cognitive Training Center",
+    "subtitle": "Neural enhancement protocols for superhuman cognition.",
+    "progress": {
+      "workingMemory": "Working Memory",
+      "processingSpeed": "Processing Speed",
+      "memoryCapacity": "Memory Capacity",
+      "readingSpeed": "Reading Speed",
+      "levelSuffix": " level",
+      "msSuffix": "ms avg",
+      "itemsSuffix": " items",
+      "wpmSuffix": " WPM"
+    },
+    "recentSessions": "Recent Training Sessions",
+    "noSessions": "No training sessions yet. Select a module to begin cognitive enhancement.",
+    "back": "Back",
+    "startTraining": "Start Training",
+    "moduleCard": {
+      "bestScore": "Best Score",
+      "lastChange": "Last Change",
+      "sessions": "Sessions",
+      "scientificBasis": "Scientific Basis"
+    },
+    "sessionHistory": {
+      "durationSuffix": "min"
+    },
+    "modules": {
+      "dual-n-back": {
+        "name": "Dual N-Back",
+        "description": "Working memory enhancement through dual-task training.",
+        "metric": "N-Level achieved"
+      },
+      "speed-reading": {
+        "name": "Speed Reading",
+        "description": "Accelerated reading with comprehension maintenance.",
+        "metric": "Words per minute"
+      },
+      "memory-palace": {
+        "name": "Memory Palace",
+        "description": "Spatial memory techniques for information retention.",
+        "metric": "Items memorized"
+      },
+      "reaction-time": {
+        "name": "Reaction Training",
+        "description": "Processing speed and neural response optimization.",
+        "metric": "Reaction time (ms)"
+      }
+    }
+  },
+  "dualNBack": {
+    "title": "Dual N-Back Training",
+    "description": "Match both position and audio stimuli from {level} steps back",
+    "instructionsTitle": "Instructions:",
+    "instruction1": "• Watch the blue square and listen to the audio tones",
+    "instruction2": "• Press SPACE when the position matches {level} steps back",
+    "instruction3": "• Press ENTER when the audio matches {level} steps back",
+    "instruction4": "• You can match both, one, or neither on each trial",
+    "instruction5": "• Aim for 80%+ accuracy to advance to the next level",
+    "level": "N-Level:",
+    "start": "Start Training",
+    "trial": "Trial",
+    "levelLabel": "Level",
+    "posMatch": "Position Match (SPACE)",
+    "audioMatch": "Audio Match (ENTER)",
+    "resultsTitle": "Training Complete!",
+    "accuracy": "Accuracy Score",
+    "duration": "Duration",
+    "levelMastered": "Level Mastered!",
+    "readyForNext": "Ready for {level}-Back",
+    "trainAgain": "Train Again",
+    "completeSession": "Complete Session"
+  },
+  "neuralArchitect": {
+    "title": "Neural Architect AI",
+    "subtitle": "Advanced performance optimization counsel",
+    "initialMessage": "Neural Architect online. Analyzing your current state and objectives... How can I optimize your performance today?",
+    "userQueryLabel": "User Question",
+    "modules": {
+      "focus": { "name": "Focus Enhancement", "description": "Cognitive load optimization & attention training.", "prompt": "NEURAL ARCHITECT - FOCUS ENHANCEMENT MODULE\nUser Profile: ENFP Creative Achiever, struggles with sustained attention, high creativity.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Dual N-Back training, Flow state triggers, Implementation intentions.\n\nProvide specific, actionable focus enhancement strategies considering:\n- ENFP need for variety and meaning\n- Current energy/clarity levels from check-in\n- Environmental optimization\n- Cognitive load management\n- Deep work session design\n\nResponse style: Direct, encouraging, scientific but accessible." },
+      "creativity": { "name": "Creative Flow", "description": "Innovation catalyst & creative block resolution.", "prompt": "NEURAL ARCHITECT - CREATIVE FLOW MODULE\nUser Profile: ENFP with exceptional creative abilities, needs structured creativity.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Divergent thinking, Constraint-based creativity, Flow state optimization.\n\nGenerate creative enhancement strategies:\n- Structured brainstorming techniques\n- Creative constraints that enhance (not limit) output\n- Environment design for creativity\n- Integration of current projects/goals\n- ENFP-optimized creative processes\n\nResponse style: Inspiring, practical, celebrates creative process." },
+      "discipline": { "name": "Discipline Architecture", "description": "Sustainable systems for consistent execution.", "prompt": "NEURAL ARCHITECT - DISCIPLINE ARCHITECTURE MODULE\nUser Profile: ENFP struggling with consistency, high potential, needs sustainable structure.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Implementation intentions, Environment design, Keystone habits.\n\nDesign discipline systems that honor ENFP nature:\n- Flexible structure (not rigid)\n- Visual progress tracking\n- Micro-habits that stack\n- Reward systems that motivate\n- Failure recovery protocols\n\nResponse style: Understanding, systematic, builds confidence." },
+      "performance": { "name": "Peak Performance", "description": "Biohacking & optimization protocols.", "prompt": "NEURAL ARCHITECT - PEAK PERFORMANCE MODULE\nUser Profile: ENFP seeking superhuman optimization, science-driven.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Circadian optimization, Neuroplasticity, Compound effects.\n\nOptimize performance across dimensions:\n- Sleep/energy optimization\n- Cognitive enhancement protocols\n- Physical performance correlation\n- Recovery and regeneration\n- Long-term sustainability\n\nResponse style: Data-driven, ambitious, health-conscious." },
+      "strategic": { "name": "Strategic Clarity", "description": "Goal alignment & decision framework.", "prompt": "NEURAL ARCHITECT - STRATEGIC CLARITY MODULE\nUser Profile: ENFP with multiple interests, needs direction prioritization.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Systems thinking, Goal hierarchy, Strategic planning.\n\nProvide strategic clarity:\n- Goal prioritization framework\n- Decision-making systems\n- Project evaluation criteria\n- Long-term vision alignment\n- Resource allocation optimization\n\nResponse style: Clear, decisive, visionary yet practical." },
+      "flowOptimization": { "name": "Flow Optimization", "description": "Deep work and flow state enhancement.", "prompt": "NEURAL ARCHITECT - FLOW OPTIMIZATION MODULE\nUser Profile: ENFP seeking peak performance states.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Flow state triggers, Challenge-skill balance, Environmental optimization.\n\nAnalyze current state and provide flow optimization guidance:\n- Optimal session duration based on energy levels\n- Environment setup recommendations\n- Challenge-skill balance for selected task\n- Flow state entry techniques\n- Distraction management strategies\n- Recovery protocols between sessions\n\nResponse style: Precise, performance-focused, scientifically grounded." }
+    },
+    "askPlaceholder": "Ask your Neural Architect...",
+    "quickActions": {
+      "analyze": "📊 Analyze Current State",
+      "focusGuidance": "🎯 Focus Guidance",
+      "energyOptimization": "⚡ Energy Optimization"
+    },
+    "error": "Neural pathway disrupted. Let me recalibrate... Please try again.",
+    "analysisError": "Analysis protocol failed. Manual assessment recommended.",
+    "systemPrompt": "You are the Neural Architect AI, an advanced AI coach specifically designed for an ENFP personality type (Creative Achiever).\n\nPERSONALITY ADAPTATION:\n- ENFP needs: Variety, meaning, encouragement, visual progress, flexibility\n- Communication style: Enthusiastic but focused, understanding of creative struggles\n- Avoid: Rigid systems, overwhelming detail, judgment about inconsistency\n- Emphasize: Potential, growth, meaningful impact, creative solutions\n\nSCIENTIFIC FOUNDATION:\nBase all advice on established neuroscience, psychology, and performance optimization research. Reference specific techniques when helpful but keep it accessible.\n\nRESPONSE GUIDELINES:\n- Be encouraging but realistic\n- Provide actionable steps appropriate for ENFP\n- Acknowledge both strengths and challenges\n- Connect advice to the user's specific goals and context\n- Use metaphors and visual language when helpful\n- Keep responses focused and implementable\n\nCurrent user context and state provided below.",
+    "contextAnalysisPrompt": "NEURAL ARCHITECT - CONTEXT ANALYSIS\nPerform a comprehensive analysis of the current state and provide strategic insights.\n\n{context}\n\nProvide:\n1. Current state assessment\n2. Performance optimization opportunities\n3. Potential challenges today\n4. Recommended focus areas\n5. Strategic adjustments\n\nBe specific and actionable for the ENFP personality.",
+    "contextAnalysisSystemPrompt": "You are an advanced AI performance coach. Provide insightful analysis.",
+    "context": {
+      "currentState": "CURRENT STATE:",
+      "energy": "Energy",
+      "clarity": "Clarity",
+      "momentum": "Momentum",
+      "userState": "User State",
+      "activeGoals": "Active Goals",
+      "habitsToday": "habits tracked today",
+      "pendingTasks": "pending tasks",
+      "focusAreas": "DEVELOPMENT FOCUS AREAS:",
+      "completedHabits": "Habits Completed Today",
+      "pendingMITs": "Pending High-Priority Tasks"
+    }
+  },
+  "loading": {
+    "syncing": "Syncing with cloud...",
+    "auth": "Authenticating..."
+  },
+  "flowLab": {
+    "title": "Flow State Laboratory",
+    "subtitle": "Enter peak performance states for superhuman productivity",
+    "minutes": "minutes",
+    "enterFlow": "Enter Flow State",
+    "chooseProtocol": "Choose Your Flow Protocol",
+    "recentSessions": "Recent Flow Sessions",
+    "readiness": {
+      "title": "Flow Readiness Assessment",
+      "energy": "Energy",
+      "clarity": "Clarity",
+      "momentum": "Momentum",
+      "potential": "Predicted Flow Potential"
+    },
+    "presets": {
+      "deepWork": { "name": "Deep Work", "desc": "Extended focus for complex tasks" },
+      "creativeFlow": { "name": "Creative Flow", "desc": "Optimal for creative and innovative work" },
+      "learningSprint": { "name": "Learning Sprint", "desc": "Intensive learning and skill development" },
+      "powerHour": { "name": "Power Hour", "desc": "High-intensity task completion" },
+      "compatibility": "Compatibility",
+      "compat": { "high": "High", "medium": "Medium", "low": "Low" },
+      "startFlow": "Start Flow"
+    },
+    "custom": {
+      "title": "Custom Session Setup",
+      "focusTask": "Focus Task",
+      "selectTask": "Select a task...",
+      "duration": "Session Duration"
+    },
+    "env": {
+      "musicType": "Music Type",
+      "music": { "none": "None", "focus": "Focus Music", "ambient": "Ambient", "binaural": "Binaural Beats", "nature": "Nature Sounds" },
+      "noiseLevel": "Noise Level",
+      "noise": { "silent": "Silent", "minimal": "Minimal", "moderate": "Moderate" },
+      "blockDistractions": "Block distractions"
+    },
+    "history": {
+      "untitled": "Untitled",
+      "distractions": "distractions"
+    },
+    "active": {
+      "title": "Flow State Active",
+      "task": "Focus Task",
+      "distractions": "Distractions",
+      "elapsed": "Minutes Elapsed",
+      "progress": "Progress",
+      "pause": "Pause",
+      "resume": "Resume",
+      "distraction": "Distraction",
+      "complete": "Complete",
+      "environment": "Environment",
+      "distractionsBlocked": "distractions blocked",
+      "distractionsAllowed": "distractions allowed"
+    },
+    "break": {
+      "title": "Break Time"
+    },
+    "complete": {
+      "title": "Flow Session Complete",
+      "summary": "Session Summary",
+      "duration": "Duration",
+      "distractions": "Distractions",
+      "task": "Task",
+      "environment": "Environment",
+      "flowQuality": "Flow State Quality (1-10)",
+      "focusQuality": "Focus Quality (1-10)",
+      "notes": "Session Notes",
+      "notesPlaceholder": "How did the session feel? What worked well? What could be improved?",
+      "discard": "Discard Session",
+      "save": "Save & Continue"
+    }
+  },
+   "biohacking": {
+    "title": "Biohacking Suite",
+    "subtitle": "Physiological optimization for superhuman performance",
+    "optimizationScore": "Biohacking Optimization Score",
+    "performanceIndex": "Physiological Performance Index",
+    "todayProtocols": "Today's Optimization Protocols",
+    "overview": {
+      "sleep": "Sleep Quality",
+      "hrv": "HRV Score",
+      "energy": "Energy Stability",
+      "hydration": "Hydration"
+    },
+    "metrics": {
+      "quality": "Quality",
+      "duration": "Duration",
+      "environment": "Environment",
+      "macros": "Macros",
+      "timing": "Timing",
+      "stability": "Stability",
+      "hrv": "HRV",
+      "stress": "Stress",
+      "readiness": "Readiness",
+      "effectiveness": "Effectiveness",
+      "stack": "Stack"
+    },
+    "module": {
+      "score": "score",
+      "target": "Target",
+      "optimize": "Optimize Now"
+    },
+    "status": {
+      "optimal": "Optimal",
+      "good": "Good",
+      "fair": "Fair",
+      "needs-attention": "Needs Attention"
+    },
+    "protocols": {
+      "status": {
+        "pending": "Pending",
+        "active": "Active",
+        "completed": "Completed"
+      },
+      "sunlight": { "name": "Morning Sunlight Exposure", "benefit": "Circadian rhythm alignment" },
+      "coldShower": { "name": "Cold Shower Protocol", "benefit": "Stress resilience & alertness" },
+      "fasting": { "name": "Intermittent Fasting", "benefit": "Metabolic optimization" },
+      "breathing": { "name": "HRV Breathing Session", "benefit": "Autonomic nervous system balance" }
+    },
+    "modules": {
+      "sleep": { "name": "Sleep Optimization", "description": "Circadian rhythm & recovery optimization", "target": "8h, 90%+ quality" },
+      "nutrition": { "name": "Metabolic Fuel", "description": "Optimal nutrition for cognitive performance", "target": "IF 16:8, stable energy" },
+      "recovery": { "name": "Recovery Systems", "description": "HRV, stress management & restoration", "target": "HRV >50, Stress <4" },
+      "supplements": { "name": "Nootropic Stack", "description": "Evidence-based cognitive enhancement", "target": "Optimal timing & dosing" }
+    },
+    "sleep": {
+      "score": "Sleep Score",
+      "efficiency": "Efficiency",
+      "circadian": { "sync": "Circadian Sync", "optimal": "Optimal", "good": "Good", "suboptimal": "Suboptimal" },
+      "timing": { "title": "Sleep Timing", "bedtime": "Bedtime", "wakeTime": "Wake Time", "duration": "Sleep Duration" },
+      "quality": { "title": "Sleep Quality Assessment", "overall": "Overall Quality", "restfulness": "Restfulness", "latency": "Sleep Latency", "awakenings": "Night Awakenings" },
+      "environment": { "title": "Sleep Environment", "temperature": "Temperature", "darkness": "Darkness", "quietness": "Quietness", "airQuality": "Air Quality" },
+      "recommendations": {
+        "title": "Optimization Recommendations",
+        "env": { "title": "Optimize Sleep Environment", "desc": "Temperature 18-20°C, complete darkness, minimal noise" },
+        "hygiene": { "title": "Improve Sleep Hygiene", "desc": "No screens 1h before bed, consistent routine" },
+        "alignment": { "title": "Circadian Alignment", "desc": "Morning sunlight exposure, consistent sleep schedule" }
+      },
+      "save": "Save Sleep Data"
+    },
+    "priority": { "high": "High", "medium": "Medium", "low": "Low" }
+  },
+  "achievements": {
+    "title": "Achievement Constellation",
+    "subtitle": "Neural evolution tracking & gamified progression",
+    "level": "Level",
+    "architect": "Neural Architect",
+    "totalXp": "Total XP",
+    "progressToLevel": "Progress to Level {level}",
+    "recent": "Recent Achievements",
+    "progress": "Progress",
+    "unlocked": "Unlocked",
+    "complete": "Complete",
+    "streaks": {
+      "checkin": "Daily Check-ins",
+      "habits": "Habit Completion",
+      "flow": "Flow Sessions"
+    },
+    "categories": {
+      "cognitive": "Cognitive",
+      "physical": "Physical",
+      "mastery": "Mastery",
+      "social": "Social",
+      "spiritual": "Spiritual"
+    },
+    "gallery": {
+      "title": "Achievement Gallery",
+      "subtitle": "{unlocked}/{total} achievements unlocked",
+      "category": "Category",
+      "tier": "Tier",
+      "categories": {
+        "all": "All Categories",
+        "cognitive": "Cognitive",
+        "physical": "Physical",
+        "social": "Social",
+        "spiritual": "Spiritual",
+        "mastery": "Mastery"
+      },
+      "tiers": {
+        "all": "All Tiers",
+        "bronze": "Bronze",
+        "silver": "Silver",
+        "gold": "Gold",
+        "platinum": "Platinum",
+        "diamond": "Diamond"
+      },
+      "scientificBasis": "Scientific Basis",
+      "requirements": "Requirements",
+      "timeframes": {
+        "per": "per",
+        "daily": "day",
+        "weekly": "week",
+        "monthly": "month",
+        "total": "total"
+      }
+    },
+    "levels": {
+      "1": { "title": "Neural Initiate", "stage": "Foundation Builder" },
+      "5": { "title": "Cognitive Apprentice", "stage": "Pattern Recognition" },
+      "10": { "title": "Flow State Seeker", "stage": "Performance Optimization" },
+      "15": { "title": "Biohacking Adept", "stage": "Physiological Mastery" },
+      "20": { "title": "Neural Architect", "stage": "System Integration" },
+      "25": { "title": "Peak Performance Sage", "stage": "Consistent Excellence" },
+      "30": { "title": "Superhuman Catalyst", "stage": "Transcendent Impact" },
+      "40": { "title": "Evolution Master", "stage": "Reality Sculptor" },
+      "50": { "title": "Consciousness Hacker", "stage": "Unlimited Potential" }
+    },
+    "defs": {
+      "first_flow": { "name": "Flow State Initiate", "desc": "Enter your first documented flow state", "science": "Flow states increase performance by 300-500% (McKinsey)" },
+      "flow_master": { "name": "Flow State Master", "desc": "Complete 50 high-quality flow sessions", "science": "Consistent flow practice rewires neural networks for peak performance" },
+      "cognitive_breakthrough": { "name": "Cognitive Breakthrough", "desc": "Achieve 90%+ accuracy in Dual N-Back Level 4", "science": "4-back performance indicates superior working memory capacity" },
+      "sleep_champion": { "name": "Sleep Optimization Champion", "desc": "Maintain 8+ sleep quality for 30 consecutive days", "science": "Quality sleep is the foundation of all cognitive enhancement" },
+      "habit_architect": { "name": "Habit Architecture Master", "desc": "Maintain 90%+ habit completion for 90 days", "science": "90 days creates permanent neural pathway changes" },
+      "consistency_king": { "name": "Consistency Sovereign", "desc": "Complete daily protocols for 365 consecutive days", "science": "Annual consistency creates permanent behavioral transformation" }
+    }
+  },
+  "neuralAnalytics": {
+    "title": "Neural Analytics",
+    "subtitle": "Advanced pattern recognition & optimization insights",
+    "timeRange": {
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter",
+      "year": "Year"
+    },
+    "performance": {
+      "target": "Target",
+      "mentalClarity": { "name": "Mental Clarity" },
+      "energyLevel": { "name": "Energy Level" },
+      "habitConsistency": { "name": "Habit Consistency" },
+      "flowStateQuality": { "name": "Flow State Quality" },
+      "flowFrequency": { "name": "Flow Frequency", "unit": "/week" },
+      "cognitiveTraining": { "name": "Cognitive Training" },
+      "statuses": {
+        "optimal": "Optimal",
+        "good": "Good",
+        "declining": "Declining",
+        "critical": "Critical"
+      }
+    },
+    "overview": {
+      "keyInsights": "Key Insights Discovered",
+      "viewAllInsights": "View all {count} insights →",
+      "priorityActions": "Priority Optimization Actions",
+      "viewAllRecommendations": "View all {count} recommendations →",
+      "summary": {
+        "title": "Analysis Summary",
+        "checkins": "Check-ins Analyzed",
+        "patterns": "Patterns Found",
+        "optimizations": "Optimizations",
+        "confidence": "Avg Confidence"
+      }
+    },
+    "insight": {
+      "types": {
+        "correlation": "Correlation",
+        "trend": "Trend",
+        "anomaly": "Anomaly",
+        "optimization": "Optimization"
+      },
+      "confidence": "Confidence",
+      "recommendation": "RECOMMENDATION"
+    },
+    "recommendations": {
+      "expectedImpact": "Expected Impact",
+      "implementationSteps": "Implementation Steps:",
+      "timeframe": "Timeframe",
+      "priorities": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "timeframes": {
+        "immediate": "Immediate",
+        "weekly": "Weekly",
+        "monthly": "Monthly"
+      },
+      "categories": {
+        "foundation": "Physical Foundation",
+        "enhancement": "Cognitive Enhancement",
+        "performance": "Performance Optimization",
+        "system": "System Building"
+      },
+      "sleep": {
+        "title": "Sleep Quality Enhancement Required",
+        "description": "Current sleep quality ({quality}/10) is below optimal threshold (7.5+). Sleep is the foundation of all cognitive enhancement.",
+        "implementation": "Maintain consistent bedtime ±15 minutes|Room temperature 18-20°C|Complete darkness (blackout curtains)|No screens 1 hour before bed|Morning sunlight exposure within 30 minutes of waking",
+        "science": "Sleep quality directly impacts memory consolidation, learning capacity, and emotional regulation (Walker, 2017)"
+      },
+      "cognitive": {
+        "title": "Increase Cognitive Training Frequency",
+        "description": "Current training frequency ({frequency}/week) is below optimal for neuroplasticity activation (3-5x/week).",
+        "implementation": "Schedule cognitive training for consistent times daily|Start with 15-minute sessions if time is limited|Focus on dual n-back 3x/week minimum|Track improvements weekly to maintain motivation",
+        "science": "Neuroplasticity requires consistent stimulation; 3-5x weekly training shows optimal working memory gains (Jaeggi et al.)"
+      },
+      "flow": {
+        "title": "Flow State Distraction Control",
+        "description": "Average distractions ({distractions}) exceed optimal flow threshold (≤2). Reducing distractions can increase performance 300-500%.",
+        "implementation": "Phone on airplane mode during flow sessions|Use website blockers for non-essential sites|Inform others of your deep work schedule|Prepare all materials before session start|Use noise-cancelling headphones if needed",
+        "science": "Flow states require uninterrupted attention; interruptions can take 23 minutes to recover from (Mark et al.)"
+      },
+      "habit": {
+        "title": "Habit Consistency Architecture",
+        "description": "Habit consistency ({consistency}%) needs improvement for compound growth effects.",
+        "implementation": "Start with 2-minute versions of habits|Use implementation intentions (\"If X, then Y\")|Stack new habits onto existing routines|Track completion immediately after doing|Focus on consistency over perfection",
+        "science": "Small, consistent habits create neural automation; consistency matters more than intensity (Clear, 2018)"
+      }
+    },
+    "patterns": {
+      "title": "Pattern Analysis",
+      "subtitle": "Deep insights from your {timeRange} data",
+      "filterType": "Pattern Type",
+      "sortBy": "Sort By",
+      "types": {
+        "all": "All Types",
+        "correlation": "Correlation",
+        "trend": "Trend",
+        "anomaly": "Anomaly",
+        "optimization": "Optimization"
+      },
+      "sortOptions": {
+        "confidence": "Confidence",
+        "impact": "Impact"
+      },
+      "noResults": "No patterns found for the selected filters.",
+      "noResultsHint": "Try adjusting your filter criteria or data range."
+    },
+    "insights": {
+      "positive": "positive",
+      "negative": "negative",
+      "energySleep": {
+        "title": "Strong Energy-Sleep Connection",
+        "description": "Your energy levels show a {direction} correlation ({correlation}%) with sleep quality.",
+        "recommendationPositive": "Focus on sleep optimization to maintain high energy levels.",
+        "recommendationNegative": "Investigate potential sleep disruptors affecting energy.",
+        "science": "Sleep quality directly impacts energy through hormonal regulation and neural recovery."
+      },
+      "habitMastery": {
+        "title": "Habit Mastery Pattern Identified",
+        "description": "\"{habit}\" shows your longest streak ({streak} days), indicating strong neural pathway formation.",
+        "recommendation": "Apply the same consistency strategies to other habits for compound growth.",
+        "science": "Habit formation requires 66+ days average for neuroplasticity-based automation."
+      },
+      "flowOptimization": {
+        "title": "Flow State Sweet Spot Identified",
+        "description": "Your highest flow sessions average {duration} minutes with {distractions} distractions.",
+        "recommendation": "Structure sessions for {duration} minutes with strict distraction control.",
+        "science": "Flow state requires challenge-skill balance and sustained attention without interruption."
+      },
+      "cognitiveBreakthrough": {
+        "title": "Cognitive Performance Breakthrough",
+        "description": "Recent cognitive training scores ({recentAvg}%) significantly exceed your baseline ({mean}%).",
+        "recommendation": "Increase training frequency to capitalize on this neural plasticity window.",
+        "science": "Performance breakthroughs indicate optimal neuroplasticity activation periods."
+      },
+      "impacts": {
+        "high": "High Impact",
+        "medium": "Medium Impact",
+        "low": "Low Impact"
+      },
+      "recommendation": "Actionable Recommendation",
+      "scientificBasis": "Scientific Basis",
+      "showDetails": "Show Technical Details",
+      "hideDetails": "Hide Technical Details",
+      "rawData": "Raw Data"
+    }
+  }
+}

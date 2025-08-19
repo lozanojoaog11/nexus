@@ -1,8 +1,10 @@
 
+
 import React, { useState, useMemo } from 'react';
 import { Project, Task, TaskStatus, DevelopmentNode } from '../types';
 import { PlusIcon, DevelopmentIcon } from '../constants';
 import TaskDetailModal from './TaskDetailModal';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface KanbanBoardProps {
   projects: Project[];
@@ -23,30 +25,34 @@ const TrashIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-const KanbanCard: React.FC<{ task: Task; onDragStart: (e: React.DragEvent<HTMLDivElement>, taskId: string) => void; onClick: () => void }> = ({ task, onDragStart, onClick }) => (
-  <div
-    draggable
-    onClick={onClick}
-    onDragStart={(e) => onDragStart(e, task.id)}
-    className={`p-4 bg-gray-800/80 rounded-lg border border-white/10 mb-3 cursor-pointer active:cursor-grabbing transition-all duration-200 hover:border-[#00A9FF]/50 hover:bg-gray-700/50 group ${task.isMIT ? 'border-l-4 border-l-[#00A9FF] animate-subtle-glow' : ''}`}
+const KanbanCard: React.FC<{ task: Task; onDragStart: (e: React.DragEvent<HTMLDivElement>, taskId: string) => void; onClick: () => void }> = ({ task, onDragStart, onClick }) => {
+  const { t } = useTranslation();
+  return (
+    <div
+      draggable
+      onClick={onClick}
+      onDragStart={(e) => onDragStart(e, task.id)}
+      className={`p-4 bg-gray-800/80 rounded-lg border border-white/10 mb-3 cursor-pointer active:cursor-grabbing transition-all duration-200 hover:border-[#00A9FF]/50 hover:bg-gray-700/50 group ${task.isMIT ? 'border-l-4 border-l-[#00A9FF] animate-subtle-glow' : ''}`}
     >
-    <p className="text-sm text-gray-200">{task.content}</p>
-    {task.relatedDevelopmentNodeId && (
-        <div className="mt-2 flex items-center gap-1.5">
-            <DevelopmentIcon className="w-3 h-3 text-gray-500 group-hover:text-[#00A9FF] transition-colors" />
-            <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">Vinculado</span>
-        </div>
-    )}
-  </div>
-);
-
+      <p className="text-sm text-gray-200">{task.content}</p>
+      {task.relatedDevelopmentNodeId && (
+          <div className="mt-2 flex items-center gap-1.5">
+              <DevelopmentIcon className="w-3 h-3 text-gray-500 group-hover:text-[#00A9FF] transition-colors" />
+              <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors">{t('kanban.linked')}</span>
+          </div>
+      )}
+    </div>
+  );
+};
 const KanbanColumn: React.FC<{
-  title: TaskStatus;
+  titleKey: 'kanban.todo' | 'kanban.inProgress' | 'kanban.done';
+  status: TaskStatus;
   tasks: Task[];
   onDragStart: (e: React.DragEvent<HTMLDivElement>, taskId: string) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, status: TaskStatus) => void;
   onCardClick: (task: Task) => void;
-}> = ({ title, tasks, onDragStart, onDrop, onCardClick }) => {
+}> = ({ titleKey, status, tasks, onDragStart, onDrop, onCardClick }) => {
+  const { t } = useTranslation();
   const [isOver, setIsOver] = useState(false);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -61,7 +67,7 @@ const KanbanColumn: React.FC<{
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsOver(false);
-    onDrop(e, title);
+    onDrop(e, status);
   };
 
   return (
@@ -72,7 +78,7 @@ const KanbanColumn: React.FC<{
         className={`flex-1 bg-black/30 rounded-xl p-4 min-w-[300px] transition-colors duration-300 ${isOver ? 'bg-white/10' : ''}`}
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-300 uppercase tracking-wider text-sm">{title}</h3>
+        <h3 className="font-semibold text-gray-300 uppercase tracking-wider text-sm">{t(titleKey)}</h3>
         <span className="text-xs font-bold text-gray-500 bg-gray-900/50 rounded-full px-2 py-1">{tasks.length}</span>
       </div>
       <div className="h-full">
@@ -86,6 +92,7 @@ const KanbanColumn: React.FC<{
 
 
 const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, setSelectedProjectId, updateTaskStatus, updateTask, addTask, onAddProject, deleteProject, developmentNodes }) => {
+  const { t } = useTranslation();
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [newTaskContent, setNewTaskContent] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -137,16 +144,20 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, 
   if (projects.length === 0 || !selectedProject) {
     return (
         <div className="p-8 text-center text-gray-400 w-full h-full flex flex-col items-center justify-center">
-            <p className="mb-4">Nenhum projeto encontrado. Crie um para começar.</p>
+            <p className="mb-4">{t('kanban.noProjects')}</p>
             <button onClick={onAddProject} className="bg-[#00A9FF] text-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 flex items-center space-x-2">
                 <PlusIcon className="w-5 h-5"/>
-                <span>Novo Projeto</span>
+                <span>{t('kanban.newProject')}</span>
             </button>
         </div>
     );
   }
 
-  const columns: TaskStatus[] = ['A Fazer', 'Em Progresso', 'Concluído'];
+  const columns: { status: TaskStatus, titleKey: 'kanban.todo' | 'kanban.inProgress' | 'kanban.done' }[] = [
+    { status: 'A Fazer', titleKey: 'kanban.todo' },
+    { status: 'Em Progresso', titleKey: 'kanban.inProgress' },
+    { status: 'Concluído', titleKey: 'kanban.done' }
+  ];
 
   return (
     <div className="p-8 text-white w-full h-full flex flex-col animate-fade-in-up">
@@ -165,7 +176,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, 
                 <div className="w-full bg-gray-800 rounded-full h-2.5 mt-2">
                     <div className="bg-[#00A9FF] h-2.5 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
                 </div>
-                <p className="text-right text-sm text-gray-400 mt-1">{progress}% concluído</p>
+                <p className="text-right text-sm text-gray-400 mt-1">{progress}{t('kanban.progress')}</p>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
                 <select 
@@ -178,7 +189,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, 
                 <button onClick={onAddProject} className="p-2 bg-gray-800 border border-gray-700 rounded-md hover:bg-gray-700 transition-colors">
                     <PlusIcon className="w-5 h-5"/>
                 </button>
-                <button onClick={() => deleteProject(selectedProject.id)} className="p-2 bg-gray-800 border border-gray-700 rounded-md hover:bg-red-900/50 hover:border-red-500/50 transition-colors">
+                <button onClick={() => deleteProject(selectedProject.id)} className="p-2 bg-gray-800 border border-gray-700 rounded-md hover:bg-red-900/50 hover:border-red-500/50 transition-colors" title={t('kanban.deleteProject')}>
                     <TrashIcon className="w-5 h-5 pointer-events-none"/>
                 </button>
             </div>
@@ -186,11 +197,12 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, 
       </header>
 
       <div className="flex-grow flex gap-6 overflow-x-auto pb-4">
-        {columns.map(status => (
+        {columns.map(col => (
             <KanbanColumn 
-                key={status}
-                title={status}
-                tasks={selectedProject.tasks.filter(t => t.status === status)}
+                key={col.status}
+                titleKey={col.titleKey}
+                status={col.status}
+                tasks={selectedProject.tasks.filter(t => t.status === col.status)}
                 onDragStart={handleDragStart}
                 onDrop={handleDrop}
                 onCardClick={handleCardClick}
@@ -204,11 +216,11 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, 
             value={newTaskContent}
             onChange={e => setNewTaskContent(e.target.value)}
             onKeyPress={e => e.key === 'Enter' && handleAddTask()}
-            placeholder="Adicionar nova tarefa..."
+            placeholder={t('kanban.addTaskPlaceholder')}
             className="w-full bg-gray-700/50 text-white p-3 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-[#00A9FF]"
         />
         <button onClick={handleAddTask} className="bg-[#00A9FF] text-black font-bold px-6 py-3 rounded-lg hover:bg-opacity-80 transition-all">
-            Adicionar
+            {t('kanban.add')}
         </button>
       </footer>
     </div>

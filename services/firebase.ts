@@ -124,7 +124,7 @@ class DataService {
           const initialData = transformInitialData();
           // Profile data is set on sign up, but we can ensure it has a timestamp
           initialData.profile = { 
-              email: auth.currentUser?.email,
+              email: auth.currentUser?.email || 'dev@eixo.os',
               createdAt: new Date().toISOString() 
           };
           await this.setData('/', initialData);
@@ -162,6 +162,10 @@ class DataService {
 
   public async signInWithEmailAndPassword(email: string, password: string): Promise<firebase.auth.UserCredential> {
     return auth.signInWithEmailAndPassword(email, password);
+  }
+  
+  public async signInAnonymously(): Promise<firebase.auth.UserCredential> {
+    return auth.signInAnonymously();
   }
 
   public async signOut(): Promise<void> {

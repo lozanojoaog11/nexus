@@ -1,4 +1,3 @@
-
 import { Project, Book, View, DevelopmentGraph, Habit, CalendarEvent, Goal, IconName } from './types';
 
 export const ACCENT_COLOR = '#00A9FF';
@@ -80,29 +79,6 @@ export const INITIAL_GOALS: Goal[] = [
     }
 ];
 
-export const USER_MANIFESTO = `
-[IDENTIFICAÇÃO DO OPERADOR]
-Nome/Código: João Gabriel Lozano, "O Arquiteto Cognitivo"
-Objetivo Prime: Tornar-se um outlier positivo em todas as métricas relevantes de desenvolvimento humano, culminando na materialização do "Ponto de Fuga": R$1M com a d.IA.logo como prova de "potência realizada".
-
-[RAIO-X DA ARQUITETURA COGNITiva]
-O Núcleo (Quem Você É): Alquimista Digital e Arquiteto Cognitivo. Opera na intersecção entre criatividade caótica e busca por estrutura. Realizador Criativo Adaptativo com capacidade de "Síntese Transmutacional Criativa". Cérebro não-linear, conectando domínios distintos.
-O Conflito Central (Sua Principal Batalha): Dissonância entre o imenso potencial criativo e a dificuldade na sustentação da disciplina executiva e finalização de ciclos. O ciclo de "explosão criativa seguida de dispersão".
-O Ponto de Fuga (Onde Você Quer Chegar): Transmutar a d.IA.logo em um ecossistema educacional de altíssimo impacto, faturando R$1M em 18-24 meses.
-
-[DEEP SCAN PSICOMÉTRICO]
-NEUROTYPE: Cronotipo vespertino, estilo cognitivo Cinestésico-Visual. Força em Flexibilidade Cognitiva, fraqueza em Controle Inibitório e Foco Sustentado.
-BIG FIVE: Openness (95), Conscientiousness (40), Extraversion (80), Agreeableness (65), Neuroticism (60).
-DEEP DRIVERS: Dores (Confronto com a Morte, Instabilidade Crônica, Perda Financeira), Êxtases (Imersão em IA, Freestyle, Liderança de Workshops).
-EDGE: Vantagem (Pensamento Conectivo, Comunicação Multidimensional), Superpoder (Resiliência Regenerativa), Obsessão (Arquitetura Cognitiva de LLMs), Habilidade Natural ("Traduzir complexidade").
-
-[FÍSICA DO DESENVOLVIMENTO]
-Princípio #1: Otimização da Energia.
-Princípio #2: A ação gera a inspiração.
-Princípio #3: Consistência na execução do bloco de Deep Work matinal é a alavanca primária.
-Princípio #4: O hábito keystone é o "wind down protocol" noturno.
-`;
-
 export const INITIAL_DEVELOPMENT_DATA: DevelopmentGraph = {
     nodes: [
         { id: 'pf1', type: 'Ponto de Fuga', label: 'R$1M com d.IA.logo', description: 'Materializar a "potência realizada" através do sucesso do ecossistema educacional.', icon: 'Foguete', successMetrics: 'Atingir R$1M de faturamento em 18-24 meses.' },
@@ -129,6 +105,12 @@ export const INITIAL_DEVELOPMENT_DATA: DevelopmentGraph = {
 };
 
 // --- ICONS ---
+
+export const PlusIcon = ({ className }: { className?: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+    </svg>
+);
 
 const CentroIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}><path d="M12 2v4M12 18v4M22 12h-4M6 12H2M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -239,19 +221,65 @@ export const GoalsIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
-export const PlusIcon = ({ className }: { className?: string }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
-        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+export const CognitiveIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M12 21C12 21 4 17 4 12C4 7 8 3 12 3C16 3 20 7 20 12C20 17 12 21 12 21Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 12C14.7614 12 17 9.76142 17 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 12C9.23858 12 7 9.76142 7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 15C13.6569 15 15 13.6569 15 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 15C10.3431 15 9 13.6569 9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 17V21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 );
 
-export const NAV_ITEMS: { view: View; label: string; icon: React.ReactNode }[] = [
-    { view: 'dashboard', label: 'Painel', icon: <DashboardIcon className="w-5 h-5" /> },
-    { view: 'habits', label: 'Hábitos', icon: <HabitsIcon className="w-5 h-5" /> },
-    { view: 'projects', label: 'Projetos', icon: <KanbanIcon className="w-5 h-5" /> },
-    { view: 'goals', label: 'Metas', icon: <GoalsIcon className="w-5 h-5" /> },
-    { view: 'agenda', label: 'Agenda', icon: <AgendaIcon className="w-5 h-5" /> },
-    { view: 'development', label: 'Desenvolvimento', icon: <DevelopmentIcon className="w-5 h-5" /> },
-    { view: 'guardian', label: 'Guardião', icon: <GuardianIcon className="w-5 h-5" /> },
-    { view: 'library', label: 'Biblioteca', icon: <LibraryIcon className="w-5 h-5" /> },
+export const BiohackingIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M12 3V21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M16 7L8 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M16 17L8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M4 12H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const TrophyIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+        <path d="M12 22s8-4 8-10V4H4v8c0 6 8 10 8 10z" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M12 12V6" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M15 9l-3-3-3 3" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M18 9h-3" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M9 9H6" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+export const AnalyticsIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+        <path d="M7 20V10M12 20V4M17 20V14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+);
+
+
+export const FlowLabIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className}>
+        <path d="M12 8V4H8" />
+        <rect x="4" y="4" width="16" height="16" rx="2" />
+        <path d="M8 12h4" />
+        <path d="M12 16h4" />
+    </svg>
+);
+
+
+export const NAV_ITEMS = [
+  { view: 'dashboard' as View, labelKey: 'sidebar.dashboard', icon: <DashboardIcon className="w-6 h-6" /> },
+  { view: 'habits' as View, labelKey: 'sidebar.habits', icon: <HabitsIcon className="w-6 h-6" /> },
+  { view: 'projects' as View, labelKey: 'sidebar.projects', icon: <KanbanIcon className="w-6 h-6" /> },
+  { view: 'goals' as View, labelKey: 'sidebar.goals', icon: <GoalsIcon className="w-6 h-6" /> },
+  { view: 'agenda' as View, labelKey: 'sidebar.agenda', icon: <AgendaIcon className="w-6 h-6" /> },
+  { view: 'development' as View, labelKey: 'sidebar.development', icon: <DevelopmentIcon className="w-6 h-6" /> },
+  { view: 'cognitive' as View, labelKey: 'sidebar.cognitive', icon: <CognitiveIcon className="w-6 h-6" /> },
+  { view: 'flowlab' as View, labelKey: 'sidebar.flowLab', icon: <FlowLabIcon className="w-6 h-6" /> },
+  { view: 'biohacking' as View, labelKey: 'sidebar.biohacking', icon: <BiohackingIcon className="w-6 h-6" /> },
+  { view: 'achievements' as View, labelKey: 'sidebar.achievements', icon: <TrophyIcon className="w-6 h-6" /> },
+  { view: 'analytics' as View, labelKey: 'sidebar.analytics', icon: <AnalyticsIcon className="w-6 h-6" /> },
+  { view: 'guardian' as View, labelKey: 'sidebar.guardian', icon: <GuardianIcon className="w-6 h-6" /> },
+  { view: 'library' as View, labelKey: 'sidebar.library', icon: <LibraryIcon className="w-6 h-6" /> },
 ];

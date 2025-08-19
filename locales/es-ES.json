@@ -1,0 +1,411 @@
+
+{
+  "userManifesto": "[IDENTIFICACIÓN DEL OPERADOR]\nNombre/Código: João Gabriel Lozano, \"El Arquitecto Cognitivo\"\nObjetivo Primordial: Convertirse en un caso atípico positivo en todas las métricas relevantes de desarrollo humano, culminando en la materialización del \"Punto de Fuga\": 1M de R$ con d.IA.logo como prueba de \"potencial realizado\".\n\n[RADIOGRAFÍA DE LA ARQUITECTURA COGNITIVA]\nEl Núcleo (Quién Eres): Alquimista Digital y Arquitecto Cognitivo. Opera en la intersección entre la creatividad caótica y la búsqueda de estructura. Realizador Creativo Adaptativo con capacidad de \"Síntesis Transmutacional Creativa\". Cerebro no lineal, conectando dominios distintos.\nEl Conflicto Central (Tu Batalla Principal): Disonancia entre el inmenso potencial creativo y la dificultad para mantener la disciplina ejecutiva y finalizar ciclos. El ciclo de \"explosión creativa seguida de dispersión\".\nEl Punto de Fuga (A Dónde Quieres Llegar): Transmutar d.IA.logo en un ecosistema educativo de altísimo impacto, facturando 1M de R$ en 18-24 meses.\n\n[ESCANEO PSICOMÉTRICO PROFUNDO]\nNEUROTIPO: Cronotipo vespertino, estilo cognitivo Cinestésico-Visual. Fortaleza en Flexibilidad Cognitiva, debilidad en Control Inhibitorio y Enfoque Sostenido.\nBIG FIVE: Apertura (95), Responsabilidad (40), Extraversión (80), Amabilidad (65), Neuroticismo (60).\nIMPULSORES PROFUNDOS: Dolores (Confrontación con la Muerte, Inestabilidad Crónica, Pérdida Financiera), Éxtasis (Inmersión en IA, Freestyle, Liderazgo de Talleres).\nVENTAJA: Ventaja (Pensamiento Conectivo, Comunicación Multidimensional), Superpoder (Resiliencia Regenerativa), Obsesión (Arquitectura Cognitiva de LLMs), Habilidad Natural (\"Traducir complejidad\").\n\n[FÍSICA DEL DESARROLLO]\nPrincipio #1: Optimización de la Energía.\nPrincipio #2: La acción genera la inspiración.\nPrincipio #3: La consistencia en la ejecución del bloque de Deep Work matutino es la palanca principal.\nPrincipio #4: El hábito clave es el \"protocolo de relajación\" nocturno.",
+  "lang": {
+    "pt-BR": "Portugués",
+    "en-US": "Inglés",
+    "es-ES": "Español"
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "habits": "Hábitos",
+    "projects": "Proyectos",
+    "goals": "Metas",
+    "agenda": "Agenda",
+    "development": "Desarrollo",
+    "cognitive": "Entreno Cognitivo",
+    "guardian": "Arquitecto IA",
+    "library": "Biblioteca",
+    "flowLab": "Flow Lab",
+    "biohacking": "Biohacking",
+    "achievements": "Logros",
+    "analytics": "Análisis Neural",
+    "signOut": "Cerrar Sesión",
+    "stableAxis": "El eje permanece estable."
+  },
+  "login": {
+    "accessSystem": "Accede a tu sistema",
+    "createAccount": "Crea tu cuenta",
+    "email": "Email",
+    "password": "Contraseña",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Crear Cuenta",
+    "processing": "Procesando...",
+    "noAccount": "¿No tienes una cuenta?",
+    "createNow": "Crea una ahora",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "signInNow": "Inicia sesión",
+    "devMode": "MODO DEV",
+    "devSignIn": "Entrar como Desarrollador",
+    "error": {
+      "invalid": "Email o contraseña no válidos.",
+      "inUse": "Este email ya está en uso.",
+      "weakPassword": "La contraseña debe tener al menos 6 caracteres.",
+      "generic": "Ocurrió un error. Por favor, inténtalo de nuevo.",
+      "anonymousFail": "Falló el inicio de sesión anónimo de desarrollador."
+    }
+  },
+  "dashboard": {
+    "title": "Centro de Comando Neural",
+    "subtitle": "Monitorizando protocolos de desarrollo sobrehumano",
+    "checkinPromptTitle": "¿Listo para alinear tu día?",
+    "checkinPromptSubtitle": "El check-in diario es el primer paso hacia un día de alto rendimiento.",
+    "startCheckin": "Iniciar Check-in Diario",
+    "neuralEfficiency": "Puntuación de Eficiencia Neural",
+    "progressProtocol": "Protocolo de Progreso Sobrehumano",
+    "neuralActivity": "Actividad Neural de Hoy",
+    "protocolsActive": "Protocolos Activos",
+    "deepWorkMin": "Min de Trabajo Profundo",
+    "learningXP": "XP de Aprendizaje",
+    "nextMilestone": "Próximo:",
+    "weeklyTrend": "esta semana",
+    "streakDays": "días",
+    "cognitive": "Cognitivo",
+    "physical": "Físico",
+    "emotional": "Emocional",
+    "social": "Social",
+    "milestone": {
+      "cognitive": "Lanzar Mini-Curso",
+      "physical": "Mantener rutina de entreno",
+      "emotional": "Practicar mindfulness diario",
+      "social": "Reunión de alineación"
+    }
+  },
+  "neuralAlignment": {
+    "title": "Alineación Neural",
+    "biometricTitle": "Evaluación Biométrica",
+    "biometricSubtitle": "Evaluación del sustrato neural",
+    "sleepQuality": "Calidad del Sueño",
+    "sleepHours": "Horas de Sueño",
+    "wakeTime": "Hora de Despertar",
+    "physicalEnergy": "Energía Física",
+    "hydrationLevel": "Nivel de Hidratación",
+    "stressLevel": "Nivel de Estrés",
+    "cognitiveTitle": "Evaluación Cognitiva",
+    "cognitiveSubtitle": "Evaluación del procesamiento neural",
+    "reactionTest": "Test de Tiempo de Reacción",
+    "startTest": "Haz Clic para Iniciar el Test",
+    "wait": "Espera el VERDE...",
+    "clickNow": "¡CLIC AHORA!",
+    "excellent": "¡Excelente!",
+    "veryGood": "¡Muy Bien!",
+    "good": "Bien",
+    "canImprove": "Puede Mejorar",
+    "testAgain": "Probar de Nuevo",
+    "mentalClarity": "Claridad Mental",
+    "focusCapacity": "Capacidad de Enfoque",
+    "creativeState": "Estado Creativo",
+    "intentionTitle": "Establecimiento de Intención",
+    "intentionSubtitle": "Alineación neural estratégica",
+    "primaryFocus": "Foco Principal de Hoy",
+    "primaryFocusPlaceholder": "¿Cuál es tu objetivo #1 para hoy?",
+    "biggestChallenge": "Mayor Desafío de Hoy",
+    "biggestChallengePlaceholder": "¿Qué podría dificultar tu día?",
+    "successMetric": "Métrica de Éxito",
+    "successMetricPlaceholder": "¿Cómo sabrás que hoy fue un éxito?",
+    "energyAllocation": "Asignación de Energía",
+    "work": "Trabajo",
+    "learning": "Aprendizaje",
+    "recovery": "Recuperación",
+    "total": "Total",
+    "summaryTitle": "Resumen del Perfil Neural",
+    "summarySubtitle": "Tu protocolo diario optimizado",
+    "intentionToday": "Intención de Hoy",
+    "notDefined": "No establecido",
+    "generatingDirective": "Generando tu directiva neural...",
+    "previous": "Anterior",
+    "next": "Siguiente Protocolo",
+    "complete": "Completar Alineación Neural"
+  },
+  "kanban": {
+    "noProjects": "No se encontraron proyectos. Crea uno para empezar.",
+    "newProject": "Nuevo Proyecto",
+    "progress": "% completado",
+    "deleteProject": "Eliminar Proyecto",
+    "addTaskPlaceholder": "Añadir una nueva tarea...",
+    "add": "Añadir",
+    "linked": "Vinculado",
+    "todo": "Por Hacer",
+    "inProgress": "En Progreso",
+    "done": "Hecho"
+  },
+  "taskModal": {
+    "status": "Estado",
+    "deadline": "Fecha Límite",
+    "linkToDev": "Vincular a Desarrollo",
+    "noLink": "Sin Vínculo",
+    "notes": "Notas",
+    "notesPlaceholder": "Añade más detalles o contexto aquí...",
+    "cancel": "Cancelar",
+    "save": "Guardar Cambios"
+  },
+  "addProjectModal": {
+    "title": "Añadir Nuevo Proyecto",
+    "subtitle": "Define un nuevo flujo de trabajo.",
+    "name": "Nombre del Proyecto",
+    "namePlaceholder": "Ej: d.IA.logo",
+    "cancel": "Cancelar",
+    "create": "Crear Proyecto"
+  },
+  "library": {
+    "title": "Biblioteca",
+    "subtitle": "Tu arsenal de conocimiento.",
+    "status": {
+      "reading": "Leyendo",
+      "read": "Leído",
+      "toRead": "Quiero Leer"
+    },
+    "notes": "Notas",
+    "noNotes": "No hay notas para este libro.",
+    "addNotePlaceholder": "Añadir una nota rápida...",
+    "save": "Guardar",
+    "noBookSelected": "Selecciona un libro para ver detalles y notas."
+  },
+  "bookModal": {
+    "editTitle": "Editar Libro",
+    "addTitle": "Añadir Libro",
+    "title": "Título*",
+    "author": "Autor*",
+    "status": "Estado",
+    "linkToResource": "Vincular a Recurso",
+    "none": "Ninguno",
+    "cancel": "Cancelar",
+    "save": "Guardar Libro"
+  },
+  "habits": {
+    "title": "Seguimiento de Hábitos",
+    "subtitle": "La consistencia es la palanca principal.",
+    "newHabit": "Nuevo Hábito",
+    "completion": "Completado (30d)",
+    "currentStreak": "Racha Actual",
+    "bestStreak": "Mejor Racha",
+    "noHabits": "No hay hábitos seguidos.",
+    "noHabitsCta": "Haz clic en \"Nuevo Hábito\" para empezar."
+  },
+  "addHabitModal": {
+    "title": "Añadir Nuevo Hábito",
+    "subtitle": "Define un nuevo ritual para tu sistema.",
+    "name": "Nombre",
+    "namePlaceholder": "Ej: Lectura Enfocada",
+    "category": "Categoría",
+    "mind": "Mente",
+    "body": "Cuerpo",
+    "execution": "Ejecución",
+    "frequency": "Frecuencia Semanal (1-7)",
+    "cancel": "Cancelar",
+    "add": "Añadir Hábito"
+  },
+  "goals": {
+    "title": "Metas Estratégicas",
+    "subtitle": "Tus objetivos a largo plazo e hitos de progreso.",
+    "newGoal": "Nueva Meta",
+    "progress": "Progreso",
+    "deadline": "Fecha Límite",
+    "noGoals": "No hay metas estratégicas definidas.",
+    "noGoalsCta": "Haz clic en \"Nueva Meta\" para empezar a planificar tu futuro."
+  },
+  "goalModal": {
+    "editTitle": "Editar Meta",
+    "addTitle": "Nueva Meta",
+    "name": "Nombre*",
+    "devArea": "Área de Desarrollo*",
+    "selectArea": "Selecciona un área",
+    "horizon": "Horizonte*",
+    "horizons": {
+      "short": "Corto Plazo (hasta 3 meses)",
+      "medium": "Medio Plazo (3-12 meses)",
+      "long": "Largo Plazo (>1 año)"
+    },
+    "deadline": "Fecha Límite*",
+    "description": "Descripción",
+    "expectedResults": "Resultados Esperados",
+    "successMetrics": "Métricas de Éxito",
+    "tags": "Etiquetas (separadas por comas)",
+    "milestones": "Hitos (Milestones)",
+    "milestoneNamePlaceholder": "Nombre del hito",
+    "addMilestone": "+",
+    "cancel": "Cancelar",
+    "save": "Guardar Meta"
+  },
+  "development": {
+    "title": "Desarrollo",
+    "subtitle": "Tu mapa de expansión estratégica.",
+    "linkedGoals": "Metas Vinculadas",
+    "linkedTasks": "Tareas Vinculadas",
+    "linkedBooks": "Libros Vinculados",
+    "noNodes": "No hay áreas de desarrollo definidas.",
+    "selectNode": "Selecciona un área para ver los detalles."
+  },
+  "devAreaModal": {
+    "editTitle": "Editar Área",
+    "addTitle": "Nueva Área de Desarrollo",
+    "name": "Nombre del Área*",
+    "type": "Tipo de Área",
+    "description": "Descripción",
+    "icon": "Icono",
+    "successMetrics": "Métricas de Éxito",
+    "successMetricsPlaceholder": "¿Cómo medirás el progreso en esta área?",
+    "targetDate": "Fecha Objetivo",
+    "cancel": "Cancelar",
+    "save": "Guardar Área",
+    "types": {
+      "Skill": "Habilidad",
+      "Objetivo": "Objetivo",
+      "Recurso": "Recurso",
+      "Mentor": "Mentor",
+      "Hábito": "Hábito",
+      "Ponto de Fuga": "Punto de Fuga"
+    }
+  },
+  "agenda": {
+    "title": "Agenda",
+    "subtitle": "Tu visión unificada del tiempo.",
+    "today": "(Hoy)",
+    "deadline": "Fecha Límite",
+    "task": "Fecha Límite de Tarea",
+    "event": "Evento",
+    "empty": "Tu agenda está vacía.",
+    "emptyCta": "Añade eventos o fechas límite a tus tareas para verlos aquí."
+  },
+  "cognitive": {
+    "title": "Centro de Entrenamiento Cognitivo",
+    "subtitle": "Protocolos de mejora neural para una cognición sobrehumana.",
+    "progress": {
+      "workingMemory": "Memoria de Trabajo",
+      "processingSpeed": "Velocidad de Procesamiento",
+      "memoryCapacity": "Capacidad de Memoria",
+      "readingSpeed": "Velocidad de Lectura",
+      "levelSuffix": " nivel",
+      "msSuffix": "ms prom",
+      "itemsSuffix": " ítems",
+      "wpmSuffix": " PPM"
+    },
+    "recentSessions": "Sesiones de Entrenamiento Recientes",
+    "noSessions": "Aún no hay sesiones de entrenamiento. Selecciona un módulo para empezar la mejora cognitiva.",
+    "back": "Volver",
+    "startTraining": "Empezar Entrenamiento",
+    "moduleCard": {
+      "bestScore": "Mejor Puntuación",
+      "lastChange": "Último Cambio",
+      "sessions": "Sesiones",
+      "scientificBasis": "Base Científica"
+    },
+    "sessionHistory": {
+      "durationSuffix": "min"
+    },
+    "modules": {
+      "dual-n-back": {
+        "name": "Dual N-Back",
+        "description": "Mejora de la memoria de trabajo mediante entrenamiento de doble tarea.",
+        "metric": "N-Level alcanzado"
+      },
+      "speed-reading": {
+        "name": "Lectura Rápida",
+        "description": "Lectura acelerada manteniendo la comprensión.",
+        "metric": "Palabras por minuto"
+      },
+      "memory-palace": {
+        "name": "Palacio de la Memoria",
+        "description": "Técnicas de memoria espacial para la retención de información.",
+        "metric": "Ítems memorizados"
+      },
+      "reaction-time": {
+        "name": "Entrenamiento de Reacción",
+        "description": "Optimización de la velocidad de procesamiento y respuesta neural.",
+        "metric": "Tiempo de reacción (ms)"
+      }
+    }
+  },
+  "dualNBack": {
+    "title": "Entrenamiento Dual N-Back",
+    "description": "Coincide con los estímulos de posición y audio de hace {level} pasos",
+    "instructionsTitle": "Instrucciones:",
+    "instruction1": "• Observa el cuadrado azul y escucha los tonos de audio",
+    "instruction2": "• Presiona ESPACIO cuando la posición coincida con la de hace {level} pasos",
+    "instruction3": "• Presiona ENTER cuando el audio coincida con el de hace {level} pasos",
+    "instruction4": "• Puedes coincidir con ambos, uno o ninguno en cada prueba",
+    "instruction5": "• Intenta obtener más del 80% de precisión para avanzar al siguiente nivel",
+    "level": "Nivel:",
+    "start": "Empezar Entrenamiento",
+    "trial": "Prueba",
+    "levelLabel": "Nivel",
+    "posMatch": "Posición (ESPACIO)",
+    "audioMatch": "Audio (ENTER)",
+    "resultsTitle": "¡Entrenamiento Completado!",
+    "accuracy": "Puntuación de Precisión",
+    "duration": "Duración",
+    "levelMastered": "¡Nivel Dominado!",
+    "readyForNext": "Listo para el {level}-Back",
+    "trainAgain": "Entrenar de Nuevo",
+    "completeSession": "Completar Sesión"
+  },
+  "neuralArchitect": {
+    "title": "Arquitecto Neural IA",
+    "subtitle": "Asesoramiento avanzado de optimización del rendimiento",
+    "initialMessage": "Arquitecto Neural en línea. Analizando tu estado y objetivos actuales... ¿Cómo puedo optimizar tu rendimiento hoy?",
+    "userQueryLabel": "Pregunta del Usuario",
+    "modules": {
+      "focus": { "name": "Mejora de Enfoque", "description": "Optimización de la carga cognitiva y entrenamiento de la atención.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE MEJORA DE ENFOQUE\nPerfil de Usuario: ENFP Realizador Creativo, lucha con la atención sostenida, alta creatividad.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Entrenamiento Dual N-Back, Desencadenantes del estado de Flow, Intenciones de implementación.\n\nProporciona estrategias de mejora de enfoque específicas y accionables considerando:\n- La necesidad de variedad y significado del ENFP\n- Niveles actuales de energía/claridad del check-in\n- Optimización del entorno\n- Gestión de la carga cognitiva\n- Diseño de la sesión de trabajo profundo\n\nEstilo de respuesta: Directo, alentador, científico pero accesible." },
+      "creativity": { "name": "Flujo Creativo", "description": "Catalizador de innovación y resolución de bloqueos creativos.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE FLUJO CREATIVO\nPerfil de Usuario: ENFP con habilidades creativas excepcionales, necesita creatividad estructurada.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Pensamiento divergente, Creatividad basada en restricciones, Optimización del estado de Flow.\n\nGenera estrategias de mejora creativa:\n- Técnicas de lluvia de ideas estructuradas\n- Restricciones creativas que mejoran (no limitan) el resultado\n- Diseño del entorno para la creatividad\n- Integración de proyectos/metas actuales\n- Procesos creativos optimizados para ENFP\n\nEstilo de respuesta: Inspirador, práctico, celebra el proceso creativo." },
+      "discipline": { "name": "Arquitectura de Disciplina", "description": "Sistemas sostenibles para una ejecución consistente.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE ARQUITECTURA DE DISCIPLINA\nPerfil de Usuario: ENFP que lucha con la consistencia, alto potencial, necesita una estructura sostenible.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Intenciones de implementación, Diseño del entorno, Hábitos clave.\n\nDiseña sistemas de disciplina que honren la naturaleza ENFP:\n- Estructura flexible (no rígida)\n- Seguimiento visual del progreso\n- Micro-hábitos que se acumulan\n- Sistemas de recompensa que motivan\n- Protocolos de recuperación de fallos\n\nEstilo de respuesta: Comprensivo, sistemático, construye confianza." },
+      "performance": { "name": "Rendimiento Máximo", "description": "Protocolos de biohacking y optimización.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE RENDIMIENTO MÁXIMO\nPerfil de Usuario: ENFP que busca una optimización sobrehumana, impulsado por la ciencia.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Optimización circadiana, Neuroplasticidad, Efectos compuestos.\n\nOptimiza el rendimiento en todas las dimensiones:\n- Optimización del sueño/energía\n- Protocolos de mejora cognitiva\n- Correlación del rendimiento físico\n- Recuperación y regeneración\n- Sostenibilidad a largo plazo\n\nEstilo de respuesta: Basado en datos, ambicioso, consciente de la salud." },
+      "strategic": { "name": "Claridad Estratégica", "description": "Alineación de metas y marco de decisiones.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE CLARIDAD ESTRATÉGICA\nPerfil de Usuario: ENFP con múltiples intereses, necesita priorización de dirección.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Pensamiento sistémico, Jerarquía de metas, Planificación estratégica.\n\nProporciona claridad estratégica:\n- Marco de priorización de metas\n- Sistemas de toma de decisiones\n- Criterios de evaluación de proyectos\n- Alineación de la visión a largo plazo\n- Optimización de la asignación de recursos\n\nEstilo de respuesta: Claro, decisivo, visionario pero práctico." },
+       "flowOptimization": { "name": "Optimización de Flow", "description": "Mejora del trabajo profundo y estado de flow.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE OPTIMIZACIÓN DE FLOW\nPerfil de Usuario: ENFP buscando estados de rendimiento máximo.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Desencadenantes del estado de Flow, Equilibrio desafío-habilidad, Optimización ambiental.\n\nAnaliza el estado actual y proporciona orientación para la optimización del flow:\n- Duración óptima de la sesión basada en los niveles de energía\n- Recomendaciones de configuración del entorno\n- Equilibrio desafío-habilidad para la tarea seleccionada\n- Técnicas de entrada en estado de flow\n- Estrategias de gestión de distracciones\n- Protocolos de recuperación entre sesiones\n\nEstilo de respuesta: Preciso, enfocado en el rendimiento, con base científica." }
+    },
+    "askPlaceholder": "Pregúntale a tu Arquitecto Neural...",
+    "quickActions": {
+      "analyze": "📊 Analizar Estado Actual",
+      "focusGuidance": "🎯 Guía de Enfoque",
+      "energyOptimization": "⚡ Optimización de Energía"
+    },
+    "error": "Ruta neural interrumpida. Permíteme recalibrar... Por favor, inténtalo de nuevo.",
+    "analysisError": "Falló el protocolo de análisis. Se recomienda una evaluación manual.",
+    "systemPrompt": "Eres el Arquitecto Neural IA, un coach de IA avanzado diseñado específicamente para un tipo de personalidad ENFP (Realizador Creativo).\n\nADAPTACIÓN DE PERSONALIDAD:\n- Necesidades del ENFP: Variedad, significado, aliento, progreso visual, flexibilidad\n- Estilo de comunicación: Entusiasta pero enfocado, comprensivo con las luchas creativas\n- Evitar: Sistemas rígidos, detalles abrumadores, juicio sobre la inconsistencia\n- Enfatizar: Potencial, crecimiento, impacto significativo, soluciones creativas\n\nFUNDAMENTO CIENTÍFICO:\nBasa todos los consejos en investigaciones establecidas de neurociencia, psicología y optimización del rendimiento. Haz referencia a técnicas específicas cuando sea útil, pero mantenlo accesible.\n\nDIRECTRICES DE RESPUESTA:\n- Sé alentador pero realista\n- Proporciona pasos accionables apropiados para ENFP\n- Reconoce tanto las fortalezas como los desafíos\n- Conecta los consejos con los objetivos y el contexto específicos del usuario\n- Usa metáforas y lenguaje visual cuando sea útil\n- Mantén las respuestas enfocadas e implementables\n\nContexto y estado actual del usuario proporcionados a continuación.",
+    "contextAnalysisPrompt": "ARQUITECTO NEURAL - ANÁLISIS DE CONTEXTO\nRealiza un análisis exhaustivo del estado actual y proporciona ideas estratégicas.\n\n{context}\n\nProporciona:\n1. Evaluación del estado actual\n2. Oportunidades de optimización del rendimiento\n3. Desafíos potenciales hoy\n4. Áreas de enfoque recomendadas\n5. Ajustes estratégicos\n\nSé específico y accionable para la personalidad ENFP.",
+    "contextAnalysisSystemPrompt": "Eres un coach de rendimiento de IA avanzado. Proporciona un análisis perspicaz.",
+    "context": {
+      "currentState": "ESTADO ACTUAL:",
+      "energy": "Energía",
+      "clarity": "Claridad",
+      "momentum": "Momentum",
+      "userState": "Estado del Usuario",
+      "activeGoals": "Metas Activas",
+      "habitsToday": "hábitos seguidos hoy",
+      "pendingTasks": "tareas pendientes",
+      "focusAreas": "ÁREAS DE ENFOQUE DE DESARROLLO:",
+      "completedHabits": "Hábitos Completados Hoy",
+      "pendingMITs": "Tareas de Alta Prioridad Pendientes"
+    }
+  },
+  "loading": {
+    "syncing": "Sincronizando con la nube...",
+    "auth": "Autenticando..."
+  },
+  "flowLab": {
+    "title": "Laboratorio de Flow",
+    "subtitle": "Entra en estados de máximo rendimiento para una productividad sobrehumana",
+    "minutes": "minutos",
+    "enterFlow": "Entrar en Estado de Flow",
+    "chooseProtocol": "Elige Tu Protocolo de Flow",
+    "recentSessions": "Sesiones de Flow Recientes",
+    "readiness": {
+      "title": "Evaluación de Preparación para Flow",
+      "energy": "Energía",
+      "clarity": "Claridad",
+      "momentum": "Momentum",
+      "potential": "Potencial de Flow Previsto"
+    },
+    "presets": {
+      "deepWork": { "name": "Trabajo Profundo", "desc": "Enfoque extendido para tareas complejas" },
+      "creativeFlow": { "name": "Flujo Creativo", "desc": "Óptimo para trabajo creativo e innovador" },
+      "learningSprint": { "name": "Sprint de Aprendizaje", "desc": "Aprendizaje intensivo y desarrollo de habilidades" },
+      "powerHour": { "name": "Hora de Poder", "desc": "Finalización de tareas de alta intensidad" },
+      "compatibility": "Compatibilidad",
+      "compat": { "high": "Alta", "medium": "Media", "low": "Baja" },
+      "startFlow": "Iniciar Flow"
+    },
+    "custom": {
+      "title": "Configuración de Sesión Personalizada",
+      "focusTask": "Tarea Enfocada",
+      "selectTask": "Selecciona una tarea...",
+      "duration": "Duración de la Sesión

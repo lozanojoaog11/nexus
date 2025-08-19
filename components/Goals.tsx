@@ -1,7 +1,9 @@
 
+
 import React from 'react';
 import { Goal } from '../types';
 import { PlusIcon } from '../constants';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface GoalsProps {
   goals: Goal[];
@@ -25,25 +27,32 @@ const EditIcon = ({ className }: { className?: string }) => (
 
 
 const Goals: React.FC<GoalsProps> = ({ goals, onAddGoal, onEditGoal, onDeleteGoal }) => {
+  const { t, language } = useTranslation();
   const calculateProgress = (goal: Goal) => {
     if (goal.milestones.length === 0) return 0;
     const completed = goal.milestones.filter(m => new Date(m.date) <= new Date()).length;
     return Math.round((completed / goal.milestones.length) * 100);
   };
 
+  const horizonKeyMap = {
+    'Curto Prazo (até 3 meses)': 'goalModal.horizons.short',
+    'Médio Prazo (3-12 meses)': 'goalModal.horizons.medium',
+    'Longo Prazo (>1 ano)': 'goalModal.horizons.long',
+  };
+
   return (
     <div className="p-8 text-white w-full h-full flex flex-col animate-fade-in-up">
       <header className="mb-8 flex-shrink-0 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Metas Estratégicas</h1>
-          <p className="text-gray-400 mt-1">Seus objetivos de longo prazo e marcos de progresso.</p>
+          <h1 className="text-3xl font-bold">{t('goals.title')}</h1>
+          <p className="text-gray-400 mt-1">{t('goals.subtitle')}</p>
         </div>
         <button
           onClick={onAddGoal}
           className="bg-[#00A9FF] text-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 flex items-center space-x-2"
         >
           <PlusIcon className="h-5 w-5" />
-          <span>Nova Meta</span>
+          <span>{t('goals.newGoal')}</span>
         </button>
       </header>
 
@@ -52,18 +61,19 @@ const Goals: React.FC<GoalsProps> = ({ goals, onAddGoal, onEditGoal, onDeleteGoa
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {goals.map(goal => {
               const progress = calculateProgress(goal);
+              const horizonKey = horizonKeyMap[goal.horizon] || goal.horizon;
               return (
                 <div key={goal.id} className="bg-[#1C1C1C] rounded-2xl border border-white/10 p-6 flex flex-col justify-between group">
                   <div>
                     <div className="flex justify-between items-start mb-4">
                       <h2 className="text-xl font-bold text-white pr-4">{goal.name}</h2>
-                      <span className="text-xs font-semibold bg-white/10 px-2 py-1 rounded-full flex-shrink-0">{goal.horizon}</span>
+                      <span className="text-xs font-semibold bg-white/10 px-2 py-1 rounded-full flex-shrink-0">{t(horizonKey)}</span>
                     </div>
                     <p className="text-sm text-gray-400 mb-4 h-10 overflow-hidden">{goal.description}</p>
                     
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs font-medium text-gray-400">Progresso</span>
+                          <span className="text-xs font-medium text-gray-400">{t('goals.progress')}</span>
                           <span className="text-xs font-bold text-[#00A9FF]">{progress}%</span>
                       </div>
                       <div className="w-full bg-gray-800 rounded-full h-2">
@@ -72,7 +82,7 @@ const Goals: React.FC<GoalsProps> = ({ goals, onAddGoal, onEditGoal, onDeleteGoa
                     </div>
 
                     <div className="text-xs text-gray-500">
-                      <span>Prazo: {new Date(goal.deadline + 'T12:00:00').toLocaleDateString('pt-BR')}</span>
+                      <span>{t('goals.deadline')}: {new Date(goal.deadline + 'T12:00:00').toLocaleDateString(language)}</span>
                     </div>
                   </div>
                   <div className="border-t border-white/10 mt-4 pt-4 flex justify-end items-center gap-2">
@@ -87,8 +97,8 @@ const Goals: React.FC<GoalsProps> = ({ goals, onAddGoal, onEditGoal, onDeleteGoa
           </div>
         ) : (
           <div className="text-center text-gray-500 pt-16">
-            <p>Nenhuma meta estratégica definida.</p>
-            <p className="mt-2">Clique em "Nova Meta" para começar a planejar seu futuro.</p>
+            <p>{t('goals.noGoals')}</p>
+            <p className="mt-2">{t('goals.noGoalsCta')}</p>
           </div>
         )}
       </div>
