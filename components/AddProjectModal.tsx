@@ -1,21 +1,27 @@
-
-
 import React, { useState } from 'react';
 import { useTranslation } from '../hooks/useTranslation';
 
 interface AddProjectModalProps {
   onClose: () => void;
-  onAdd: (name: string) => void;
+  onAdd: (name: string) => Promise<void>;
 }
 
 const AddProjectModal: React.FC<AddProjectModalProps> = ({ onClose, onAdd }) => {
   const { t } = useTranslation();
   const [name, setName] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (name.trim()) {
-      onAdd(name.trim());
-      onClose();
+      setIsSaving(true);
+      try {
+        await onAdd(name.trim());
+        onClose();
+      } catch (error) {
+        console.error("Failed to add project:", error);
+      } finally {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -46,15 +52,16 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ onClose, onAdd }) => 
             <button
               onClick={onClose}
               className="w-full bg-gray-700/80 text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-700 transition-all duration-200"
+              disabled={isSaving}
             >
               {t('addProjectModal.cancel')}
             </button>
             <button
               onClick={handleSubmit}
-              disabled={!name.trim()}
+              disabled={!name.trim() || isSaving}
               className="w-full bg-[#00A9FF] text-black font-bold py-3 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 disabled:bg-gray-600 disabled:shadow-none disabled:cursor-not-allowed"
             >
-              {t('addProjectModal.create')}
+              {isSaving ? 'Criando...' : t('addProjectModal.create')}
             </button>
         </div>
       </div>

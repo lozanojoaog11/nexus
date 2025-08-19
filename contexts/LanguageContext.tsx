@@ -1,6 +1,4 @@
-
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
 
 type Language = 'pt-BR' | 'en-US' | 'es-ES';
 
@@ -15,8 +13,12 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const translationsCache: Partial<Record<Language, any>> = {};
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useLocalStorage<Language>('eixo-language', 'pt-BR');
+  const [language] = useState<Language>('pt-BR');
   const [translations, setTranslations] = useState<any>(translationsCache[language] || {});
+
+  const setLanguage = () => {
+    // Language switching is disabled for now.
+  };
 
   useEffect(() => {
     const fetchTranslations = async () => {

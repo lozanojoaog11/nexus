@@ -1,30 +1,32 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { Book, DevelopmentNode } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { useUI } from '../contexts/UIContext';
 
 interface BookModalProps {
-  onClose: () => void;
-  onSave: (book: Book) => void;
-  bookToEdit: Book | null;
+  onSave: (book: Book) => Promise<void>;
   developmentNodes: DevelopmentNode[];
 }
 
-const BookModal: React.FC<BookModalProps> = ({ onClose, onSave, bookToEdit, developmentNodes }) => {
+const BookModal: React.FC<BookModalProps> = ({ onSave, developmentNodes }) => {
   const { t } = useTranslation();
+  const { state, close } = useUI();
+  const bookToEdit = state.modalProps.book || null;
+  const [isSaving, setIsSaving] = useState(false);
+
   const [book, setBook] = useState<Omit<Book, 'id' | 'notes'> & { notes: Book['notes'] }>({
     title: '',
     author: '',
     status: 'Quero Ler',
     relatedDevelopmentNodeId: '',
     notes: [],
-    ...bookToEdit,
   });
 
   useEffect(() => {
     if (bookToEdit) {
       setBook({ ...bookToEdit });
+    } else {
+        setBook({ title: '', author: '', status: 'Quero Ler', relatedDevelopmentNodeId: '', notes: [] });
     }
   }, [bookToEdit]);
 
@@ -33,17 +35,25 @@ const BookModal: React.FC<BookModalProps> = ({ onClose, onSave, bookToEdit, deve
     setBook(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (book.title.trim() && book.author.trim()) {
-      const bookToSave = { ...book, id: bookToEdit?.id || '' };
-      onSave(bookToSave as Book);
+        setIsSaving(true);
+        try {
+            const bookToSave = { ...book, id: bookToEdit?.id || '' };
+            await onSave(bookToSave as Book);
+            close();
+        } catch (error) {
+            console.error("Failed to save book:", error);
+        } finally {
+            setIsSaving(false);
+        }
     }
   };
   
   const resourceNodes = developmentNodes.filter(n => n.type === 'Recurso');
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 animate-fade-in" onClick={close}>
       <div className="bg-[#181818] border border-white/10 rounded-2xl shadow-2xl p-8 w-full max-w-lg flex flex-col animate-fade-in-up" onClick={e => e.stopPropagation()}>
         <h2 className="text-2xl font-bold text-white mb-6">{bookToEdit ? t('bookModal.editTitle') : t('bookModal.addTitle')}</h2>
         
@@ -74,8 +84,10 @@ const BookModal: React.FC<BookModalProps> = ({ onClose, onSave, bookToEdit, deve
         </div>
         
         <div className="w-full flex gap-4 mt-8 pt-6 border-t border-white/10">
-            <button onClick={onClose} className="w-full bg-gray-700/80 text-white font-bold py-3 rounded-lg hover:bg-gray-700">{t('bookModal.cancel')}</button>
-            <button onClick={handleSubmit} className="w-full bg-[#00A9FF] text-black font-bold py-3 rounded-lg hover:bg-opacity-90 shadow-lg shadow-[#00A9FF]/20">{t('bookModal.save')}</button>
+            <button onClick={close} className="w-full bg-gray-700/80 text-white font-bold py-3 rounded-lg hover:bg-gray-700" disabled={isSaving}>{t('bookModal.cancel')}</button>
+            <button onClick={handleSubmit} className="w-full bg-[#00A9FF] text-black font-bold py-3 rounded-lg hover:bg-opacity-90 shadow-lg shadow-[#00A9FF]/20" disabled={isSaving}>
+                {isSaving ? 'Salvando...' : t('bookModal.save')}
+            </button>
         </div>
       </div>
     </div>

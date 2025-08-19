@@ -1,14 +1,11 @@
-
-
 import React from 'react';
 import { Goal } from '../types';
 import { PlusIcon } from '../constants';
 import { useTranslation } from '../hooks/useTranslation';
+import { useUI } from '../contexts/UIContext';
 
 interface GoalsProps {
   goals: Goal[];
-  onAddGoal: () => void;
-  onEditGoal: (goal: Goal) => void;
   onDeleteGoal: (goalId: string) => void;
 }
 
@@ -26,8 +23,10 @@ const EditIcon = ({ className }: { className?: string }) => (
 );
 
 
-const Goals: React.FC<GoalsProps> = ({ goals, onAddGoal, onEditGoal, onDeleteGoal }) => {
+const Goals: React.FC<GoalsProps> = ({ goals, onDeleteGoal }) => {
   const { t, language } = useTranslation();
+  const ui = useUI();
+
   const calculateProgress = (goal: Goal) => {
     if (goal.milestones.length === 0) return 0;
     const completed = goal.milestones.filter(m => new Date(m.date) <= new Date()).length;
@@ -48,7 +47,7 @@ const Goals: React.FC<GoalsProps> = ({ goals, onAddGoal, onEditGoal, onDeleteGoa
           <p className="text-gray-400 mt-1">{t('goals.subtitle')}</p>
         </div>
         <button
-          onClick={onAddGoal}
+          onClick={() => ui.open('goal')}
           className="bg-[#00A9FF] text-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 flex items-center space-x-2"
         >
           <PlusIcon className="h-5 w-5" />
@@ -87,7 +86,7 @@ const Goals: React.FC<GoalsProps> = ({ goals, onAddGoal, onEditGoal, onDeleteGoa
                   </div>
                   <div className="border-t border-white/10 mt-4 pt-4 flex justify-end items-center gap-2">
                      <div className="text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex gap-2">
-                        <button onClick={() => onEditGoal(goal)} className="p-2 rounded-md hover:bg-white/10 hover:text-white"><EditIcon className="w-4 h-4" /></button>
+                        <button onClick={() => ui.open('goal', { goal })} className="p-2 rounded-md hover:bg-white/10 hover:text-white"><EditIcon className="w-4 h-4" /></button>
                         <button onClick={() => onDeleteGoal(goal.id)} className="p-2 rounded-md hover:bg-red-500/20 hover:text-red-400"><TrashIcon className="w-4 h-4" /></button>
                     </div>
                   </div>

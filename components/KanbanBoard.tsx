@@ -1,10 +1,9 @@
-
-
 import React, { useState, useMemo } from 'react';
 import { Project, Task, TaskStatus, DevelopmentNode } from '../types';
 import { PlusIcon, DevelopmentIcon } from '../constants';
 import TaskDetailModal from './TaskDetailModal';
 import { useTranslation } from '../hooks/useTranslation';
+import { useUI } from '../contexts/UIContext';
 
 interface KanbanBoardProps {
   projects: Project[];
@@ -13,7 +12,6 @@ interface KanbanBoardProps {
   updateTaskStatus: (projectId: string, taskId: string, newStatus: TaskStatus) => void;
   updateTask: (projectId: string, updatedTask: Task) => void;
   addTask: (projectId: string, content: string) => void;
-  onAddProject: () => void;
   deleteProject: (projectId: string) => void;
   developmentNodes: DevelopmentNode[];
 }
@@ -91,8 +89,9 @@ const KanbanColumn: React.FC<{
 };
 
 
-const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, setSelectedProjectId, updateTaskStatus, updateTask, addTask, onAddProject, deleteProject, developmentNodes }) => {
+const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, setSelectedProjectId, updateTaskStatus, updateTask, addTask, deleteProject, developmentNodes }) => {
   const { t } = useTranslation();
+  const ui = useUI();
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [newTaskContent, setNewTaskContent] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -145,7 +144,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, 
     return (
         <div className="p-8 text-center text-gray-400 w-full h-full flex flex-col items-center justify-center">
             <p className="mb-4">{t('kanban.noProjects')}</p>
-            <button onClick={onAddProject} className="bg-[#00A9FF] text-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 flex items-center space-x-2">
+            <button onClick={() => ui.open('addProject')} className="bg-[#00A9FF] text-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 flex items-center space-x-2">
                 <PlusIcon className="w-5 h-5"/>
                 <span>{t('kanban.newProject')}</span>
             </button>
@@ -186,7 +185,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ projects, selectedProjectId, 
                 >
                     {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
-                <button onClick={onAddProject} className="p-2 bg-gray-800 border border-gray-700 rounded-md hover:bg-gray-700 transition-colors">
+                <button onClick={() => ui.open('addProject')} className="p-2 bg-gray-800 border border-gray-700 rounded-md hover:bg-gray-700 transition-colors">
                     <PlusIcon className="w-5 h-5"/>
                 </button>
                 <button onClick={() => deleteProject(selectedProject.id)} className="p-2 bg-gray-800 border border-gray-700 rounded-md hover:bg-red-900/50 hover:border-red-500/50 transition-colors" title={t('kanban.deleteProject')}>

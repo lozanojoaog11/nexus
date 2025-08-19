@@ -1,13 +1,10 @@
-
-
 import React, { useState, useEffect } from 'react';
-import { Goal, Milestone, GoalHorizon, DevelopmentNode, Project } from '../types';
+import { Goal, Milestone, DevelopmentNode, Project } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { useUI } from '../contexts/UIContext';
 
 interface GoalModalProps {
-  onClose: () => void;
-  onSave: (goal: Goal) => void;
-  goalToEdit: Goal | null;
+  onSave: (goal: Goal) => Promise<void>;
   developmentNodes: DevelopmentNode[];
   projects: Project[];
 }
@@ -18,8 +15,12 @@ const TrashIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const GoalModal: React.FC<GoalModalProps> = ({ onClose, onSave, goalToEdit, developmentNodes, projects }) => {
+const GoalModal: React.FC<GoalModalProps> = ({ onSave, developmentNodes, projects }) => {
   const { t, language } = useTranslation();
+  const { state, close } = useUI();
+  const goalToEdit = state.modalProps.goal || null;
+  const [isSaving, setIsSaving] = useState(false);
+  
   const [goal, setGoal] = useState<Omit<Goal, 'id'>>({
     name: '',
     areaId: '',
@@ -31,19 +32,22 @@ const GoalModal: React.FC<GoalModalProps> = ({ onClose, onSave, goalToEdit, deve
     tags: '',
     relatedProjectIds: [],
     milestones: [],
-    ...goalToEdit,
   });
 
-  const [newMilestoneName, setNewMilestoneName] = useState('');
-  const [newMilestoneDate, setNewMilestoneDate] = useState('');
+  useEffect(() => {
+    if (goalToEdit) {
+      setGoal(goalToEdit);
+    }
+  }, [goalToEdit]);
+
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') close();
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
+  }, [close]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -67,17 +71,28 @@ const GoalModal: React.FC<GoalModalProps> = ({ onClose, onSave, goalToEdit, deve
       setGoal(prev => ({...prev, milestones: prev.milestones.filter(m => m.id !== milestoneId)}));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (goal.name.trim() && goal.areaId && goal.deadline) {
-        const goalToSave = { ...goal, id: goalToEdit?.id || '' };
-        onSave(goalToSave);
+        setIsSaving(true);
+        try {
+            const goalToSave = { ...goal, id: goalToEdit?.id || '' };
+            await onSave(goalToSave as Goal);
+            close();
+        } catch (error) {
+            console.error("Failed to save goal:", error);
+        } finally {
+            setIsSaving(false);
+        }
     }
   };
+  
+  const [newMilestoneName, setNewMilestoneName] = useState('');
+  const [newMilestoneDate, setNewMilestoneDate] = useState('');
   
   const developmentAreas = developmentNodes.filter(n => n.type === 'Ponto de Fuga' || n.type === 'Objetivo');
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 animate-fade-in" onClick={close}>
       <div className="bg-[#181818] border border-white/10 rounded-2xl shadow-2xl p-8 w-full max-w-3xl flex flex-col animate-fade-in-up max-h-[95vh]" onClick={e => e.stopPropagation()}>
         <h2 className="text-2xl font-bold text-white mb-6">{goalToEdit ? t('goalModal.editTitle') : t('goalModal.addTitle')}</h2>
         
@@ -145,8 +160,10 @@ const GoalModal: React.FC<GoalModalProps> = ({ onClose, onSave, goalToEdit, deve
         </div>
         
         <div className="w-full flex gap-4 mt-6 pt-6 border-t border-white/10">
-            <button onClick={onClose} className="w-full bg-gray-700/80 text-white font-bold py-3 rounded-lg hover:bg-gray-700">{t('goalModal.cancel')}</button>
-            <button onClick={handleSubmit} className="w-full bg-[#00A9FF] text-black font-bold py-3 rounded-lg hover:bg-opacity-90 shadow-lg shadow-[#00A9FF]/20">{t('goalModal.save')}</button>
+            <button onClick={close} className="w-full bg-gray-700/80 text-white font-bold py-3 rounded-lg hover:bg-gray-700" disabled={isSaving}>{t('goalModal.cancel')}</button>
+            <button onClick={handleSubmit} className="w-full bg-[#00A9FF] text-black font-bold py-3 rounded-lg hover:bg-opacity-90 shadow-lg shadow-[#00A9FF]/20" disabled={isSaving}>
+                {isSaving ? 'Salvando...' : t('goalModal.save')}
+            </button>
         </div>
       </div>
     </div>

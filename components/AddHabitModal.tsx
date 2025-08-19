@@ -1,12 +1,10 @@
-
-
 import React, { useState } from 'react';
 import { Habit } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
 interface AddHabitModalProps {
   onClose: () => void;
-  onAdd: (name: string, category: Habit['category'], frequency: number) => void;
+  onAdd: (name: string, category: Habit['category'], frequency: number) => Promise<void>;
 }
 
 const AddHabitModal: React.FC<AddHabitModalProps> = ({ onClose, onAdd }) => {
@@ -14,10 +12,19 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ onClose, onAdd }) => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<Habit['category']>('Mente');
   const [frequency, setFrequency] = useState(7);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (name.trim() && frequency > 0 && frequency <= 7) {
-      onAdd(name.trim(), category, frequency);
+      setIsSaving(true);
+      try {
+        await onAdd(name.trim(), category, frequency);
+        onClose();
+      } catch (error) {
+        console.error("Failed to add habit:", error);
+      } finally {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -72,15 +79,16 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ onClose, onAdd }) => {
             <button
               onClick={onClose}
               className="w-full bg-gray-700/80 text-white font-bold py-3 px-4 rounded-lg hover:bg-gray-700 transition-all duration-200"
+              disabled={isSaving}
             >
               {t('addHabitModal.cancel')}
             </button>
             <button
               onClick={handleSubmit}
-              disabled={!name.trim() || frequency < 1 || frequency > 7}
+              disabled={!name.trim() || frequency < 1 || frequency > 7 || isSaving}
               className="w-full bg-[#00A9FF] text-black font-bold py-3 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 disabled:bg-gray-600 disabled:shadow-none disabled:cursor-not-allowed"
             >
-              {t('addHabitModal.add')}
+              {isSaving ? 'Adicionando...' : t('addHabitModal.add')}
             </button>
         </div>
       </div>

@@ -3,14 +3,13 @@ import { DevelopmentGraph, DevelopmentNode, DevelopmentNodeType, Goal, Task, Boo
 import { ICON_MAP, PlusIcon } from '../constants';
 import { useTranslation } from '../hooks/useTranslation';
 import GraphView from './GraphView';
+import { useUI } from '../contexts/UIContext';
 
 interface DevelopmentProps {
   graph: DevelopmentGraph;
   goals: Goal[];
   tasks: Task[];
   books: Book[];
-  onAddNode: () => void;
-  onEditNode: (node: DevelopmentNode) => void;
   onDeleteNode: (nodeId: string) => void;
 }
 
@@ -39,8 +38,9 @@ const getNodeCanvasColor = (type: DevelopmentNodeType): string => {
 };
 
 
-const Development: React.FC<DevelopmentProps> = ({ graph, goals, tasks, books, onAddNode, onEditNode, onDeleteNode }) => {
+const Development: React.FC<DevelopmentProps> = ({ graph, goals, tasks, books, onDeleteNode }) => {
     const { t } = useTranslation();
+    const ui = useUI();
     const [selectedNode, setSelectedNode] = useState<DevelopmentNode | null>(null);
     const [viewMode, setViewMode] = useState<'list' | 'graph'>('list');
 
@@ -88,7 +88,7 @@ const Development: React.FC<DevelopmentProps> = ({ graph, goals, tasks, books, o
                              <button onClick={() => setViewMode('list')} className={`px-3 py-1 text-sm rounded-md ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-gray-700'}`}>{t('development.view.list')}</button>
                              <button onClick={() => setViewMode('graph')} className={`px-3 py-1 text-sm rounded-md ${viewMode === 'graph' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-gray-700'}`}>{t('development.view.graph')}</button>
                         </div>
-                        <button onClick={onAddNode} className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors"><PlusIcon className="w-5 h-5"/></button>
+                        <button onClick={() => ui.open('developmentArea')} className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors"><PlusIcon className="w-5 h-5"/></button>
                     </div>
                 </div>
                 <p className="text-gray-400 mb-6">{t('development.subtitle')}</p>

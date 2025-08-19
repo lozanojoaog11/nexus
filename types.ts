@@ -28,6 +28,7 @@ export type Habit = {
     completed: boolean;
   }[];
   bestStreak: number;
+  currentStreak: number;
   isKeystone?: boolean;
 };
 

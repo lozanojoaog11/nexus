@@ -3,11 +3,11 @@ import { Project, Book, View, DevelopmentGraph, Habit, CalendarEvent, Goal, Icon
 export const ACCENT_COLOR = '#00A9FF';
 
 export const INITIAL_HABITS: Habit[] = [
-  { id: 'h1', name: 'Meditação Mindfulness', category: 'Mente', frequency: 7, history: [], bestStreak: 0 },
-  { id: 'h2', name: 'Bloco de Deep Work (90 min)', category: 'Execução', frequency: 5, history: [], bestStreak: 0 },
-  { id: 'h3', name: 'Leitura Focada (15 min)', category: 'Mente', frequency: 7, history: [], bestStreak: 0 },
-  { id: 'h4', name: 'Treino de Força / Exercício', category: 'Corpo', frequency: 4, history: [], bestStreak: 0 },
-  { id: 'h5', name: 'Protocolo Noturno (Wind down)', category: 'Corpo', frequency: 7, history: [], bestStreak: 0, isKeystone: true },
+  { id: 'h1', name: 'Meditação Mindfulness', category: 'Mente', frequency: 7, history: [], bestStreak: 0, currentStreak: 0 },
+  { id: 'h2', name: 'Bloco de Deep Work (90 min)', category: 'Execução', frequency: 5, history: [], bestStreak: 0, currentStreak: 0 },
+  { id: 'h3', name: 'Leitura Focada (15 min)', category: 'Mente', frequency: 7, history: [], bestStreak: 0, currentStreak: 0 },
+  { id: 'h4', name: 'Treino de Força / Exercício', category: 'Corpo', frequency: 4, history: [], bestStreak: 0, currentStreak: 0 },
+  { id: 'h5', name: 'Protocolo Noturno (Wind down)', category: 'Corpo', frequency: 7, history: [], bestStreak: 0, currentStreak: 0, isKeystone: true },
 ];
 
 export const INITIAL_PROJECTS: Project[] = [

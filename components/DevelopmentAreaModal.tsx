@@ -1,18 +1,19 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { DevelopmentNode, DevelopmentNodeType, IconName } from '../types';
 import { ICON_MAP } from '../constants';
 import { useTranslation } from '../hooks/useTranslation';
+import { useUI } from '../contexts/UIContext';
 
 interface DevelopmentAreaModalProps {
-  onClose: () => void;
-  onSave: (node: DevelopmentNode) => void;
-  nodeToEdit: DevelopmentNode | null;
+  onSave: (node: DevelopmentNode) => Promise<void>;
 }
 
-const DevelopmentAreaModal: React.FC<DevelopmentAreaModalProps> = ({ onClose, onSave, nodeToEdit }) => {
+const DevelopmentAreaModal: React.FC<DevelopmentAreaModalProps> = ({ onSave }) => {
   const { t } = useTranslation();
+  const { state, close } = useUI();
+  const nodeToEdit = state.modalProps.node || null;
+  const [isSaving, setIsSaving] = useState(false);
+
   const [node, setNode] = useState<Omit<DevelopmentNode, 'id'>>({
     label: '',
     description: '',
@@ -20,12 +21,13 @@ const DevelopmentAreaModal: React.FC<DevelopmentAreaModalProps> = ({ onClose, on
     icon: 'Estudos',
     successMetrics: '',
     targetDate: '',
-    ...nodeToEdit,
   });
 
   useEffect(() => {
     if (nodeToEdit) {
       setNode({ ...nodeToEdit });
+    } else {
+      setNode({ label: '', description: '', type: 'Skill', icon: 'Estudos', successMetrics: '', targetDate: '' });
     }
   }, [nodeToEdit]);
 
@@ -38,11 +40,18 @@ const DevelopmentAreaModal: React.FC<DevelopmentAreaModalProps> = ({ onClose, on
     setNode(prev => ({...prev, icon: iconName}));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (node.label.trim()) {
-      const nodeToSave = { ...node, id: nodeToEdit?.id || '' };
-      onSave(nodeToSave);
-      onClose();
+      setIsSaving(true);
+      try {
+        const nodeToSave = { ...node, id: nodeToEdit?.id || '' };
+        await onSave(nodeToSave as DevelopmentNode);
+        close();
+      } catch (error) {
+        console.error("Failed to save development node:", error);
+      } finally {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -50,7 +59,7 @@ const DevelopmentAreaModal: React.FC<DevelopmentAreaModalProps> = ({ onClose, on
   const iconNames = Object.keys(ICON_MAP) as IconName[];
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-xl flex items-center justify-center z-50 animate-fade-in" onClick={close}>
       <div className="bg-[#181818] border border-white/10 rounded-2xl shadow-2xl p-8 w-full max-w-2xl flex flex-col animate-fade-in-up max-h-[95vh]" onClick={e => e.stopPropagation()}>
         <h2 className="text-2xl font-bold text-white mb-6">{nodeToEdit ? t('devAreaModal.editTitle') : t('devAreaModal.addTitle')}</h2>
         
@@ -97,8 +106,10 @@ const DevelopmentAreaModal: React.FC<DevelopmentAreaModalProps> = ({ onClose, on
         </div>
         
         <div className="w-full flex gap-4 mt-6 pt-6 border-t border-white/10">
-            <button onClick={onClose} className="w-full bg-gray-700/80 text-white font-bold py-3 rounded-lg hover:bg-gray-700">{t('devAreaModal.cancel')}</button>
-            <button onClick={handleSubmit} className="w-full bg-[#00A9FF] text-black font-bold py-3 rounded-lg hover:bg-opacity-90 shadow-lg shadow-[#00A9FF]/20">{t('devAreaModal.save')}</button>
+            <button onClick={close} className="w-full bg-gray-700/80 text-white font-bold py-3 rounded-lg hover:bg-gray-700" disabled={isSaving}>{t('devAreaModal.cancel')}</button>
+            <button onClick={handleSubmit} className="w-full bg-[#00A9FF] text-black font-bold py-3 rounded-lg hover:bg-opacity-90 shadow-lg shadow-[#00A9FF]/20" disabled={isSaving}>
+                {isSaving ? 'Salvando...' : t('devAreaModal.save')}
+            </button>
         </div>
       </div>
     </div>

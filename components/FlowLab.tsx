@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Task, DailyCheckin, FlowSession, EnvironmentSettings } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import FlowPresetCard from './flowlab/FlowPresetCard';
+import EnvironmentControls from './flowlab/EnvironmentControls';
+import SessionHistoryCard from './flowlab/SessionHistoryCard';
+import SessionCompletionView from './flowlab/SessionCompletionView';
 
 interface FlowLabProps {
   tasks: Task[];
@@ -180,111 +184,6 @@ const FlowLab: React.FC<FlowLabProps> = ({ tasks, checkin, sessionHistory, onSes
   }
 
   return null;
-};
-
-// SUB-COMPONENTS
-const FlowPresetCard: React.FC<{ preset: any; onSelect: () => void; currentEnergy: number; }> = ({ preset, onSelect, currentEnergy }) => {
-  const { t } = useTranslation();
-  const compatibility = currentEnergy >= 7 ? t('flowLab.presets.compat.high') : currentEnergy >= 5 ? t('flowLab.presets.compat.medium') : t('flowLab.presets.compat.low');
-  const compatibilityColor = currentEnergy >= 7 ? 'text-green-400' : currentEnergy >= 5 ? 'text-yellow-400' : 'text-red-400';
-  return (
-    <div className="bg-gray-800/50 p-6 rounded-xl border border-gray-700 hover:border-gray-600 transition-all">
-      <div className="flex items-center gap-3 mb-3">
-        <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${preset.color} flex items-center justify-center text-2xl`}>{preset.icon}</div>
-        <div><h3 className="font-bold">{t(preset.nameKey)}</h3><p className="text-sm text-gray-400">{preset.duration} {t('flowLab.minutes')}</p></div>
-      </div>
-      <p className="text-sm text-gray-300 mb-4">{t(preset.descKey)}</p>
-      <div className="flex justify-between items-center mb-4"><span className="text-xs text-gray-400">{t('flowLab.presets.compatibility')}:</span><span className={`text-xs font-bold ${compatibilityColor}`}>{compatibility}</span></div>
-      <button onClick={onSelect} className={`w-full py-2 rounded-lg bg-gradient-to-r ${preset.color} text-white font-medium hover:opacity-90`}>{t('flowLab.presets.startFlow')}</button>
-    </div>
-  );
-};
-
-const EnvironmentControls: React.FC<{ environment: EnvironmentSettings; onChange: (env: EnvironmentSettings) => void; }> = ({ environment, onChange }) => {
-    const { t } = useTranslation();
-    return (
-        <div className="grid grid-cols-2 gap-4">
-            <div>
-            <label className="block text-sm text-gray-400 mb-2">{t('flowLab.env.musicType')}</label>
-            <select value={environment.musicType} onChange={(e) => onChange({...environment, musicType: e.target.value as any})} className="w-full bg-gray-800 text-white p-2 rounded border border-gray-600">
-                <option value="none">{t('flowLab.env.music.none')}</option><option value="focus">{t('flowLab.env.music.focus')}</option><option value="ambient">{t('flowLab.env.music.ambient')}</option><option value="binaural">{t('flowLab.env.music.binaural')}</option><option value="nature">{t('flowLab.env.music.nature')}</option>
-            </select>
-            </div>
-            <div>
-            <label className="block text-sm text-gray-400 mb-2">{t('flowLab.env.noiseLevel')}</label>
-            <select value={environment.noiseLevel} onChange={(e) => onChange({...environment, noiseLevel: e.target.value as any})} className="w-full bg-gray-800 text-white p-2 rounded border border-gray-600">
-                <option value="silent">{t('flowLab.env.noise.silent')}</option><option value="minimal">{t('flowLab.env.noise.minimal')}</option><option value="moderate">{t('flowLab.env.noise.moderate')}</option>
-            </select>
-            </div>
-            <div className="col-span-2">
-            <label className="flex items-center gap-2"><input type="checkbox" checked={environment.distractionsBlocked} onChange={(e) => onChange({...environment, distractionsBlocked: e.target.checked})} className="accent-blue-500" /><span className="text-sm text-gray-300">{t('flowLab.env.blockDistractions')}</span></label>
-            </div>
-        </div>
-    );
-};
-
-const SessionHistoryCard: React.FC<{ session: FlowSession }> = ({ session }) => {
-    const { t, language } = useTranslation();
-    return (
-        <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg">
-            <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">🎯</div>
-            <div>
-                <div className="text-white font-medium">{session.taskCompleted || t('flowLab.history.untitled')}</div>
-                <div className="text-gray-400 text-sm">{new Date(session.startTime).toLocaleDateString(language)} • {session.duration}{t('flowLab.minutes')}</div>
-            </div>
-            </div>
-            <div className="text-right">
-            <div className="text-white font-bold">{session.flowRating}/10</div>
-            <div className="text-gray-400 text-xs">{session.distractionCount} {t('flowLab.history.distractions')}</div>
-            </div>
-        </div>
-    );
-};
-
-const SessionCompletionView: React.FC<{ session: FlowSession; onSave: (session: FlowSession, earnedXp: number) => void; onDiscard: () => void; }> = ({ session, onSave, onDiscard }) => {
-  const { t } = useTranslation();
-  const [flowRating, setFlowRating] = useState(7);
-  const [focusQuality, setFocusQuality] = useState(7);
-  const [notes, setNotes] = useState('');
-  const handleSave = () => { 
-    const earnedXp = Math.round(session.duration * (flowRating / 10) * Math.max(0, (1 - (session.distractionCount / 10))));
-    onSave({ ...session, flowRating, focusQuality, notes }, earnedXp); 
-  };
-  return (
-    <div className="p-8 text-white w-full h-full overflow-y-auto">
-      <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold text-center mb-8">{t('flowLab.complete.title')}</h2>
-        <div className="bg-gray-900/50 p-6 rounded-xl border border-gray-700 mb-6">
-          <h3 className="font-semibold mb-4">{t('flowLab.complete.summary')}</h3>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>{t('flowLab.complete.duration')}: {session.duration} {t('flowLab.minutes')}</div>
-            <div>{t('flowLab.complete.distractions')}: {session.distractionCount}</div>
-            <div>{t('flowLab.complete.task')}: {session.taskCompleted}</div>
-            <div>{t('flowLab.complete.environment')}: {session.environment.musicType}</div>
-          </div>
-        </div>
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm text-gray-400 mb-2">{t('flowLab.complete.flowQuality')}: {flowRating}</label>
-            <input type="range" min="1" max="10" value={flowRating} onChange={(e) => setFlowRating(parseInt(e.target.value))} className="w-full accent-purple-500" />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-2">{t('flowLab.complete.focusQuality')}: {focusQuality}</label>
-            <input type="range" min="1" max="10" value={focusQuality} onChange={(e) => setFocusQuality(parseInt(e.target.value))} className="w-full accent-blue-500" />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-400 mb-2">{t('flowLab.complete.notes')}</label>
-            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder={t('flowLab.complete.notesPlaceholder')} className="w-full bg-gray-800 text-white p-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-purple-500 rows-3" />
-          </div>
-        </div>
-        <div className="flex gap-4 mt-8">
-          <button onClick={onDiscard} className="flex-1 bg-gray-700 hover:bg-gray-600 py-3 rounded-lg">{t('flowLab.complete.discard')}</button>
-          <button onClick={handleSave} className="flex-1 bg-gradient-to-r from-purple-500 to-blue-600 py-3 rounded-lg font-bold">{t('flowLab.complete.save')}</button>
-        </div>
-      </div>
-    </div>
-  );
 };
 
 export default FlowLab;

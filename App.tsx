@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData, TaskStatus, BookNote } from './types';
+import React, { useState, useMemo, useEffect } from 'react';
+import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData } from './types';
 import useDatabase from './hooks/useDatabase';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
@@ -24,6 +24,45 @@ import AchievementConstellation from './components/AchievementConstellation';
 import NeuralAnalytics from './components/NeuralAnalytics';
 import TodayView from './components/TodayView';
 import { LanguageProvider, useTranslation } from './contexts/LanguageContext';
+import { UIProvider, useUI } from './contexts/UIContext';
+
+const AppModals: React.FC<{
+    projects: Project[];
+    developmentGraph: DevelopmentGraph;
+    saveGoal: (goal: Goal) => Promise<void>;
+    saveDevelopmentNode: (node: DevelopmentNode) => Promise<void>;
+    saveBook: (book: Book) => Promise<void>;
+    addHabit: (name: string, category: "Corpo" | "Mente" | "Execução", frequency: number) => Promise<void>;
+    addProject: (name: string) => Promise<void>;
+}> = ({ projects, developmentGraph, saveGoal, saveDevelopmentNode, saveBook, addHabit, addProject }) => {
+    const { state, close } = useUI();
+
+    return (
+        <>
+            {state.openModal === 'addHabit' && <AddHabitModal onClose={close} onAdd={addHabit} />}
+            {state.openModal === 'addProject' && <AddProjectModal onClose={close} onAdd={addProject} />}
+            {state.openModal === 'goal' && (
+                <GoalModal 
+                    onSave={saveGoal} 
+                    developmentNodes={developmentGraph.nodes} 
+                    projects={projects} 
+                />
+            )}
+            {state.openModal === 'developmentArea' && (
+                <DevelopmentAreaModal 
+                    onSave={saveDevelopmentNode} 
+                />
+            )}
+            {state.openModal === 'book' && (
+                <BookModal 
+                    onSave={saveBook} 
+                    developmentNodes={developmentGraph.nodes} 
+                />
+            )}
+        </>
+    );
+};
+
 
 const MainApp: React.FC = () => {
   const { t, language } = useTranslation();
@@ -49,16 +88,8 @@ const MainApp: React.FC = () => {
     biohackingMetrics, saveBiohackingMetrics
   } = useDatabase(language, t('userManifesto'));
 
-  const [showCheckinModal, setShowCheckinModal] = useState(false);
+  const [showCheckin, setShowCheckin] = useState(false);
   const [isProcessingCheckin, setIsProcessingCheckin] = useState(false);
-  const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
-  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
-  const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
-  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
-  const [isDevelopmentAreaModalOpen, setIsDevelopmentAreaModalOpen] = useState(false);
-  const [editingDevelopmentNode, setEditingDevelopmentNode] = useState<DevelopmentNode | null>(null);
-  const [isBookModalOpen, setIsBookModalOpen] = useState(false);
-  const [editingBook, setEditingBook] = useState<Book | null>(null);
 
   const allTasks = useMemo(() => projects.flatMap(p => p.tasks), [projects]);
 
@@ -87,7 +118,7 @@ const MainApp: React.FC = () => {
     });
   }, [achievementDefinitions, allTasks, flowSessions, cognitiveSessions, biohackingMetrics]);
   
-  const prevAchievementsRef = useRef<Achievement[]>([]);
+  const prevAchievementsRef = React.useRef<Achievement[]>([]);
   useEffect(() => {
     const newlyUnlocked = achievements.filter(current => {
         const prev = prevAchievementsRef.current.find(p => p.id === current.id);
@@ -119,17 +150,23 @@ const MainApp: React.FC = () => {
   ], [flowSessions, t]);
 
   // --- End of Achievement Logic ---
+  
+  const today = new Date().toISOString().split('T')[0];
+  const hasCheckedInToday = !!dailyCheckin && dailyCheckin.date === today;
+
+  useEffect(() => {
+    if (!loading && isAuthenticated && !hasCheckedInToday) {
+      setShowCheckin(true);
+    }
+  }, [loading, isAuthenticated, hasCheckedInToday]);
+
 
   const onCheckinConfirm = async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>) => {
     setIsProcessingCheckin(true);
     await handleCheckinConfirm(checkinData);
     setIsProcessingCheckin(false);
-    setShowCheckinModal(false);
+    setShowCheckin(false);
   };
-
-  const openGoalModal = (goal: Goal | null = null) => { setEditingGoal(goal); setIsGoalModalOpen(true); };
-  const openDevelopmentAreaModal = (node: DevelopmentNode | null = null) => { setEditingDevelopmentNode(node); setIsDevelopmentAreaModalOpen(true); };
-  const openBookModal = (book: Book | null = null) => { setEditingBook(book); setIsBookModalOpen(true); };
 
   const renderView = () => {
     if (loading) {
@@ -146,11 +183,8 @@ const MainApp: React.FC = () => {
         );
     }
       
-    const today = new Date().toISOString().split('T')[0];
-    const hasCheckedInToday = !!dailyCheckin && dailyCheckin.date === today;
-
     switch (currentView) {
-      case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
+      case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
       case 'today': return <TodayView 
                                 dailyCheckin={dailyCheckin}
                                 tasks={allTasks}
@@ -159,19 +193,19 @@ const MainApp: React.FC = () => {
                                 updateTaskStatus={updateTaskStatus}
                                 toggleHabitCompletion={toggleHabitCompletion}
                             />;
-      case 'habits': return <Habits habits={habits} toggleHabitCompletion={toggleHabitCompletion} onAddHabit={() => setIsAddHabitModalOpen(true)} onDeleteHabit={deleteHabit} />;
-      case 'projects': return <KanbanBoard projects={projects} selectedProjectId={selectedProjectId} setSelectedProjectId={setSelectedProjectId} updateTaskStatus={updateTaskStatus} updateTask={updateTask} addTask={addTask} onAddProject={() => setIsAddProjectModalOpen(true)} deleteProject={deleteProject} developmentNodes={developmentGraph.nodes} />;
-      case 'goals': return <Goals goals={goals} onAddGoal={() => openGoalModal(null)} onEditGoal={(goal) => openGoalModal(goal)} onDeleteGoal={deleteGoal} />;
+      case 'habits': return <Habits habits={habits} toggleHabitCompletion={toggleHabitCompletion} onDeleteHabit={deleteHabit} />;
+      case 'projects': return <KanbanBoard projects={projects} selectedProjectId={selectedProjectId} setSelectedProjectId={setSelectedProjectId} updateTaskStatus={updateTaskStatus} updateTask={updateTask} addTask={addTask} deleteProject={deleteProject} developmentNodes={developmentGraph.nodes} />;
+      case 'goals': return <Goals goals={goals} onDeleteGoal={deleteGoal} />;
       case 'agenda': return <Agenda events={agendaEvents} tasks={allTasks} />;
-      case 'development': return <Development graph={developmentGraph} goals={goals} tasks={allTasks} books={books} onAddNode={() => openDevelopmentAreaModal(null)} onEditNode={(node) => openDevelopmentAreaModal(node)} onDeleteNode={deleteDevelopmentNode}  />;
+      case 'development': return <Development graph={developmentGraph} goals={goals} tasks={allTasks} books={books} onDeleteNode={deleteDevelopmentNode}  />;
       case 'cognitive': return <CognitiveTraining sessions={cognitiveSessions} onSessionComplete={saveCognitiveSession} />;
       case 'flowlab': return <FlowLab tasks={allTasks} checkin={dailyCheckin} sessionHistory={flowSessions} onSessionSave={saveFlowSession} />;
       case 'biohacking': return <BiohackingSuite checkin={dailyCheckin} habits={habits} metricsHistory={biohackingMetrics} onMetricsSave={saveBiohackingMetrics} />;
       case 'achievements': return <AchievementConstellation achievements={achievements} userLevel={userLevel} activeStreaks={activeStreaks} totalXP={profile?.totalXp || 0} />;
       case 'analytics': return <NeuralAnalytics checkins={allDailyCheckins} habits={habits} tasks={allTasks} goals={goals} flowSessions={flowSessions} cognitiveSessions={cognitiveSessions} biohackingData={biohackingMetrics} achievements={achievements} />;
       case 'guardian': return <NeuralArchitectAI checkin={dailyCheckin} habits={habits} goals={goals} tasks={allTasks} developmentNodes={developmentGraph.nodes} />;
-      case 'library': return <Library books={books} backlinks={backlinks} addNoteToBook={addNoteToBook} onAddBook={() => openBookModal(null)} onEditBook={(book) => openBookModal(book)} onDeleteBook={deleteBook} onUpdateNote={updateNote} onDeleteNote={deleteNote} />;
-      default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckinModal(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
+      case 'library': return <Library books={books} backlinks={backlinks} addNoteToBook={addNoteToBook} onDeleteBook={deleteBook} onUpdateNote={updateNote} onDeleteNote={deleteNote} />;
+      default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
     }
   };
 
@@ -192,12 +226,18 @@ const MainApp: React.FC = () => {
 
   return (
     <div className="flex h-screen w-screen text-white">
-      {showCheckinModal && <NeuralAlignmentModal onConfirm={onCheckinConfirm} isProcessing={isProcessingCheckin}/>}
-      {isAddHabitModalOpen && <AddHabitModal onClose={() => setIsAddHabitModalOpen(false)} onAdd={addHabit} />}
-      {isAddProjectModalOpen && <AddProjectModal onClose={() => setIsAddProjectModalOpen(false)} onAdd={addProject} />}
-      {isGoalModalOpen && <GoalModal onClose={() => { setEditingGoal(null); setIsGoalModalOpen(false); }} onSave={saveGoal} goalToEdit={editingGoal} developmentNodes={developmentGraph.nodes} projects={projects} />}
-      {isDevelopmentAreaModalOpen && <DevelopmentAreaModal onClose={() => { setEditingDevelopmentNode(null); setIsDevelopmentAreaModalOpen(false); }} onSave={saveDevelopmentNode} nodeToEdit={editingDevelopmentNode} />}
-      {isBookModalOpen && <BookModal onClose={() => { setEditingBook(null); setIsBookModalOpen(false); }} onSave={saveBook} bookToEdit={editingBook} developmentNodes={developmentGraph.nodes} />}
+      {showCheckin && <NeuralAlignmentModal onConfirm={onCheckinConfirm} isProcessing={isProcessingCheckin}/>}
+      
+      <AppModals 
+        projects={projects}
+        developmentGraph={developmentGraph}
+        saveGoal={saveGoal}
+        saveDevelopmentNode={saveDevelopmentNode}
+        saveBook={saveBook}
+        addHabit={addHabit}
+        addProject={addProject}
+      />
+
       <Sidebar currentView={currentView} setCurrentView={setCurrentView} onSignOut={signOut} />
       <main className="flex-1 bg-black/10">
         {renderView()}
@@ -208,7 +248,9 @@ const MainApp: React.FC = () => {
 
 const App: React.FC = () => (
   <LanguageProvider>
-    <MainApp />
+    <UIProvider>
+      <MainApp />
+    </UIProvider>
   </LanguageProvider>
 );
 

@@ -1,14 +1,12 @@
-
-
 import React, { useMemo } from 'react';
 import { Habit } from '../types';
 import { PlusIcon, ACCENT_COLOR } from '../constants';
 import { useTranslation } from '../hooks/useTranslation';
+import { useUI } from '../contexts/UIContext';
 
 interface HabitsProps {
   habits: Habit[];
   toggleHabitCompletion: (habitId: string, date: string, isCompleted: boolean) => void;
-  onAddHabit: () => void;
   onDeleteHabit: (habitId: string) => void;
 }
 
@@ -89,8 +87,9 @@ const HabitRow: React.FC<{
     );
 }
 
-const Habits: React.FC<HabitsProps> = ({ habits, toggleHabitCompletion, onAddHabit, onDeleteHabit }) => {
+const Habits: React.FC<HabitsProps> = ({ habits, toggleHabitCompletion, onDeleteHabit }) => {
   const { t } = useTranslation();
+  const ui = useUI();
   return (
     <div className="p-8 text-white w-full h-full flex flex-col animate-fade-in-up">
       <header className="mb-8 flex-shrink-0 flex justify-between items-center">
@@ -99,7 +98,7 @@ const Habits: React.FC<HabitsProps> = ({ habits, toggleHabitCompletion, onAddHab
             <p className="text-gray-400 mt-1">{t('habits.subtitle')}</p>
         </div>
         <button
-            onClick={onAddHabit}
+            onClick={() => ui.open('addHabit')}
             className="bg-[#00A9FF] text-black font-bold py-2 px-4 rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-lg shadow-[#00A9FF]/20 flex items-center space-x-2"
         >
           <PlusIcon className="h-5 w-5" />

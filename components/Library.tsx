@@ -3,6 +3,7 @@ import { Book, BookNote } from '../types';
 import { PlusIcon } from '../constants';
 import { useTranslation } from '../hooks/useTranslation';
 import LinkedNoteRenderer from './shared/LinkedNoteRenderer';
+import { useUI } from '../contexts/UIContext';
 
 const EditIcon = ({ className }: { className?: string }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" /></svg>
@@ -16,8 +17,6 @@ interface LibraryProps {
   books: Book[];
   backlinks: Record<string, { bookId: string; bookTitle: string; note: BookNote }[]>;
   addNoteToBook: (bookId: string, noteContent: string) => void;
-  onAddBook: () => void;
-  onEditBook: (book: Book) => void;
   onDeleteBook: (bookId: string) => void;
   onUpdateNote: (bookId: string, note: BookNote) => void;
   onDeleteNote: (bookId: string, noteId: string) => void;
@@ -70,8 +69,9 @@ const NoteItem: React.FC<NoteItemProps> = ({ note, onUpdate, onDelete, books, on
 }
 
 
-const Library: React.FC<LibraryProps> = ({ books, backlinks, addNoteToBook, onAddBook, onEditBook, onDeleteBook, onUpdateNote, onDeleteNote }) => {
+const Library: React.FC<LibraryProps> = ({ books, backlinks, addNoteToBook, onDeleteBook, onUpdateNote, onDeleteNote }) => {
   const { t } = useTranslation();
+  const ui = useUI();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [noteInput, setNoteInput] = useState('');
 
@@ -122,7 +122,7 @@ const Library: React.FC<LibraryProps> = ({ books, backlinks, addNoteToBook, onAd
       <div className="w-1/3 flex flex-col">
         <div className="flex justify-between items-center mb-2">
             <h1 className="text-3xl font-bold">{t('library.title')}</h1>
-             <button onClick={onAddBook} className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors"><PlusIcon className="w-5 h-5"/></button>
+             <button onClick={() => ui.open('book')} className="p-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors"><PlusIcon className="w-5 h-5"/></button>
         </div>
         <p className="text-gray-400 mb-6">{t('library.subtitle')}</p>
         <div className="flex-grow overflow-y-auto bg-gray-900/50 rounded-lg p-2 border border-gray-700">
@@ -143,7 +143,7 @@ const Library: React.FC<LibraryProps> = ({ books, backlinks, addNoteToBook, onAd
                       <p className="text-sm text-gray-400">{book.author}</p>
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                       <button onClick={(e) => { e.stopPropagation(); onEditBook(book); }} className="p-1 text-gray-400 hover:text-white"><EditIcon className="w-4 h-4" /></button>
+                       <button onClick={(e) => { e.stopPropagation(); ui.open('book', { book }); }} className="p-1 text-gray-400 hover:text-white"><EditIcon className="w-4 h-4" /></button>
                        <button onClick={(e) => { e.stopPropagation(); onDeleteBook(book.id); }} className="p-1 text-gray-400 hover:text-red-400"><TrashIcon className="w-4 h-4" /></button>
                     </div>
                   </div>

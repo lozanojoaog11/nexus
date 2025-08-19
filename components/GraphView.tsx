@@ -26,7 +26,7 @@ const GraphView: React.FC<GraphViewProps> = ({ graphData, onNodeClick }) => {
 
     updateDimensions();
 
-    const resizeObserver = new ResizeObserver(updateDimensions);
+    const resizeObserver = new ResizeObserver(() => updateDimensions());
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }

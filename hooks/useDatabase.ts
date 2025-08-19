@@ -2,11 +2,12 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { dataService } from '../services/firebase';
 import { generateDailyDirective } from '../services/geminiService';
 import { Habit, Task, Project, Book, BookNote, Goal, Milestone, DevelopmentGraph, DailyCheckin, TaskStatus, DevelopmentNode, FlowSession, CognitiveSession, BiohackingMetrics, UserProfile, DevelopmentEdge } from '../types';
+import { calculateCurrentStreak } from '../utils/streak';
 
 interface AppState {
   profile: UserProfile | null;
   dailyCheckins: Record<string, DailyCheckin>;
-  habits: Record<string, Omit<Habit, 'history' | 'currentStreak' | 'id'> & { id: string, history?: Record<string, boolean>}>;
+  habits: Record<string, Omit<Habit, 'history' | 'id'> & { id: string, history?: Record<string, boolean>}>;
   tasks: Record<string, Task>;
   projects: Record<string, Omit<Project, 'tasks' | 'id'> & { id: string }>;
   books: Record<string, Omit<Book, 'notes' | 'id'> & { id: string }>;
@@ -37,41 +38,6 @@ const initialState: Omit<AppState, 'profile'> = {
   flowSessions: {},
   cognitiveSessions: {},
   biohackingMetrics: {},
-};
-
-const calculateCurrentStreak = (history: { date: string, completed: boolean }[]) => {
-    let streak = 0;
-    const sortedHistory = [...(history || [])]
-      .filter(h => h.completed)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-    if (sortedHistory.length === 0) return 0;
-    
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    const todayStr = today.toISOString().split('T')[0];
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
-    
-    // Adjust for timezone when parsing date strings
-    const lastCompletionDate = new Date(sortedHistory[0].date + 'T12:00:00Z');
-    const lastCompletionStr = lastCompletionDate.toISOString().split('T')[0];
-    
-    if(lastCompletionStr !== todayStr && lastCompletionStr !== yesterdayStr) return 0;
-
-    streak = 1;
-    for (let i = 0; i < sortedHistory.length - 1; i++) {
-      const current = new Date(sortedHistory[i].date + 'T12:00:00Z');
-      const next = new Date(sortedHistory[i+1].date + 'T12:00:00Z');
-      const diff = (current.getTime() - next.getTime()) / (1000 * 3600 * 24);
-      if (diff === 1) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    return streak;
 };
 
 export default function useDatabase(language: string, userManifesto: string) {
@@ -165,7 +131,7 @@ export default function useDatabase(language: string, userManifesto: string) {
             id: h.id!,
             history,
             bestStreak: h.bestStreak || 0,
-            currentStreak: calculateCurrentStreak(history)
+            currentStreak: h.currentStreak || 0
         };
     });
   }, [data.habits]);
@@ -284,7 +250,7 @@ export default function useDatabase(language: string, userManifesto: string) {
     const newId = dataService.getNewId('habits');
     if (!newId) return;
     const newHabit: Omit<Habit, 'id'|'history'|'bestStreak'|'currentStreak'> = { name, category, frequency };
-    await dataService.setData(`habits/${newId}`, {...newHabit, id: newId, bestStreak: 0});
+    await dataService.setData(`habits/${newId}`, {...newHabit, id: newId, bestStreak: 0, currentStreak: 0});
     await addXp(50);
   }, [addXp]);
 
@@ -297,17 +263,26 @@ export default function useDatabase(language: string, userManifesto: string) {
     await dataService.setData(`habits/${habitId}/history/${date}`, !isCompleted);
     if (!isCompleted) await addXp(20); else await addXp(-10);
     
-    const habit = habits.find(h => h.id === habitId);
-    if (habit) {
-      const newHistory = [...habit.history];
-      const entry = newHistory.find(e => e.date === date);
-      if (entry) entry.completed = !isCompleted; else newHistory.push({ date, completed: true });
-      const newStreak = calculateCurrentStreak(newHistory);
-      if (newStreak > (habit.bestStreak || 0)) {
-        await dataService.updateData(`habits/${habitId}`, { bestStreak: newStreak });
-      }
+    const habitData = data.habits[habitId];
+    if (habitData) {
+        // Create a temporary history array for calculation
+        const newHistoryRecord = {...(habitData.history || {}), [date]: !isCompleted};
+        const historyArray = Object.entries(newHistoryRecord).map(([d, c]) => ({ date: d, completed: !!c }));
+
+        const newStreak = calculateCurrentStreak(historyArray);
+        const bestStreak = habitData.bestStreak || 0;
+        
+        const updates: { currentStreak: number; bestStreak?: number } = {
+            currentStreak: newStreak
+        };
+
+        if (newStreak > bestStreak) {
+            updates.bestStreak = newStreak;
+        }
+        
+        await dataService.updateData(`habits/${habitId}`, updates);
     }
-  }, [addXp, habits]);
+  }, [addXp, data.habits]);
 
   const addProject = useCallback(async (name: string) => {
     const newId = dataService.getNewId('projects');
