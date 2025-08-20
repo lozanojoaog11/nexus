@@ -94,16 +94,17 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
         }),
       });
 
-      if (!response.ok) {
-        // Tenta ler a resposta como JSON, mas se falhar, usa o texto bruto
-        try {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `A execução da ferramenta falhou com o status: ${response.status}`);
-        } catch (e) {
-            const errorText = await response.text();
-            throw new Error(`A execução da ferramenta falhou com o status ${response.status}: ${errorText}`);
-        }
-      }
+if (!response.ok) {
+const errorText = await response.text();
+try {
+// Tenta interpretar o erro como JSON, que é o formato esperado da nossa API
+const errorData = JSON.parse(errorText);
+throw new Error(errorData.error || `A execução da ferramenta falhou com o status: ${response.status}`);
+} catch (e) {
+// Se não for JSON, usa o texto bruto do erro (ex: erro de gateway, HTML de erro)
+throw new Error(`A execução da ferramenta falhou com o status ${response.status}: ${errorText}`);
+}
+}
 
       const result = await response.json();
       return result.result; // O servidor encapsula o resultado em uma chave 'result'
