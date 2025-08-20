@@ -2,20 +2,25 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import * as admin from 'firebase-admin';
 import { z } from 'zod';
 
-// --- Inicialização do Firebase Admin SDK ---
-// As credenciais devem ser configuradas como variáveis de ambiente no Vercel
-try {
+// --- Função de Inicialização do Firebase Admin SDK ---
+// Garante que a inicialização ocorra apenas uma vez (singleton pattern)
+function initializeFirebaseAdmin() {
   if (!admin.apps.length) {
     const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
     if (!serviceAccountJson) {
       throw new Error('A variável de ambiente FIREBASE_SERVICE_ACCOUNT_JSON não está definida.');
     }
-    const serviceAccount = JSON.parse(serviceAccountJson);
     
-    // Leitura inteligente de variáveis: funciona em dev (VITE_) e prod
+    let serviceAccount;
+    try {
+        serviceAccount = JSON.parse(serviceAccountJson);
+    } catch (e) {
+        throw new Error('Falha ao analisar o JSON da FIREBASE_SERVICE_ACCOUNT_JSON. Verifique o formato.');
+    }
+    
     const databaseURL = process.env.VITE_FIREBASE_DATABASE_URL || process.env.FIREBASE_DATABASE_URL;
     if (!databaseURL) {
-        throw new Error('A URL do banco de dados do Firebase não foi encontrada nas variáveis de ambiente.');
+      throw new Error('A URL do banco de dados do Firebase não foi encontrada nas variáveis de ambiente.');
     }
 
     admin.initializeApp({
@@ -23,12 +28,8 @@ try {
       databaseURL: databaseURL,
     });
   }
-} catch (error) {
-  console.error('Erro ao inicializar o Firebase Admin SDK:', error);
-  // Não quebra a aplicação aqui, mas o erro será capturado no handler
+  return admin.database();
 }
-
-const db = admin.database();
 
 // --- Definição das Ferramentas ---
 
@@ -39,7 +40,7 @@ const habitInputSchema = z.object({
   frequency: z.number().min(1).max(7),
 });
 
-async function createHabit(input: z.infer<typeof habitInputSchema>) {
+async function createHabit(db: admin.database.Database, input: z.infer<typeof habitInputSchema>) {
   const { userId, name, category, frequency } = input;
   const habitsRef = db.ref(`users/${userId}/habits`);
   const newHabitRef = habitsRef.push();
@@ -68,7 +69,6 @@ const toolRegistry = {
     execute: createHabit,
     schema: habitInputSchema,
   },
-  // Futuras ferramentas (ex: 'tasks.create') serão adicionadas aqui
 };
 
 // --- Handler da Serverless Function ---
@@ -77,11 +77,15 @@ export default async function handler(
   request: VercelRequest,
   response: VercelResponse,
 ) {
-  if (request.method !== 'POST') {
-    return response.status(405).json({ error: 'Método não permitido' });
-  }
-
   try {
+    if (request.method !== 'POST') {
+      return response.status(405).json({ error: 'Método não permitido' });
+    }
+
+    // Passo 1: Inicializa o Firebase DENTRO do handler
+    const db = initializeFirebaseAdmin();
+
+    // Passo 2: Processa a requisição
     const { tool, params } = request.body;
 
     if (!tool || typeof tool !== 'string' || !toolRegistry[tool]) {
@@ -89,12 +93,8 @@ export default async function handler(
     }
 
     const { execute, schema } = toolRegistry[tool];
-
-    // Valida os parâmetros de entrada usando o esquema Zod
     const validatedParams = schema.parse(params);
-
-    // Executa a função da ferramenta com os parâmetros validados
-    const result = await execute(validatedParams);
+    const result = await execute(db, validatedParams);
 
     return response.status(200).json({ result });
 
@@ -103,7 +103,6 @@ export default async function handler(
     
     let errorMessage = 'Ocorreu um erro desconhecido no servidor.';
     if (error instanceof z.ZodError) {
-        // Erro de validação do Zod, mais informativo para o dev
         errorMessage = `Erro de validação nos parâmetros: ${error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')}`;
         return response.status(400).json({ error: errorMessage });
     }
@@ -111,7 +110,6 @@ export default async function handler(
         errorMessage = error.message;
     }
     
-    // Garante que a resposta seja sempre um JSON válido
     return response.status(500).json({ error: errorMessage });
   }
 }
