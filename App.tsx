@@ -183,7 +183,7 @@ const MainApp: React.FC = () => {
   }, [loading, isAuthenticated, hasCheckedInToday]);
 
 
-  const onCheckinConfirm = async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>) => {
+  const onCheckinConfirm = async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp' | 'activeStrategy'>) => {
     setIsProcessingCheckin(true);
     await handleCheckinConfirm(checkinData);
     setIsProcessingCheckin(false);
@@ -214,6 +214,7 @@ const MainApp: React.FC = () => {
                                 agendaEvents={agendaEvents}
                                 updateTaskStatus={updateTaskStatus}
                                 toggleHabitCompletion={toggleHabitCompletion}
+                                setCurrentView={setCurrentView}
                             />;
       case 'habits': return <Habits habits={habits} toggleHabitCompletion={toggleHabitCompletion} onDeleteHabit={deleteHabit} />;
       case 'projects': return <KanbanBoard projects={projects} selectedProjectId={selectedProjectId} setSelectedProjectId={setSelectedProjectId} updateTaskStatus={updateTaskStatus} updateTask={updateTask} addTask={addTask} deleteProject={deleteProject} developmentNodes={developmentGraph.nodes} />;

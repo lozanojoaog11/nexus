@@ -7,6 +7,8 @@ export type UserProfile = {
   totalXp?: number;
 };
 
+export type DailyStrategy = 'eat_the_frog' | 'small_wins' | 'deep_work_focus' | null;
+
 export type DailyCheckin = {
   date: string; // YYYY-MM-DD
   timestamp: string; // ISO 8601
@@ -16,6 +18,7 @@ export type DailyCheckin = {
   notes?: string; // For "Brain Dump"
   completedHabitIds?: string[]; // IDs of habits completed before check-in
   directive?: string; // AI-generated daily strategic advice
+  activeStrategy?: DailyStrategy;
 };
 
 export type Habit = {

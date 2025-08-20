@@ -34,7 +34,20 @@
     "noMissions": "No hay misiones esenciales definidas para hoy. Un buen día para planificar o abordar tareas más pequeñas.",
     "allMissionsComplete": "Todas las misiones esenciales completadas. Bien hecho.",
     "noRituals": "No hay rituales diarios definidos.",
-    "noEvents": "No hay eventos programados para hoy."
+    "noEvents": "No hay eventos programados para hoy.",
+    "startFlowSession": "Iniciar Sesión de Enfoque",
+    "noSmallTasks": "No hay tareas pequeñas para hoy. Limpia tu lista o añade nuevas.",
+    "strategy": {
+      "eatTheFrog": "Estrategia Activa: Eat the Frog",
+      "smallWins": "Estrategia Activa: Pequeñas Victorias",
+      "deepWorkFocus": "Estrategia Activa: Enfoque Profundo",
+      "names": {
+        "eatTheFrog": "Eat the Frog",
+        "smallWins": "Pequeñas Victorias",
+        "deepWorkFocus": "Enfoque Profundo",
+        "none": "Ninguna"
+      }
+    }
   },
   "login": {
     "accessSystem": "Accede a tu sistema",
@@ -420,7 +433,11 @@
       "discipline": { "name": "Arquitectura de Disciplina", "description": "Sistemas sostenibles para una ejecución consistente.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE ARQUITECTURA DE DISCIPLINA\nPerfil de Usuario: ENFP que lucha con la consistencia, alto potencial, necesita una estructura sostenible.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Intenciones de implementación, Diseño del entorno, Hábitos clave.\n\nDiseña sistemas de disciplina que honren la naturaleza ENFP:\n- Estructura flexible (no rígida)\n- Seguimiento visual del progreso\n- Micro-hábitos que se acumulan\n- Sistemas de recompensa que motivan\n- Protocolos de recuperación de fallos\n\nEstilo de respuesta: Comprensivo, sistemático, construye confianza." },
       "performance": { "name": "Rendimiento Máximo", "description": "Protocolos de biohacking y optimización.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE RENDIMIENTO MÁXIMO\nPerfil de Usuario: ENFP que busca una optimización sobrehumana, impulsado por la ciencia.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Optimización circadiana, Neuroplasticidad, Efectos compuestos.\n\nOptimiza el rendimiento en todas las dimensiones:\n- Optimización del sueño/energía\n- Protocolos de mejora cognitiva\n- Correlación del rendimiento físico\n- Recuperación y regeneración\n- Sostenibilidad a largo plazo\n\nEstilo de respuesta: Basado en datos, ambicioso, consciente de la salud." },
       "strategic": { "name": "Claridad Estratégica", "description": "Alineación de metas y marco de decisiones.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE CLARIDAD ESTRATÉGICA\nPerfil de Usuario: ENFP con múltiples intereses, necesita priorización de dirección.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Pensamiento sistémico, Jerarquía de metas, Planificación estratégica.\n\nProporciona claridad estratégica:\n- Marco de priorización de metas\n- Sistemas de toma de decisiones\n- Criterios de evaluación de proyectos\n- Alineación de la visión a largo plazo\n- Optimización de la asignación de recursos\n\nEstilo de respuesta: Claro, decisivo, visionario pero práctico." },
-       "flowOptimization": { "name": "Optimización de Flow", "description": "Mejora del trabajo profundo y estado de flow.", "prompt": "ARQUITECTO NEURAL - MÓDULO DE OPTIMIZACIÓN DE FLOW\nPerfil de Usuario: ENFP buscando estados de rendimiento máximo.\nContexto Actual: {{CONTEXT}}\nFundamento Científico: Desencadenantes del estado de Flow, Equilibrio desafío-habilidad, Optimización ambiental.\n\nAnaliza el estado actual y proporciona orientación para la optimización del flow:\n- Duración óptima de la sesión basada en los niveles de energía\n- Recomendaciones de configuración del entorno\n- Equilibrio desafío-habilidad para la tarea seleccionada\n- Técnicas de entrada en estado de flow\n- Estrategias de gestión de distracciones\n- Protocolos de recuperación entre sesiones\n\nEstilo de respuesta: Preciso, enfocado en el rendimiento, con base científica." }
+       "strategy": {
+        "name": "Estrategia Diaria",
+        "description": "Entiende y aplica la estrategia del día.",
+        "prompt": "ARQUITECTO NEURAL - MÓDULO DE ESTRATEGIA DIARIA\nContexto: {{CONTEXT}}\n\nExplica la estrategia de productividad de hoy ('{{STRATEGY}}'). Detalla:\n- Por qué se eligió esta estrategia basándose en el check-in.\n- Cómo implementarla de la manera más efectiva.\n- Errores comunes que se deben evitar.\n- Cómo se alinea con los objetivos a largo plazo del usuario.\n\nEstilo: Como un estratega, claro y motivador."
+      }
     },
     "askPlaceholder": "Pregúntale a tu Arquitecto Neural...",
     "quickActions": {
@@ -439,6 +456,7 @@
       "clarity": "Claridad",
       "momentum": "Momentum",
       "userState": "Estado del Usuario",
+      "activeStrategy": "Estrategia Activa",
       "activeGoals": "Metas Activas",
       "habitsToday": "hábitos seguidos hoy",
       "pendingTasks": "tareas pendientes",

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from '../hooks/useTranslation';
-import { DailyCheckin, Task, Habit, CalendarEvent, TaskStatus } from '../types';
+import { DailyCheckin, Task, Habit, CalendarEvent, TaskStatus, View } from '../types';
 
 interface TodayViewProps {
     dailyCheckin: DailyCheckin | null;
@@ -9,6 +9,7 @@ interface TodayViewProps {
     agendaEvents: CalendarEvent[];
     updateTaskStatus: (projectId: string, taskId: string, newStatus: TaskStatus) => void;
     toggleHabitCompletion: (habitId: string, date: string, isCompleted: boolean) => void;
+    setCurrentView: (view: View) => void;
 }
 
 const CheckIcon = ({ className }: { className?: string }) => (
@@ -28,12 +29,36 @@ const Section: React.FC<{ title: string; icon: string; children: React.ReactNode
     </div>
 );
 
-const TodayView: React.FC<TodayViewProps> = ({ dailyCheckin, tasks, habits, agendaEvents, updateTaskStatus, toggleHabitCompletion }) => {
-    const { t, language } = useTranslation();
+const TodayView: React.FC<TodayViewProps> = ({ dailyCheckin, tasks, habits, agendaEvents, updateTaskStatus, toggleHabitCompletion, setCurrentView }) => {
+    const { t } = useTranslation();
     const todayStr = new Date().toISOString().split('T')[0];
+    const activeStrategy = dailyCheckin?.activeStrategy;
 
-    const todaysMITs = React.useMemo(() => tasks.filter(task => task.isMIT), [tasks]);
-    const incompleteMITs = todaysMITs.filter(task => task.status !== 'Concluído');
+    const strategyInfo = activeStrategy ? {
+        eat_the_frog: { icon: '🐸', text: t('todayView.strategy.eatTheFrog') },
+        small_wins: { icon: '🏆', text: t('todayView.strategy.smallWins') },
+        deep_work_focus: { icon: '🎯', text: t('todayView.strategy.deepWorkFocus') }
+    }[activeStrategy] : null;
+
+    const essentialFocusTasks = React.useMemo(() => {
+        if (!activeStrategy) {
+            return tasks.filter(task => task.isMIT && task.status !== 'Concluído');
+        }
+
+        switch (activeStrategy) {
+            case 'small_wins':
+                return tasks
+                    .filter(task => task.status === 'A Fazer')
+                    .sort((a, b) => a.content.length - b.content.length)
+                    .slice(0, 3);
+            case 'deep_work_focus':
+            case 'eat_the_frog':
+            default:
+                return tasks.filter(task => task.isMIT && task.status !== 'Concluído');
+        }
+    }, [tasks, activeStrategy]);
+
+    const mitExists = React.useMemo(() => tasks.some(task => task.isMIT), [tasks]);
     
     const todaysEvents = React.useMemo(() => 
         agendaEvents
@@ -48,6 +73,15 @@ const TodayView: React.FC<TodayViewProps> = ({ dailyCheckin, tasks, habits, agen
                 <p className="text-gray-400 mt-1">{t('todayView.subtitle')}</p>
             </header>
 
+            {strategyInfo && (
+                <div className="bg-blue-900/30 border border-blue-500/30 p-4 rounded-2xl mb-6 flex items-center gap-4 animate-fade-in">
+                    <span className="text-3xl">{strategyInfo.icon}</span>
+                    <div>
+                        <p className="text-blue-200 font-semibold">{strategyInfo.text}</p>
+                    </div>
+                </div>
+            )}
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Left Column */}
                 <div className="space-y-6">
@@ -58,25 +92,41 @@ const TodayView: React.FC<TodayViewProps> = ({ dailyCheckin, tasks, habits, agen
                     </Section>
 
                     <Section title={t('todayView.essentialFocus')} icon="🎯">
-                        {incompleteMITs.length > 0 ? (
-                            <div className="space-y-3">
-                                {incompleteMITs.map(task => (
-                                    <div key={task.id} className="flex items-center gap-3 group">
-                                        <button 
-                                            onClick={() => updateTaskStatus(task.projectId!, task.id, 'Concluído')}
-                                            className="w-6 h-6 flex-shrink-0 rounded-md border-2 border-gray-600 group-hover:border-blue-500 transition-colors flex items-center justify-center"
-                                        >
-                                            {/* Check icon can be added here on completion */}
-                                        </button>
-                                        <span className="text-gray-200 group-hover:text-white transition-colors">{task.content}</span>
+                        {(() => {
+                            if (essentialFocusTasks.length > 0) {
+                                return (
+                                    <div className="space-y-3">
+                                        {essentialFocusTasks.map(task => (
+                                            <div key={task.id} className="flex items-center gap-3 group">
+                                                <button 
+                                                    onClick={() => updateTaskStatus(task.projectId!, task.id, 'Concluído')}
+                                                    className="w-6 h-6 flex-shrink-0 rounded-md border-2 border-gray-600 group-hover:border-blue-500 transition-colors flex items-center justify-center"
+                                                >
+                                                </button>
+                                                <span className="text-gray-200 group-hover:text-white transition-colors">{task.content}</span>
+                                            </div>
+                                        ))}
+                                        {activeStrategy === 'deep_work_focus' && (
+                                            <button 
+                                                onClick={() => setCurrentView('flowlab')} 
+                                                className="mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+                                                🎯 {t('todayView.startFlowSession')}
+                                            </button>
+                                        )}
                                     </div>
-                                ))}
-                            </div>
-                        ) : todaysMITs.length > 0 ? (
-                             <p className="text-green-400">{t('todayView.allMissionsComplete')}</p>
-                        ) : (
-                            <p className="text-gray-500">{t('todayView.noMissions')}</p>
-                        )}
+                                );
+                            }
+
+                            if (activeStrategy === 'small_wins') {
+                                return <p className="text-gray-500">{t('todayView.noSmallTasks')}</p>;
+                            }
+
+                            if (mitExists) {
+                                return <p className="text-green-400">{t('todayView.allMissionsComplete')}</p>;
+                            }
+
+                            return <p className="text-gray-500">{t('todayView.noMissions')}</p>;
+                        })()}
                     </Section>
                 </div>
 

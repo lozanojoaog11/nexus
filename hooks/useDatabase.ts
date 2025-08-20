@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { dataService } from '../services/firebase';
 import { generateDailyDirective } from '../services/geminiService';
-import { Habit, Task, Project, Book, BookNote, Goal, Milestone, DevelopmentGraph, DailyCheckin, TaskStatus, DevelopmentNode, FlowSession, CognitiveSession, BiohackingMetrics, UserProfile, DevelopmentEdge } from '../types';
+import { Habit, Task, Project, Book, BookNote, Goal, Milestone, DevelopmentGraph, DailyCheckin, TaskStatus, DevelopmentNode, FlowSession, CognitiveSession, BiohackingMetrics, UserProfile, DevelopmentEdge, DailyStrategy } from '../types';
 import { calculateCurrentStreak } from '../utils/streak';
 
 interface AppState {
@@ -233,15 +233,24 @@ export default function useDatabase(language: string, userManifesto: string) {
 
   // --- DATA MUTATION CALLBACKS ---
 
-  const handleCheckinConfirm = useCallback(async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>) => {
+  const handleCheckinConfirm = useCallback(async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp' | 'activeStrategy'>) => {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
     const directive = await generateDailyDirective(checkinData, userManifesto, language);
+
+    let strategy: DailyStrategy = 'eat_the_frog';
+    if (checkinData.energia < 5) {
+      strategy = 'small_wins';
+    } else if (checkinData.clareza > 8 && checkinData.energia > 7) {
+      strategy = 'deep_work_focus';
+    }
+
     const newCheckin: DailyCheckin = {
       ...checkinData,
       date: todayStr,
       timestamp: today.toISOString(),
       directive,
+      activeStrategy: strategy,
     };
     await dataService.setData(`dailyCheckins/${todayStr}`, newCheckin);
   }, [language, userManifesto]);

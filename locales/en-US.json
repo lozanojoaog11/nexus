@@ -34,7 +34,20 @@
     "noMissions": "No essential missions defined for today. A good day to plan or tackle smaller tasks.",
     "allMissionsComplete": "All essential missions complete. Well done.",
     "noRituals": "No daily rituals defined.",
-    "noEvents": "No events scheduled for today."
+    "noEvents": "No events scheduled for today.",
+    "startFlowSession": "Start Focus Session",
+    "noSmallTasks": "No small tasks for today. Clear your list or add new ones.",
+    "strategy": {
+      "eatTheFrog": "Active Strategy: Eat the Frog",
+      "smallWins": "Active Strategy: Small Wins",
+      "deepWorkFocus": "Active Strategy: Deep Work Focus",
+      "names": {
+        "eatTheFrog": "Eat the Frog",
+        "smallWins": "Small Wins",
+        "deepWorkFocus": "Deep Work Focus",
+        "none": "None"
+      }
+    }
   },
   "login": {
     "accessSystem": "Access your system",
@@ -420,7 +433,11 @@
       "discipline": { "name": "Discipline Architecture", "description": "Sustainable systems for consistent execution.", "prompt": "NEURAL ARCHITECT - DISCIPLINE ARCHITECTURE MODULE\nUser Profile: ENFP struggling with consistency, high potential, needs sustainable structure.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Implementation intentions, Environment design, Keystone habits.\n\nDesign discipline systems that honor ENFP nature:\n- Flexible structure (not rigid)\n- Visual progress tracking\n- Micro-habits that stack\n- Reward systems that motivate\n- Failure recovery protocols\n\nResponse style: Understanding, systematic, builds confidence." },
       "performance": { "name": "Peak Performance", "description": "Biohacking & optimization protocols.", "prompt": "NEURAL ARCHITECT - PEAK PERFORMANCE MODULE\nUser Profile: ENFP seeking superhuman optimization, science-driven.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Circadian optimization, Neuroplasticity, Compound effects.\n\nOptimize performance across dimensions:\n- Sleep/energy optimization\n- Cognitive enhancement protocols\n- Physical performance correlation\n- Recovery and regeneration\n- Long-term sustainability\n\nResponse style: Data-driven, ambitious, health-conscious." },
       "strategic": { "name": "Strategic Clarity", "description": "Goal alignment & decision framework.", "prompt": "NEURAL ARCHITECT - STRATEGIC CLARITY MODULE\nUser Profile: ENFP with multiple interests, needs direction prioritization.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Systems thinking, Goal hierarchy, Strategic planning.\n\nProvide strategic clarity:\n- Goal prioritization framework\n- Decision-making systems\n- Project evaluation criteria\n- Long-term vision alignment\n- Resource allocation optimization\n\nResponse style: Clear, decisive, visionary yet practical." },
-      "flowOptimization": { "name": "Flow Optimization", "description": "Deep work and flow state enhancement.", "prompt": "NEURAL ARCHITECT - FLOW OPTIMIZATION MODULE\nUser Profile: ENFP seeking peak performance states.\nCurrent Context: {{CONTEXT}}\nScientific Foundation: Flow state triggers, Challenge-skill balance, Environmental optimization.\n\nAnalyze current state and provide flow optimization guidance:\n- Optimal session duration based on energy levels\n- Environment setup recommendations\n- Challenge-skill balance for selected task\n- Flow state entry techniques\n- Distraction management strategies\n- Recovery protocols between sessions\n\nResponse style: Precise, performance-focused, scientifically grounded." }
+      "strategy": {
+        "name": "Daily Strategy",
+        "description": "Understand and apply the day's strategy.",
+        "prompt": "NEURAL ARCHITECT - DAILY STRATEGY MODULE\nContext: {{CONTEXT}}\n\nExplain today's productivity strategy ('{{STRATEGY}}'). Detail:\n- Why this strategy was chosen based on the check-in.\n- How to implement it most effectively.\n- Common pitfalls to avoid.\n- How it aligns with the user's long-term goals.\n\nStyle: Like a strategist, clear and motivating."
+      }
     },
     "askPlaceholder": "Ask your Neural Architect...",
     "quickActions": {
@@ -439,6 +456,7 @@
       "clarity": "Clarity",
       "momentum": "Momentum",
       "userState": "User State",
+      "activeStrategy": "Active Strategy",
       "activeGoals": "Active Goals",
       "habitsToday": "habits tracked today",
       "pendingTasks": "pending tasks",

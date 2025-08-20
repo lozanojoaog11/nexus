@@ -1,7 +1,8 @@
 
+
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { askGuardian } from '../services/geminiService';
-import { Message, DailyCheckin, Habit, Task, Goal, DevelopmentNode } from '../types';
+import { Message, DailyCheckin, Habit, Task, Goal, DevelopmentNode, DailyStrategy } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
 // NOVOS TIPOS:
@@ -54,7 +55,7 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
     { id: 'discipline', name: t('neuralArchitect.modules.discipline.name'), description: t('neuralArchitect.modules.discipline.description'), icon: '⚙️', color: 'from-green-500 to-teal-500', prompt: t('neuralArchitect.modules.discipline.prompt') },
     { id: 'performance', name: t('neuralArchitect.modules.performance.name'), description: t('neuralArchitect.modules.performance.description'), icon: '🚀', color: 'from-orange-500 to-red-500', prompt: t('neuralArchitect.modules.performance.prompt') },
     { id: 'strategic', name: t('neuralArchitect.modules.strategic.name'), description: t('neuralArchitect.modules.strategic.description'), icon: '🧠', color: 'from-indigo-500 to-purple-500', prompt: t('neuralArchitect.modules.strategic.prompt') },
-    { id: 'flow-optimization', name: t('neuralArchitect.modules.flowOptimization.name'), description: t('neuralArchitect.modules.flowOptimization.description'), icon: '🎯', color: 'from-cyan-500 to-blue-500', prompt: t('neuralArchitect.modules.flowOptimization.prompt') }
+    { id: 'strategy', name: t('neuralArchitect.modules.strategy.name'), description: t('neuralArchitect.modules.strategy.description'), icon: '🧭', color: 'from-gray-500 to-gray-600', prompt: t('neuralArchitect.modules.strategy.prompt') }
   ], [t]);
 
   const generateSessionContext = (): SessionContext => {
@@ -110,12 +111,21 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
 
     try {
       const context = generateSessionContext();
+      const strategyKeyMap: { [key in Exclude<DailyStrategy, null>]: string } = {
+          'eat_the_frog': 'eatTheFrog',
+          'small_wins': 'smallWins',
+          'deep_work_focus': 'deepWorkFocus'
+      };
+      const strategyNameKey = checkin?.activeStrategy ? `todayView.strategy.names.${strategyKeyMap[checkin.activeStrategy]}` : 'todayView.strategy.names.none';
+      const strategyName = t(strategyNameKey);
+
       const contextString = `
 ${t('neuralArchitect.context.currentState')}
 - ${t('neuralArchitect.context.energy')}: ${context.checkinData?.energia || 'N/A'}/10
 - ${t('neuralArchitect.context.clarity')}: ${context.checkinData?.clareza || 'N/A'}/10  
 - ${t('neuralArchitect.context.momentum')}: ${context.checkinData?.momentum || 'N/A'}/10
 - ${t('neuralArchitect.context.userState')}: ${context.userState}
+- ${t('neuralArchitect.context.activeStrategy')}: ${strategyName}
 - ${t('neuralArchitect.context.activeGoals')}: ${context.currentGoals.map(g => g.name).join(', ')}
 - ${t('neuralArchitect.context.habitsToday')}: ${context.todayHabits.length}
 - ${t('neuralArchitect.context.pendingTasks')}: ${context.recentTasks.length}
@@ -129,7 +139,11 @@ ${developmentNodes.map(node => `- ${node.type}: ${node.label}`).join('\n')}
 
       const module = selectedModule ? coachingModules.find(m => m.id === selectedModule) : null;
       if (module && module.prompt) {
-          query = module.prompt.replace('{{CONTEXT}}', contextString) + `\n\n${t('neuralArchitect.userQueryLabel')}: ${currentInput}`;
+          let modulePrompt = module.prompt.replace('{{CONTEXT}}', contextString);
+           if (module.id === 'strategy') {
+              modulePrompt = modulePrompt.replace('{{STRATEGY}}', strategyName);
+           }
+          query = modulePrompt + `\n\n${t('neuralArchitect.userQueryLabel')}: ${currentInput}`;
       }
 
       const response = await askGuardian(query, systemPrompt, language);
