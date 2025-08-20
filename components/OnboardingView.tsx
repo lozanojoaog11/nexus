@@ -2,15 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { generateInitialEcosystem } from '../services/geminiService';
 import { Habit, Project, Task, DevelopmentNode, DevelopmentEdge, UserProfile } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { dataService } from '../services/firebase';
 
 interface OnboardingViewProps {
     onOnboardingComplete: () => void;
-    addHabit: (name: string, category: "Corpo" | "Mente" | "Execução", frequency: number) => Promise<void>;
-    addProject: (name: string) => Promise<string | null>;
-    addTask: (projectId: string, content: string, isMIT?: boolean) => Promise<void>;
-    saveDevelopmentNode: (node: DevelopmentNode) => Promise<string | null>;
-    saveDevelopmentEdge: (edge: Omit<DevelopmentEdge, 'id'>) => Promise<void>;
-    updateProfile: (profileData: Partial<UserProfile>) => Promise<void>;
+    performAtomicOnboarding: (updates: Record<string, any>) => Promise<void>;
+    profile: UserProfile;
 }
 
 type FlowState = 'choice' | 'conversation' | 'generating' | 'complete';
@@ -24,7 +21,7 @@ const questions = [
 ];
 
 const OnboardingView: React.FC<OnboardingViewProps> = ({ 
-    onOnboardingComplete, addHabit, addProject, addTask, saveDevelopmentNode, saveDevelopmentEdge, updateProfile
+    onOnboardingComplete, performAtomicOnboarding, profile
 }) => {
     const { language } = useTranslation();
     const [flowState, setFlowState] = useState<FlowState>('choice');
@@ -90,38 +87,68 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({
         try {
             const { ecosystem, profileUpdate } = await generateInitialEcosystem(transcript);
 
+            const updates: Record<string, any> = {};
             const idMap = new Map<string, string>();
             
-            // 1. Create Projects & Nodes to get real IDs
-            for (const project of ecosystem.projects) {
-                const newId = await addProject(project.name);
-                if (newId) idMap.set(project.id, newId);
-            }
-            for (const node of ecosystem.developmentGraph.nodes) {
-                const newId = await saveDevelopmentNode(node);
-                if (newId) idMap.set(node.id, newId);
-            }
-
-            // 2. Create items that depend on the new IDs
-            const habitPromises = ecosystem.habits.map((h: any) => addHabit(h.name, h.category, h.frequency));
-            const taskPromises = ecosystem.tasks.map((t: any) => {
-                const realProjectId = idMap.get(t.projectId);
-                return realProjectId ? addTask(realProjectId, t.content, t.isMIT) : Promise.resolve();
+            // Generate all new IDs first and map them
+            ecosystem.projects.forEach((p: any) => {
+                const newId = dataService.getNewId('projects');
+                if(newId) idMap.set(p.id, newId);
             });
-            const edgePromises = ecosystem.developmentGraph.edges.map((e: any) => {
+            ecosystem.developmentGraph.nodes.forEach((n: any) => {
+                 const newId = dataService.getNewId('developmentGraph/nodes');
+                 if(newId) idMap.set(n.id, newId);
+            });
+            ecosystem.tasks.forEach((t: any) => {
+                 const newId = dataService.getNewId('tasks');
+                 if(newId) idMap.set(t.id, newId);
+            });
+            ecosystem.developmentGraph.edges.forEach((e: any) => {
+                const newId = dataService.getNewId('developmentGraph/edges');
+                if(newId) idMap.set(e.id, newId);
+            });
+            ecosystem.habits.forEach((h: any) => {
+                const newId = dataService.getNewId('habits');
+                if(newId) idMap.set(h.id, newId);
+            });
+
+
+            // Build the update object with correct, cross-referenced IDs
+            ecosystem.projects.forEach((p: any) => {
+                const realId = idMap.get(p.id);
+                if (realId) updates[`projects/${realId}`] = { name: p.name, id: realId };
+            });
+             ecosystem.developmentGraph.nodes.forEach((n: any) => {
+                const realId = idMap.get(n.id);
+                if(realId) updates[`developmentGraph/nodes/${realId}`] = { ...n, id: realId };
+            });
+            ecosystem.tasks.forEach((t: any) => {
+                const realId = idMap.get(t.id);
+                const realProjectId = idMap.get(t.projectId);
+                if (realId && realProjectId) {
+                    updates[`tasks/${realId}`] = { ...t, id: realId, projectId: realProjectId, status: 'A Fazer' };
+                }
+            });
+            ecosystem.developmentGraph.edges.forEach((e: any) => {
+                const realId = idMap.get(e.id);
                 const realSource = idMap.get(e.source);
                 const realTarget = idMap.get(e.target);
-                return (realSource && realTarget) ? saveDevelopmentEdge({ ...e, source: realSource, target: realTarget }) : Promise.resolve();
+                if (realId && realSource && realTarget) {
+                    updates[`developmentGraph/edges/${realId}`] = { ...e, id: realId, source: realSource, target: realTarget };
+                }
+            });
+            ecosystem.habits.forEach((h: any) => {
+                const realId = idMap.get(h.id);
+                if(realId) updates[`habits/${realId}`] = { ...h, id: realId, history: [], bestStreak: 0, currentStreak: 0 };
             });
 
-            await Promise.all([...habitPromises, ...taskPromises, ...edgePromises]);
-
-            // FIX: Atomically update profile and set onboarding as completed.
-            // This prevents the standard onboarding data from overwriting our personalized data.
-            await updateProfile({ ...profileUpdate, onboardingCompleted: true });
+            // Add profile update and mark onboarding as complete
+            updates['profile'] = { ...profile, ...profileUpdate, onboardingCompleted: true };
+            
+            await performAtomicOnboarding(updates);
             
             setFlowState('complete');
-            // DO NOT call onOnboardingComplete() here, as it triggers the standard data load.
+            setTimeout(() => window.location.reload(), 2000); // Reload to apply the new state
 
         } catch (e: any) {
             setError(e.message || "Ocorreu um erro desconhecido.");
@@ -203,7 +230,7 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
                         <h2 className="text-2xl font-bold">Eixo OS Configurado!</h2>
-                        <p className="text-gray-400 mt-2">Seu ambiente personalizado está pronto. O sistema será reiniciado.</p>
+                        <p className="text-gray-400 mt-2">Seu ambiente personalizado está pronto. O sistema será recarregado.</p>
                     </div>
                 );
             default:

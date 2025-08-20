@@ -77,7 +77,7 @@ const MainApp: React.FC = () => {
     signIn, signUp, signOut, signInAnonymously,
     dailyCheckin, allDailyCheckins, handleCheckinConfirm,
     completeStandardOnboarding,
-    updateProfile,
+    performAtomicOnboarding,
     habits, addHabit, deleteHabit, toggleHabitCompletion, addXp,
     yesterdaysIncompleteKeystoneHabits,
     projects, addProject, deleteProject, selectedProjectId, setSelectedProjectId,
@@ -185,10 +185,6 @@ const MainApp: React.FC = () => {
     setIsProcessingCheckin(false);
     setShowCheckin(false);
   };
-  
-  const handleOnboardingComplete = async () => {
-    await completeStandardOnboarding();
-  };
 
   const renderView = () => {
       
@@ -240,13 +236,9 @@ const MainApp: React.FC = () => {
   if (isAuthenticated && profile && profile.onboardingCompleted === false) {
     return (
       <OnboardingView 
-        onOnboardingComplete={handleOnboardingComplete}
-        addHabit={addHabit}
-        addProject={addProject}
-        addTask={addTask}
-        saveDevelopmentNode={saveDevelopmentNode}
-        saveDevelopmentEdge={saveDevelopmentEdge}
-        updateProfile={updateProfile}
+        onOnboardingComplete={completeStandardOnboarding}
+        performAtomicOnboarding={performAtomicOnboarding}
+        profile={profile}
       />
     );
   }

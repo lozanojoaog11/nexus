@@ -121,19 +121,20 @@ export default function useDatabase(language: string, userManifesto: string) {
     await dataService.updateData('profile', { totalXp: currentXp + amount });
   }, [profile]);
 
-  const updateProfile = useCallback(async (profileData: Partial<UserProfile>) => {
-    await dataService.updateData('profile', profileData);
-  }, []);
-
   const completeStandardOnboarding = useCallback(async () => {
     const initialData = getInitialEcosystemData();
-    const updates = {
-      ...initialData,
-      'profile/onboardingCompleted': true
-    };
+    const updates: Record<string, any> = {};
+    Object.entries(initialData).forEach(([key, value]) => {
+      updates[key] = value;
+    });
+    updates['profile/onboardingCompleted'] = true;
     await dataService.updateData('/', updates);
   }, []);
   
+  const performAtomicOnboarding = useCallback(async (updates: Record<string, any>) => {
+      await dataService.updateData('/', updates);
+  }, []);
+
   // --- DATA TRANSFORMATION MEMOS ---
 
   const habits = useMemo((): Habit[] => {
@@ -191,7 +192,6 @@ export default function useDatabase(language: string, userManifesto: string) {
                         if (!allBacklinks[linkedBookId]) {
                             allBacklinks[linkedBookId] = [];
                         }
-                        // Avoid adding duplicate backlink from the same note
                         if (!allBacklinks[linkedBookId].some(bl => bl.note.id === note.id)) {
                              allBacklinks[linkedBookId].push({
                                 bookId: sourceBook.id,
@@ -287,7 +287,6 @@ export default function useDatabase(language: string, userManifesto: string) {
     
     const habitData = data.habits[habitId];
     if (habitData) {
-        // Create a temporary history array for calculation
         const newHistoryRecord = {...(habitData.history || {}), [date]: !isCompleted};
         const historyArray = Object.entries(newHistoryRecord).map(([d, c]) => ({ date: d, completed: !!c }));
 
@@ -445,7 +444,7 @@ export default function useDatabase(language: string, userManifesto: string) {
     allDailyCheckins,
     handleCheckinConfirm,
     completeStandardOnboarding,
-    updateProfile,
+    performAtomicOnboarding,
     habits,
     addHabit,
     deleteHabit,

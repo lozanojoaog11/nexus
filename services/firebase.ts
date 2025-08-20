@@ -1,44 +1,47 @@
 // services/firebase.ts
-
-// MUDANÇA AQUI: Using v8 compat libraries to fix module export errors.
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/database';
 import 'firebase/compat/auth';
 import { INITIAL_HABITS, INITIAL_PROJECTS, INITIAL_BOOKS, INITIAL_DEVELOPMENT_DATA, INITIAL_AGENDA_EVENTS, INITIAL_GOALS } from '../constants';
 import { Project, Book, Goal, Habit } from '../types';
 
-// Suas credenciais do Firebase
+// Carrega a configuração do Firebase a partir das variáveis de ambiente
 const firebaseConfig = {
-  apiKey: "AIzaSyBieYuvEOV5BFPtpfEglju_lKKVav7fHhI",
-  authDomain: "nexus-app-7ecbc.firebaseapp.com",
-  databaseURL: "https://nexus-app-7ecbc-default-rtdb.firebaseio.com",
-  projectId: "nexus-app-7ecbc",
-  storageBucket: "nexus-app-7ecbc.firebasestorage.app",
-  messagingSenderId: "537560947111",
-  appId: "1:537560947111:web:8c3ea6c07a712e98e0fe82"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID
 };
 
-// Variáveis para armazenar as instâncias do Firebase
+// Verifica se todas as variáveis de ambiente necessárias estão presentes
+const requiredConfigKeys = ['apiKey', 'authDomain', 'databaseURL', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
+const missingKeys = requiredConfigKeys.filter(key => !firebaseConfig[key as keyof typeof firebaseConfig]);
+
 let app: firebase.app.App;
 let database: firebase.database.Database;
 let auth: firebase.auth.Auth;
 let firebaseAvailable = false;
 
-try {
-  // Initialize Firebase
-  if (!firebase.apps.length) {
-      app = firebase.initializeApp(firebaseConfig);
-  } else {
-      app = firebase.app();
+if (missingKeys.length > 0) {
+  console.error(`❌ Falha ao inicializar o Firebase. Variáveis de ambiente faltando: ${missingKeys.join(', ')}`);
+} else {
+  try {
+    if (!firebase.apps.length) {
+        app = firebase.initializeApp(firebaseConfig);
+    } else {
+        app = firebase.app();
+    }
+    database = firebase.database();
+    auth = firebase.auth();
+    firebaseAvailable = true;
+    console.log('✅ Firebase SDK inicializado com sucesso.');
+  } catch (e) {
+    console.error('❌ Falha ao inicializar o Firebase. Verifique a configuração.', e);
   }
-  database = firebase.database();
-  auth = firebase.auth();
-  firebaseAvailable = true;
-  console.log('✅ Firebase SDK inicializado com sucesso (v8 compat).');
-} catch (e) {
-  console.error('❌ Falha ao inicializar o Firebase. Verifique a configuração.', e);
 }
-
 
 export const getInitialEcosystemData = () => {
     const data: any = {
@@ -123,7 +126,8 @@ class DataService {
           const initialProfile = { 
               email: auth.currentUser?.email || 'dev@eixo.os',
               createdAt: new Date().toISOString(),
-              onboardingCompleted: false
+              onboardingCompleted: false,
+              totalXp: 0,
           };
           await this.setData('profile', initialProfile);
       }
@@ -217,7 +221,7 @@ class DataService {
     });
   }
 
-  public getNewId(path: string) {
+  public getNewId(path: string): string | null {
     if (!this.userId || !firebaseAvailable) return null;
     const listRef = database.ref(`users/${this.userId}/${path}`);
     return listRef.push().key;
