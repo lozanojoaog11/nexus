@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { OptimizationRecommendation, PerformanceMetric } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
@@ -49,7 +48,7 @@ const OptimizationCenter: React.FC<OptimizationCenterProps> = ({ recommendations
           <label className="block text-sm text-gray-400 mb-2">{t('neuralAnalytics.optimizationCenter.filterCategory')}</label>
           <select value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)} className="bg-gray-800 text-white p-2 rounded border border-gray-600">
             <option value="all">{t('neuralAnalytics.optimizationCenter.categories.all')}</option>
-            {categories.map(c => <option key={c} value={c}>{c}</option>)}
+            {categories.map(c => <option key={c} value={c}>{t(c)}</option>)}
           </select>
         </div>
       </div>
@@ -85,9 +84,9 @@ const DetailedRecommendationCard: React.FC<{recommendation: OptimizationRecommen
             }`}>
               {t(`neuralAnalytics.recommendations.priorities.${recommendation.priority}`)}
             </span>
-            <span className="text-sm text-gray-400">{recommendation.category}</span>
+            <span className="text-sm text-gray-400">{t(recommendation.category)}</span>
           </div>
-          <h4 className="font-bold text-lg text-white">{recommendation.title}</h4>
+          <h4 className="font-bold text-lg text-white">{t(recommendation.title)}</h4>
         </div>
         <div className="text-right">
           <div className="text-lg font-bold text-blue-400">{recommendation.expectedImpact}%</div>
@@ -95,12 +94,12 @@ const DetailedRecommendationCard: React.FC<{recommendation: OptimizationRecommen
         </div>
       </div>
       
-      <p className="text-gray-300 mb-4">{recommendation.description}</p>
+      <p className="text-gray-300 mb-4">{t(recommendation.description, recommendation.descriptionParams)}</p>
       
       <div className="mb-4 bg-gray-800/40 p-4 rounded-lg">
         <div className="text-sm font-medium text-gray-300 mb-2">{t('neuralAnalytics.recommendations.implementationSteps')}</div>
         <ul className="space-y-1">
-          {recommendation.implementation.map((step, index) => (
+          {t(recommendation.implementation).split('|').map((step, index) => (
             <li key={index} className="text-sm text-gray-200 flex items-start gap-2">
               <span className="text-blue-400 mt-1">•</span>
               {step}
@@ -110,7 +109,7 @@ const DetailedRecommendationCard: React.FC<{recommendation: OptimizationRecommen
       </div>
        <div className="bg-gray-800/40 p-4 rounded-lg">
         <div className="text-sm font-medium text-gray-300 mb-2">{t('neuralAnalytics.insight.scientificBasis')}</div>
-        <p className="text-xs text-gray-400">{recommendation.scientificEvidence}</p>
+        <p className="text-xs text-gray-400">{t(recommendation.scientificEvidence)}</p>
       </div>
       
       <div className="mt-4 flex justify-between text-xs text-gray-400">

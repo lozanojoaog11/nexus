@@ -329,11 +329,12 @@ export interface PerformanceMetric {
 export interface OptimizationRecommendation {
   id: string;
   priority: 'critical' | 'high' | 'medium' | 'low';
-  category: string;
-  title: string;
-  description: string;
+  category: string; // Translation key
+  title: string; // Translation key
+  description: string; // Translation key
+  descriptionParams?: Record<string, string | number>;
   expectedImpact: number;
-  implementation: string[];
+  implementation: string; // Translation key for a '|' separated list
   timeframe: 'immediate' | 'weekly' | 'monthly';
-  scientificEvidence: string;
+  scientificEvidence: string; // Translation key
 }

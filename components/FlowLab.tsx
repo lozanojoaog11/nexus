@@ -28,7 +28,7 @@ const FlowLab: React.FC<FlowLabProps> = ({ tasks, checkin, sessionHistory, onSes
   });
   const [distractionCount, setDistractionCount] = useState(0);
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sessionStartRef = useRef<Date | null>(null);
 
   const flowPresets = [

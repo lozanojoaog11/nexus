@@ -281,7 +281,7 @@
   "agenda": {
     "title": "Agenda",
     "subtitle": "Your unified view of time.",
-    "today": "(Today)",
+    "today": "Today",
     "deadline": "Deadline",
     "task": "Task Deadline",
     "event": "Event",
@@ -350,8 +350,8 @@
     "start": "Start Training",
     "trial": "Trial",
     "levelLabel": "Level",
-    "posMatch": "Position Match (SPACE)",
-    "audioMatch": "Audio Match (ENTER)",
+    "posMatch": "Position Match (A)",
+    "audioMatch": "Audio Match (L)",
     "resultsTitle": "Training Complete!",
     "accuracy": "Accuracy Score",
     "duration": "Duration",
@@ -774,52 +774,6 @@
       "confidence": "Confidence",
       "recommendation": "RECOMMENDATION"
     },
-    "recommendations": {
-      "expectedImpact": "Expected Impact",
-      "implementationSteps": "Implementation Steps:",
-      "timeframe": "Timeframe",
-      "priorities": {
-        "critical": "Critical",
-        "high": "High",
-        "medium": "Medium",
-        "low": "Low"
-      },
-      "timeframes": {
-        "immediate": "Immediate",
-        "weekly": "Weekly",
-        "monthly": "Monthly"
-      },
-      "categories": {
-        "foundation": "Physical Foundation",
-        "enhancement": "Cognitive Enhancement",
-        "performance": "Performance Optimization",
-        "system": "System Building"
-      },
-      "sleep": {
-        "title": "Sleep Quality Enhancement Required",
-        "description": "Current sleep quality ({quality}/10) is below optimal threshold (7.5+). Sleep is the foundation of all cognitive enhancement.",
-        "implementation": "Maintain consistent bedtime ±15 minutes|Room temperature 18-20°C|Complete darkness (blackout curtains)|No screens 1 hour before bed|Morning sunlight exposure within 30 minutes of waking",
-        "science": "Sleep quality directly impacts memory consolidation, learning capacity, and emotional regulation (Walker, 2017)"
-      },
-      "cognitive": {
-        "title": "Increase Cognitive Training Frequency",
-        "description": "Current training frequency ({frequency}/week) is below optimal for neuroplasticity activation (3-5x/week).",
-        "implementation": "Schedule cognitive training for consistent times daily|Start with 15-minute sessions if time is limited|Focus on dual n-back 3x/week minimum|Track improvements weekly to maintain motivation",
-        "science": "Neuroplasticity requires consistent stimulation; 3-5x weekly training shows optimal working memory gains (Jaeggi et al.)"
-      },
-      "flow": {
-        "title": "Flow State Distraction Control",
-        "description": "Average distractions ({distractions}) exceed optimal flow threshold (≤2). Reducing distractions can increase performance 300-500%.",
-        "implementation": "Phone on airplane mode during flow sessions|Use website blockers for non-essential sites|Inform others of your deep work schedule|Prepare all materials before session start|Use noise-cancelling headphones if needed",
-        "science": "Flow states require uninterrupted attention; interruptions can take 23 minutes to recover from (Mark et al.)"
-      },
-      "habit": {
-        "title": "Habit Consistency Architecture",
-        "description": "Habit consistency ({consistency}%) needs improvement for compound growth effects.",
-        "implementation": "Start with 2-minute versions of habits|Use implementation intentions (\"If X, then Y\")|Stack new habits onto existing routines|Track completion immediately after doing|Focus on consistency over perfection",
-        "science": "Small, consistent habits create neural automation; consistency matters more than intensity (Clear, 2018)"
-      }
-    },
     "patterns": {
       "title": "Pattern Analysis",
       "subtitle": "Deep insights from your {timeRange} data",
@@ -839,45 +793,6 @@
       "noResults": "No patterns found for the selected filters.",
       "noResultsHint": "Try adjusting your filter criteria or data range."
     },
-    "insights": {
-      "positive": "positive",
-      "negative": "negative",
-      "energySleep": {
-        "title": "Strong Energy-Sleep Connection",
-        "description": "Your energy levels show a {direction} correlation ({correlation}%) with sleep quality.",
-        "recommendationPositive": "Focus on sleep optimization to maintain high energy levels.",
-        "recommendationNegative": "Investigate potential sleep disruptors affecting energy.",
-        "science": "Sleep quality directly impacts energy through hormonal regulation and neural recovery."
-      },
-      "habitMastery": {
-        "title": "Habit Mastery Pattern Identified",
-        "description": "\"{habit}\" shows your longest streak ({streak} days), indicating strong neural pathway formation.",
-        "recommendation": "Apply the same consistency strategies to other habits for compound growth.",
-        "science": "Habit formation requires 66+ days average for neuroplasticity-based automation."
-      },
-      "flowOptimization": {
-        "title": "Flow State Sweet Spot Identified",
-        "description": "Your highest flow sessions average {duration} minutes with {distractions} distractions.",
-        "recommendation": "Structure sessions for {duration} minutes with strict distraction control.",
-        "science": "Flow state requires challenge-skill balance and sustained attention without interruption."
-      },
-      "cognitiveBreakthrough": {
-        "title": "Cognitive Performance Breakthrough",
-        "description": "Recent cognitive training scores ({recentAvg}%) significantly exceed your baseline ({mean}%).",
-        "recommendation": "Increase training frequency to capitalize on this neural plasticity window.",
-        "science": "Performance breakthroughs indicate optimal neuroplasticity activation periods."
-      },
-      "impacts": {
-        "high": "High Impact",
-        "medium": "Medium Impact",
-        "low": "Low Impact"
-      },
-      "recommendation": "Actionable Recommendation",
-      "scientificBasis": "Scientific Basis",
-      "showDetails": "Show Technical Details",
-      "hideDetails": "Hide Technical Details",
-      "rawData": "Raw Data"
-    },
     "optimizationCenter": {
       "title": "Optimization Center",
       "subtitle": "Your high-priority recommendations for accelerated growth.",
@@ -891,6 +806,38 @@
       "subtitle": "Export your Eixo OS data in JSON format.",
       "description": "This will generate a JSON file containing all of your data, including check-ins, habits, tasks, goals, insights, and recommendations. You can use this file for personal backup or to import into other tools.",
       "exportButton": "Export All Data"
+    },
+    "recommendations": {
+      "priorities": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
+      "categories": { "foundation": "Foundation", "enhancement": "Enhancement", "performance": "Performance", "system": "System" },
+      "expectedImpact": "Expected Impact",
+      "implementationSteps": "Implementation Steps",
+      "timeframe": "Timeframe",
+      "timeframes": { "immediate": "Immediate", "weekly": "Weekly", "monthly": "Monthly" },
+      "sleep": {
+        "title": "Optimize Sleep Protocol",
+        "description": "Your average sleep quality of {quality} is below the optimal threshold. Sleep is the foundation for all cognitive and physical performance.",
+        "implementation": "Establish a consistent sleep schedule (bedtime and wake-up)|Avoid screens 60 minutes before bed|Ensure total darkness and a cool temperature (18-20°C) in the bedroom",
+        "science": "Quality sleep consolidates memory, regulates hormones, and clears metabolic waste from the brain, making it crucial for cognitive function."
+      },
+      "cognitive": {
+        "title": "Increase Cognitive Training Frequency",
+        "description": "Your cognitive training frequency of {frequency}/week is below the recommended amount. Consistency is key for neuroplasticity.",
+        "implementation": "Schedule 3-4 sessions of 15 minutes per week|Try different training modules to maintain engagement|Do a short session before starting focused work",
+        "science": "Regular cognitive training induces long-term potentiation (LTP), the molecular mechanism behind learning and memory."
+      },
+      "flow": {
+        "title": "Reduce Distractions During Flow",
+        "description": "Your average of {distractions} distractions per flow session is limiting your depth of focus.",
+        "implementation": "Utilize the Flow Lab's distraction blocker|Place your phone in another room and disable notifications|Communicate your need for focus to colleagues or family",
+        "science": "Each interruption can take up to 23 minutes to fully regain focus, a phenomenon known as 'attention residue'."
+      },
+      "habit": {
+        "title": "Reinforce Habit Consistency",
+        "description": "Your overall habit consistency of {consistency}% is below the threshold for forming automaticity.",
+        "implementation": "Review your habits: are they small enough?|Use 'habit stacking': link a new habit to an existing one|Don't break the chain for more than one day ('two-day rule')",
+        "science": "Habit automaticity is achieved through consistent repetition, strengthening the neural circuit between the basal ganglia and the prefrontal cortex."
+      }
     }
   }
 }

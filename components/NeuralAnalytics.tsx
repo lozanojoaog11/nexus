@@ -165,7 +165,7 @@ const NeuralAnalytics: React.FC<NeuralAnalyticsProps> = ({
     }
 
     return metrics;
-  }, [filteredData, t, checkins]);
+  }, [filteredData, t, checkins, habits]);
 
   // Helper function for correlation calculation
   const calculateCorrelation = (x: number[], y: number[]): number => {
@@ -287,11 +287,12 @@ const NeuralAnalytics: React.FC<NeuralAnalyticsProps> = ({
       const avgSleepQuality = recentSleepData.reduce((sum, d) => sum + d.sleep.quality, 0) / recentSleepData.length;
       if (avgSleepQuality < 7.5) {
         recommendations.push({
-          id: 'sleep_optimization', priority: 'critical', category: t('neuralAnalytics.recommendations.categories.foundation'),
-          title: t('neuralAnalytics.recommendations.sleep.title'),
-          description: t('neuralAnalytics.recommendations.sleep.description', { quality: avgSleepQuality.toFixed(1) }),
-          expectedImpact: 85, implementation: t('neuralAnalytics.recommendations.sleep.implementation').split('|'),
-          timeframe: 'immediate', scientificEvidence: t('neuralAnalytics.recommendations.sleep.science')
+          id: 'sleep_optimization', priority: 'critical', category: 'neuralAnalytics.recommendations.categories.foundation',
+          title: 'neuralAnalytics.recommendations.sleep.title',
+          description: 'neuralAnalytics.recommendations.sleep.description',
+          descriptionParams: { quality: avgSleepQuality.toFixed(1) },
+          expectedImpact: 85, implementation: 'neuralAnalytics.recommendations.sleep.implementation',
+          timeframe: 'immediate', scientificEvidence: 'neuralAnalytics.recommendations.sleep.science'
         });
       }
     }
@@ -299,11 +300,12 @@ const NeuralAnalytics: React.FC<NeuralAnalyticsProps> = ({
       const sessionFrequency = filteredData.cognitiveSessions.length / Math.max(1, Math.ceil(filteredData.checkins.length / 7));
       if (sessionFrequency < 3) {
         recommendations.push({
-          id: 'cognitive_frequency', priority: 'high', category: t('neuralAnalytics.recommendations.categories.enhancement'),
-          title: t('neuralAnalytics.recommendations.cognitive.title'),
-          description: t('neuralAnalytics.recommendations.cognitive.description', { frequency: sessionFrequency.toFixed(1) }),
-          expectedImpact: 70, implementation: t('neuralAnalytics.recommendations.cognitive.implementation').split('|'),
-          timeframe: 'weekly', scientificEvidence: t('neuralAnalytics.recommendations.cognitive.science')
+          id: 'cognitive_frequency', priority: 'high', category: 'neuralAnalytics.recommendations.categories.enhancement',
+          title: 'neuralAnalytics.recommendations.cognitive.title',
+          description: 'neuralAnalytics.recommendations.cognitive.description',
+          descriptionParams: { frequency: sessionFrequency.toFixed(1) },
+          expectedImpact: 70, implementation: 'neuralAnalytics.recommendations.cognitive.implementation',
+          timeframe: 'weekly', scientificEvidence: 'neuralAnalytics.recommendations.cognitive.science'
         });
       }
     }
@@ -311,22 +313,24 @@ const NeuralAnalytics: React.FC<NeuralAnalyticsProps> = ({
       const avgDistractions = filteredData.flowSessions.reduce((sum, s) => sum + s.distractionCount, 0) / filteredData.flowSessions.length;
       if (avgDistractions > 2) {
         recommendations.push({
-          id: 'flow_distraction_reduction', priority: 'medium', category: t('neuralAnalytics.recommendations.categories.performance'),
-          title: t('neuralAnalytics.recommendations.flow.title'),
-          description: t('neuralAnalytics.recommendations.flow.description', { distractions: avgDistractions.toFixed(1) }),
-          expectedImpact: 65, implementation: t('neuralAnalytics.recommendations.flow.implementation').split('|'),
-          timeframe: 'immediate', scientificEvidence: t('neuralAnalytics.recommendations.flow.science')
+          id: 'flow_distraction_reduction', priority: 'medium', category: 'neuralAnalytics.recommendations.categories.performance',
+          title: 'neuralAnalytics.recommendations.flow.title',
+          description: 'neuralAnalytics.recommendations.flow.description',
+          descriptionParams: { distractions: avgDistractions.toFixed(1) },
+          expectedImpact: 65, implementation: 'neuralAnalytics.recommendations.flow.implementation',
+          timeframe: 'immediate', scientificEvidence: 'neuralAnalytics.recommendations.flow.science'
         });
       }
     }
     const habitConsistency = calculatePerformanceMetrics.find(m => m.name === t('neuralAnalytics.performance.habitConsistency.name'));
     if (habitConsistency && habitConsistency.current < 75) {
       recommendations.push({
-        id: 'habit_consistency', priority: 'high', category: t('neuralAnalytics.recommendations.categories.system'),
-        title: t('neuralAnalytics.recommendations.habit.title'),
-        description: t('neuralAnalytics.recommendations.habit.description', { consistency: habitConsistency.current.toFixed(1) }),
-        expectedImpact: 80, implementation: t('neuralAnalytics.recommendations.habit.implementation').split('|'),
-        timeframe: 'monthly', scientificEvidence: t('neuralAnalytics.recommendations.habit.science')
+        id: 'habit_consistency', priority: 'high', category: 'neuralAnalytics.recommendations.categories.system',
+        title: 'neuralAnalytics.recommendations.habit.title',
+        description: 'neuralAnalytics.recommendations.habit.description',
+        descriptionParams: { consistency: habitConsistency.current.toFixed(1) },
+        expectedImpact: 80, implementation: 'neuralAnalytics.recommendations.habit.implementation',
+        timeframe: 'monthly', scientificEvidence: 'neuralAnalytics.recommendations.habit.science'
       });
     }
 
@@ -431,15 +435,15 @@ const RecommendationCard: React.FC<{recommendation: OptimizationRecommendation}>
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className={`text-xs px-2 py-1 rounded uppercase font-bold border ${recommendation.priority === 'critical' ? 'border-red-500 text-red-400' : recommendation.priority === 'high' ? 'border-orange-500 text-orange-400' : recommendation.priority === 'medium' ? 'border-yellow-500 text-yellow-400' : 'border-green-500 text-green-400'}`}>{t(`neuralAnalytics.recommendations.priorities.${recommendation.priority}`)}</span>
-            <span className="text-sm text-gray-400">{recommendation.category}</span>
+            <span className="text-sm text-gray-400">{t(recommendation.category)}</span>
           </div>
-          <h4 className="font-bold text-lg text-white">{recommendation.title}</h4>
+          <h4 className="font-bold text-lg text-white">{t(recommendation.title)}</h4>
         </div>
         <div className="text-right"><div className="text-lg font-bold text-blue-400">{recommendation.expectedImpact}%</div><div className="text-xs text-gray-400">{t('neuralAnalytics.recommendations.expectedImpact')}</div></div>
       </div>
-      <p className="text-gray-300 mb-4">{recommendation.description}</p>
+      <p className="text-gray-300 mb-4">{t(recommendation.description, recommendation.descriptionParams)}</p>
       <div className="mb-4"><div className="text-sm font-medium text-gray-400 mb-2">{t('neuralAnalytics.recommendations.implementationSteps')}:</div>
-        <ul className="space-y-1">{recommendation.implementation.map((step, index) => <li key={index} className="text-sm text-gray-300 flex items-start gap-2"><span className="text-blue-400 mt-1">•</span>{step}</li>)}</ul>
+        <ul className="space-y-1">{t(recommendation.implementation).split('|').map((step, index) => <li key={index} className="text-sm text-gray-300 flex items-start gap-2"><span className="text-blue-400 mt-1">•</span>{step}</li>)}</ul>
       </div>
       <div className="flex justify-between text-xs text-gray-400"><span>{t('neuralAnalytics.recommendations.timeframe')}: {t(`neuralAnalytics.recommendations.timeframes.${recommendation.timeframe}`)}</span></div>
     </div>

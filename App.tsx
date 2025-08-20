@@ -25,6 +25,7 @@ import NeuralAnalytics from './components/NeuralAnalytics';
 import TodayView from './components/TodayView';
 import { LanguageProvider, useTranslation } from './contexts/LanguageContext';
 import { UIProvider, useUI } from './contexts/UIContext';
+import { calculateDateStreak } from './utils/streak';
 
 const AppModals: React.FC<{
     projects: Project[];
@@ -111,12 +112,25 @@ const MainApp: React.FC = () => {
           case 'cognitive_score': if (req.metric === 'dual_n_back_4') { const s = cognitiveSessions.filter(s => s.type === 'dual-n-back' && s.level >= 4 && s.score >= req.target); progress = s.length > 0 ? 1 : 0; } break;
           case 'sleep_quality': const recent = biohackingMetrics.slice(-30); const q = recent.filter(d => d.sleep.quality >= req.target); progress = Math.min(q.length, definition.maxProgress); break;
           case 'task_completion': const c = allTasks.filter(t => t.status === 'Concluído'); progress = Math.min(c.length, definition.maxProgress); break;
+          case 'habit_streak': progress = Math.min(Math.max(0, ...habits.map(h => h.currentStreak || 0)), definition.maxProgress); break;
+          case 'consistency': 
+            const checkinDates = new Set(allDailyCheckins.map(c => c.date));
+            const keystoneHabitDates = new Set(
+                habits.filter(h => h.isKeystone)
+                      .flatMap(h => h.history)
+                      .filter(entry => entry.completed)
+                      .map(entry => entry.date)
+            );
+            const consistentDays = [...checkinDates].filter(date => keystoneHabitDates.has(date));
+            const consistencyStreak = calculateDateStreak(consistentDays);
+            progress = Math.min(consistencyStreak, definition.maxProgress);
+            break;
         }
       });
       const isUnlocked = progress >= definition.maxProgress;
       return { ...definition, progress, unlockedAt: isUnlocked ? new Date().toISOString() : undefined };
     });
-  }, [achievementDefinitions, allTasks, flowSessions, cognitiveSessions, biohackingMetrics]);
+  }, [achievementDefinitions, allTasks, flowSessions, cognitiveSessions, biohackingMetrics, habits, allDailyCheckins]);
   
   const prevAchievementsRef = React.useRef<Achievement[]>([]);
   useEffect(() => {
@@ -145,9 +159,17 @@ const MainApp: React.FC = () => {
     return { currentLevel, currentXP, xpToNextLevel: xpToNextLevel, totalXP, title: levelData.title, evolutionStage: levelData.stage, capabilities: [] };
   }, [profile, evolutionTitles]);
   
-  const activeStreaks = useMemo((): StreakData[] => [
-    { type: t('achievements.streaks.checkin'), count: 15, bestStreak: 23, lastUpdate: new Date().toISOString() }, { type: t('achievements.streaks.habits'), count: 8, bestStreak: 12, lastUpdate: new Date().toISOString() }, { type: t('achievements.streaks.flow'), count: flowSessions.length, bestStreak: 5, lastUpdate: new Date().toISOString() }
-  ], [flowSessions, t]);
+  const activeStreaks = useMemo((): StreakData[] => {
+    const checkinStreak = calculateDateStreak(allDailyCheckins.map(c => c.date));
+    const habitStreak = Math.max(0, ...habits.map(h => h.currentStreak || 0));
+    const flowStreak = calculateDateStreak(flowSessions.map(s => s.startTime.split('T')[0]));
+    
+    return [
+      { type: t('achievements.streaks.checkin'), count: checkinStreak, bestStreak: 0, lastUpdate: new Date().toISOString() }, // bestStreak needs DB support
+      { type: t('achievements.streaks.habits'), count: habitStreak, bestStreak: Math.max(0, ...habits.map(h => h.bestStreak || 0)), lastUpdate: new Date().toISOString() },
+      { type: t('achievements.streaks.flow'), count: flowStreak, bestStreak: 0, lastUpdate: new Date().toISOString() } // bestStreak needs DB support
+    ];
+  }, [allDailyCheckins, habits, flowSessions, t]);
 
   // --- End of Achievement Logic ---
   
@@ -184,7 +206,7 @@ const MainApp: React.FC = () => {
     }
       
     switch (currentView) {
-      case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
+      case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} allDailyCheckins={allDailyCheckins} biohackingMetrics={biohackingMetrics} activeStreaks={activeStreaks} />;
       case 'today': return <TodayView 
                                 dailyCheckin={dailyCheckin}
                                 tasks={allTasks}
@@ -196,7 +218,7 @@ const MainApp: React.FC = () => {
       case 'habits': return <Habits habits={habits} toggleHabitCompletion={toggleHabitCompletion} onDeleteHabit={deleteHabit} />;
       case 'projects': return <KanbanBoard projects={projects} selectedProjectId={selectedProjectId} setSelectedProjectId={setSelectedProjectId} updateTaskStatus={updateTaskStatus} updateTask={updateTask} addTask={addTask} deleteProject={deleteProject} developmentNodes={developmentGraph.nodes} />;
       case 'goals': return <Goals goals={goals} onDeleteGoal={deleteGoal} />;
-      case 'agenda': return <Agenda events={agendaEvents} tasks={allTasks} />;
+      case 'agenda': return <Agenda events={agendaEvents} tasks={allTasks} goals={goals} />;
       case 'development': return <Development graph={developmentGraph} goals={goals} tasks={allTasks} books={books} onDeleteNode={deleteDevelopmentNode}  />;
       case 'cognitive': return <CognitiveTraining sessions={cognitiveSessions} onSessionComplete={saveCognitiveSession} />;
       case 'flowlab': return <FlowLab tasks={allTasks} checkin={dailyCheckin} sessionHistory={flowSessions} onSessionSave={saveFlowSession} />;
@@ -205,7 +227,7 @@ const MainApp: React.FC = () => {
       case 'analytics': return <NeuralAnalytics checkins={allDailyCheckins} habits={habits} tasks={allTasks} goals={goals} flowSessions={flowSessions} cognitiveSessions={cognitiveSessions} biohackingData={biohackingMetrics} achievements={achievements} />;
       case 'guardian': return <NeuralArchitectAI checkin={dailyCheckin} habits={habits} goals={goals} tasks={allTasks} developmentNodes={developmentGraph.nodes} />;
       case 'library': return <Library books={books} backlinks={backlinks} addNoteToBook={addNoteToBook} onDeleteBook={deleteBook} onUpdateNote={updateNote} onDeleteNote={deleteNote} />;
-      default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} />;
+      default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} allDailyCheckins={allDailyCheckins} biohackingMetrics={biohackingMetrics} activeStreaks={activeStreaks} />;
     }
   };
 

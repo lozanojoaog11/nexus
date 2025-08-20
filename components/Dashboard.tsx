@@ -1,12 +1,10 @@
-
-
 import React, { useMemo } from 'react';
-import { DailyCheckin, Habit, Task, Goal } from '../types';
+import { DailyCheckin, Habit, Task, Goal, BiohackingMetrics, StreakData } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
 // --- TYPES ---
 interface NeuralPanelData {
-  id: 'cognitive' | 'physical' | 'emotional' | 'social';
+  id: 'cognitive' | 'physical' | 'emotional';
   dimension: string;
   currentScore: number; // 0-100
   weeklyTrend: number; // -100 to +100
@@ -23,16 +21,19 @@ interface DashboardProps {
   goals: Goal[];
   tasks: Task[];
   yesterdaysIncompleteKeystoneHabits: number;
+  allDailyCheckins: DailyCheckin[];
+  biohackingMetrics: BiohackingMetrics[];
+  activeStreaks: StreakData[];
 }
 
 // --- HELPER FUNCTIONS ---
 const calculateCognitiveScore = (habits: Habit[], tasks: Task[], checkin: DailyCheckin | null): number => {
   let score = 0;
   
-  // Sleep quality impact (from checkin)
-  if (checkin?.energia) {
-      if (checkin.energia >= 8) score += 25;
-      else if (checkin.energia >= 6) score += 15;
+  // Clarity from checkin
+  if (checkin?.clareza) {
+      if (checkin.clareza >= 8) score += 25;
+      else if (checkin.clareza >= 6) score += 15;
       else score += 5;
   }
   
@@ -70,7 +71,21 @@ const calculatePhysicalScore = (habits: Habit[], checkin: DailyCheckin | null): 
         score += (completedToday / physicalHabits.length) * 60;
     }
     return Math.round(Math.min(score, 100));
+};
+
+const calculateEmotionalScore = (checkin: DailyCheckin | null, biohackingMetrics: BiohackingMetrics[]): number => {
+    let score = 0;
+    // Clarity from check-in contributes 60%
+    score += ((checkin?.clareza || 5) / 10) * 60;
+
+    // Stress level from the latest bio-hacking metric contributes 40% (inverted)
+    const latestMetrics = biohackingMetrics.length > 0 ? biohackingMetrics[biohackingMetrics.length - 1] : null;
+    const stressLevel = latestMetrics?.recovery?.stressLevel || 5;
+    score += ((10 - stressLevel) / 10) * 40;
+    
+    return Math.round(Math.min(score, 100));
 }
+
 
 const calculateBaseNeuralEfficiency = (panels: NeuralPanelData[]): number => {
     if (panels.length === 0) return 0;
@@ -78,15 +93,45 @@ const calculateBaseNeuralEfficiency = (panels: NeuralPanelData[]): number => {
     return Math.round(totalScore / panels.length);
 };
 
-const calculateWeeklyTrend = (dimension: 'cognitive' | 'physical' | 'emotional' | 'social'): number => {
-  // Placeholder logic
-  return Math.floor(Math.random() * 10) - 2; // -2 to +7
+const calculateWeeklyTrend = (dimension: 'cognitive' | 'physical' | 'emotional', allCheckins: DailyCheckin[], biohackingMetrics: BiohackingMetrics[]): number => {
+  const last7Days = allCheckins.slice(0, 7);
+  const previous7Days = allCheckins.slice(7, 14);
+
+  if (last7Days.length < 3 || previous7Days.length < 3) return 0; // Not enough data for a meaningful trend
+
+  const getAvgScore = (checkins: DailyCheckin[], metrics: BiohackingMetrics[]) => {
+      let totalScore = 0;
+      checkins.forEach(c => {
+          if (dimension === 'cognitive') totalScore += c.clareza;
+          if (dimension === 'physical') totalScore += c.energia;
+          if (dimension === 'emotional') {
+              const metricForDay = metrics.find(m => m.date === c.date);
+              totalScore += ((c.clareza || 5) + (10 - (metricForDay?.recovery?.stressLevel || 5))) / 2;
+          }
+      });
+      return totalScore / checkins.length;
+  };
+
+  const currentAvg = getAvgScore(last7Days, biohackingMetrics);
+  const previousAvg = getAvgScore(previous7Days, biohackingMetrics);
+
+  if (previousAvg === 0) return currentAvg > 0 ? 100 : 0;
+  
+  return Math.round(((currentAvg - previousAvg) / previousAvg) * 100);
 };
 
-const calculateStreakDays = (dimension: 'cognitive' | 'physical' | 'emotional' | 'social'): number => {
-  // Placeholder logic
-  return Math.floor(Math.random() * 15) + 1; // 1-15 days
-};
+const getStreakDays = (dimension: 'cognitive' | 'physical' | 'emotional', habits: Habit[], activeStreaks: StreakData[], t: (key: string) => string): number => {
+    switch (dimension) {
+        case 'cognitive':
+            return Math.max(0, ...habits.filter(h => h.category === 'Mente').map(h => h.currentStreak));
+        case 'physical':
+            return Math.max(0, ...habits.filter(h => h.category === 'Corpo').map(h => h.currentStreak));
+        case 'emotional':
+            return activeStreaks.find(s => s.type === t('achievements.streaks.checkin'))?.count || 0;
+        default:
+            return 0;
+    }
+}
 
 
 // --- SUB-COMPONENTS ---
@@ -165,7 +210,7 @@ const NeuralEfficiencyScore: React.FC<{score: number; penaltyApplied: boolean}> 
 
 
 // --- MAIN DASHBOARD COMPONENT ---
-const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onStartCheckin, habits, goals, tasks, yesterdaysIncompleteKeystoneHabits }) => {
+const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onStartCheckin, habits, goals, tasks, yesterdaysIncompleteKeystoneHabits, allDailyCheckins, biohackingMetrics, activeStreaks }) => {
     const { t } = useTranslation();
     
     const neuralDimensions = useMemo<NeuralPanelData[]>(() => {
@@ -175,8 +220,8 @@ const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onSta
                 id: 'cognitive',
                 dimension: t('dashboard.cognitive'),
                 currentScore: calculateCognitiveScore(habits, tasks, checkin),
-                weeklyTrend: calculateWeeklyTrend('cognitive'),
-                streakDays: calculateStreakDays('cognitive'),
+                weeklyTrend: calculateWeeklyTrend('cognitive', allDailyCheckins, biohackingMetrics),
+                streakDays: getStreakDays('cognitive', habits, activeStreaks, t),
                 nextMilestone: cognitiveMilestone,
                 color: 'from-blue-500 to-purple-600'
             },
@@ -184,31 +229,22 @@ const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onSta
                 id: 'physical',
                 dimension: t('dashboard.physical'),
                 currentScore: calculatePhysicalScore(habits, checkin),
-                weeklyTrend: calculateWeeklyTrend('physical'),
-                streakDays: calculateStreakDays('physical'),
+                weeklyTrend: calculateWeeklyTrend('physical', allDailyCheckins, biohackingMetrics),
+                streakDays: getStreakDays('physical', habits, activeStreaks, t),
                 nextMilestone: t('dashboard.milestone.physical'),
                 color: 'from-green-500 to-teal-500'
             },
             {
                 id: 'emotional',
                 dimension: t('dashboard.emotional'),
-                currentScore: 78, // Placeholder score
-                weeklyTrend: calculateWeeklyTrend('emotional'),
-                streakDays: calculateStreakDays('emotional'),
+                currentScore: calculateEmotionalScore(checkin, biohackingMetrics),
+                weeklyTrend: calculateWeeklyTrend('emotional', allDailyCheckins, biohackingMetrics),
+                streakDays: getStreakDays('emotional', habits, activeStreaks, t),
                 nextMilestone: t('dashboard.milestone.emotional'),
                 color: 'from-yellow-500 to-orange-500'
-            },
-            {
-                id: 'social',
-                dimension: t('dashboard.social'),
-                currentScore: 65, // Placeholder score
-                weeklyTrend: calculateWeeklyTrend('social'),
-                streakDays: calculateStreakDays('social'),
-                nextMilestone: t('dashboard.milestone.social'),
-                color: 'from-rose-500 to-pink-600'
-            },
+            }
         ];
-    }, [habits, tasks, checkin, goals, t]);
+    }, [habits, tasks, checkin, goals, allDailyCheckins, biohackingMetrics, activeStreaks, t]);
     
     const neuralEfficiency = useMemo(() => {
         const baseScore = calculateBaseNeuralEfficiency(neuralDimensions);
@@ -257,7 +293,7 @@ const Dashboard: React.FC<DashboardProps> = ({ checkin, hasCheckedInToday, onSta
                 <NeuralEfficiencyScore score={neuralEfficiency} penaltyApplied={yesterdaysIncompleteKeystoneHabits > 0}/>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 {neuralDimensions.map(panel => (
                     <NeuralPanel key={panel.id} panel={panel} />
                 ))}

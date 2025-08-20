@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { DailyCheckin, Habit, BiohackingMetrics } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
@@ -16,7 +15,7 @@ interface BiohackingSuiteProps {
 
 const BiohackingSuite: React.FC<BiohackingSuiteProps> = ({ checkin, habits, metricsHistory, onMetricsSave }) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<'overview' | 'sleep' | 'nutrition' | 'recovery' | 'supplements' | 'protocols'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'sleep' | 'nutrition' | 'recovery' | 'supplements'>('overview');
   const [todayMetrics, setTodayMetrics] = useState<BiohackingMetrics | null>(null);
   
   const biohackingModules = useMemo(() => [
@@ -64,7 +63,7 @@ const BiohackingSuite: React.FC<BiohackingSuiteProps> = ({ checkin, habits, metr
         date: today,
         sleep: { bedtime: '22:00', wakeTime: '06:00', duration: 8, quality: 7, restfulness: 7, dreams: false, awakenings: 1, sleepLatency: 15, environment: { temperature: 18, darkness: 8, quietness: 8, airQuality: 7 } },
         nutrition: { calories: 0, macros: { protein: 0, carbs: 0, fat: 0 }, meals: [], fastingWindow: 16, lastMeal: '20:00', hydrationLevel: 7, energyStability: 7 },
-        recovery: { hrvScore: Math.floor(Math.random() * 30) + 40, restingHeartRate: Math.floor(Math.random() * 20) + 50, stressLevel: checkin?.energia ? 10 - checkin.energia : 5, recoveryActivities: [], readiness: checkin?.energia || 7 },
+        recovery: { hrvScore: 55, restingHeartRate: 60, stressLevel: checkin?.energia ? 10 - checkin.energia : 5, recoveryActivities: [], readiness: checkin?.energia || 7 },
         supplements: [],
         hydration: { totalIntake: 0, frequency: 0, urineColor: 4, electrolytes: false },
         temperature: []
@@ -105,15 +104,6 @@ const BiohackingSuite: React.FC<BiohackingSuiteProps> = ({ checkin, habits, metr
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {biohackingModules.map(module => <BiohackingModuleCard key={module.id} module={module} onSelect={() => setActiveTab(module.id as any)} currentData={todayMetrics} />)}
-        </div>
-        <div className="bg-gray-900/50 rounded-xl p-6 border border-gray-700">
-          <h3 className="text-lg font-semibold mb-4">{t('biohacking.todayProtocols')}</h3>
-          <div className="space-y-3">
-            <ProtocolItem name={t('biohacking.protocols.sunlight.name')} status="pending" benefit={t('biohacking.protocols.sunlight.benefit')} time="06:30 - 07:00" />
-            <ProtocolItem name={t('biohacking.protocols.coldShower.name')} status="completed" benefit={t('biohacking.protocols.coldShower.benefit')} time="07:00 - 07:05" />
-            <ProtocolItem name={t('biohacking.protocols.fasting.name')} status="active" benefit={t('biohacking.protocols.fasting.benefit')} time="20:00 - 12:00 (+1)" />
-            <ProtocolItem name={t('biohacking.protocols.breathing.name')} status="pending" benefit={t('biohacking.protocols.breathing.benefit')} time="Evening - 10min" />
-          </div>
         </div>
       </div>
     );
@@ -169,19 +159,6 @@ const BiohackingModuleCard: React.FC<{ module: any; onSelect: () => void; curren
       </div>
       <div className="mb-4 p-3 bg-gray-800/50 rounded-lg"><div className="text-xs text-gray-400 mb-1">{t('biohacking.module.target')}:</div><div className="text-sm text-gray-300">{module.target}</div></div>
       <button className={`w-full py-2 rounded-lg bg-gradient-to-r ${module.color} text-white font-medium hover:opacity-90`}>{t('biohacking.module.optimize')}</button>
-    </div>
-  );
-};
-
-const ProtocolItem: React.FC<{ name: string; status: 'pending' | 'active' | 'completed'; benefit: string; time: string; }> = ({ name, status, benefit, time }) => {
-  const { t } = useTranslation();
-  const statusText = { pending: t('biohacking.protocols.status.pending'), active: t('biohacking.protocols.status.active'), completed: t('biohacking.protocols.status.completed')}[status];
-  const statusColor = { pending: 'text-gray-400', active: 'text-blue-400', completed: 'text-green-400'}[status];
-  const statusIcon = { pending: '⏳', active: '🔄', completed: '✅'}[status];
-  return (
-    <div className="flex items-center justify-between p-3 bg-gray-800/30 rounded-lg">
-      <div className="flex items-center gap-3"><span className="text-lg">{statusIcon}</span><div><div className="text-white font-medium">{name}</div><div className="text-gray-400 text-sm">{benefit}</div></div></div>
-      <div className="text-right"><div className={`font-bold ${statusColor}`}>{statusText}</div><div className="text-gray-400 text-xs">{time}</div></div>
     </div>
   );
 };

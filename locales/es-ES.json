@@ -281,7 +281,7 @@
   "agenda": {
     "title": "Agenda",
     "subtitle": "Tu visión unificada del tiempo.",
-    "today": "(Hoy)",
+    "today": "Hoy",
     "deadline": "Fecha Límite",
     "task": "Fecha Límite de Tarea",
     "event": "Evento",
@@ -350,8 +350,8 @@
     "start": "Empezar Entrenamiento",
     "trial": "Prueba",
     "levelLabel": "Nivel",
-    "posMatch": "Posición (ESPACIO)",
-    "audioMatch": "Audio (ENTER)",
+    "posMatch": "Posición (A)",
+    "audioMatch": "Audio (L)",
     "resultsTitle": "¡Entrenamiento Completado!",
     "accuracy": "Puntuación de Precisión",
     "duration": "Duración",
@@ -774,52 +774,6 @@
       "confidence": "Confianza",
       "recommendation": "RECOMENDACIÓN"
     },
-    "recommendations": {
-      "expectedImpact": "Impacto Esperado",
-      "implementationSteps": "Pasos de Implementación:",
-      "timeframe": "Plazo",
-      "priorities": {
-        "critical": "Crítico",
-        "high": "Alto",
-        "medium": "Medio",
-        "low": "Bajo"
-      },
-      "timeframes": {
-        "immediate": "Inmediato",
-        "weekly": "Semanal",
-        "monthly": "Mensual"
-      },
-      "categories": {
-        "foundation": "Fundamento Físico",
-        "enhancement": "Mejora Cognitiva",
-        "performance": "Optimización del Rendimiento",
-        "system": "Construcción de Sistemas"
-      },
-      "sleep": {
-        "title": "Se Requiere Mejora de la Calidad del Sueño",
-        "description": "La calidad del sueño actual ({quality}/10) está por debajo del umbral óptimo (7.5+). El sueño es la base de toda mejora cognitiva.",
-        "implementation": "Mantener hora de dormir constante ±15 minutos|Temperatura de la habitación 18-20°C|Oscuridad total (cortinas opacas)|Sin pantallas 1 hora antes de dormir|Exposición a la luz solar matutina 30 minutos después de despertar",
-        "science": "La calidad del sueño impacta directamente la consolidación de la memoria, la capacidad de aprendizaje y la regulación emocional (Walker, 2017)"
-      },
-      "cognitive": {
-        "title": "Aumentar Frecuencia del Entrenamiento Cognitivo",
-        "description": "La frecuencia de entrenamiento actual ({frequency}/semana) está por debajo de lo óptimo para la activación de la neuroplasticidad (3-5x/semana).",
-        "implementation": "Programar entrenamiento cognitivo a horas constantes|Empezar con sesiones de 15 minutos si el tiempo es limitado|Enfocarse en dual n-back 3x/semana mínimo|Seguir las mejoras semanales para mantener la motivación",
-        "science": "La neuroplasticidad requiere estimulación constante; 3-5x entrenamientos semanales muestran ganancias óptimas en la memoria de trabajo (Jaeggi et al.)"
-      },
-      "flow": {
-        "title": "Control de Distracciones en el Estado de Flow",
-        "description": "El promedio de distracciones ({distractions}) excede el umbral óptimo de flow (≤2). Reducir distracciones puede aumentar el rendimiento en un 300-500%.",
-        "implementation": "Teléfono en modo avión durante las sesiones de flow|Usar bloqueadores de sitios web no esenciales|Informar a otros de tu horario de trabajo profundo|Preparar todos los materiales antes de empezar la sesión|Usar auriculares con cancelación de ruido si es necesario",
-        "science": "Los estados de flow requieren atención ininterrumpida; las interrupciones pueden tardar 23 minutos en recuperarse (Mark et al.)"
-      },
-      "habit": {
-        "title": "Arquitectura de Consistencia de Hábitos",
-        "description": "La consistencia de hábitos ({consistency}%) necesita mejorar para los efectos de crecimiento compuesto.",
-        "implementation": "Empezar con versiones de 2 minutos de los hábitos|Usar intenciones de implementación (\"Si X, entonces Y\")|Apilar nuevos hábitos sobre rutinas existentes|Registrar la finalización inmediatamente después de hacerlo|Enfocarse en la consistencia sobre la perfección",
-        "science": "Hábitos pequeños y consistentes crean automatización neural; la consistencia importa más que la intensidad (Clear, 2018)"
-      }
-    },
     "patterns": {
       "title": "Análisis de Patrones",
       "subtitle": "Ideas profundas de tus datos de {timeRange}",
@@ -839,45 +793,6 @@
       "noResults": "No se encontraron patrones para los filtros seleccionados.",
       "noResultsHint": "Intenta ajustar tus criterios de filtro o rango de datos."
     },
-    "insights": {
-      "positive": "positiva",
-      "negative": "negativa",
-      "energySleep": {
-        "title": "Fuerte Conexión Energía-Sueño",
-        "description": "Tus niveles de energía muestran una correlación {direction} ({correlation}%) con la calidad del sueño.",
-        "recommendationPositive": "Enfócate en la optimización del sueño para mantener altos niveles de energía.",
-        "recommendationNegative": "Investiga posibles disruptores del sueño que afectan tu energía.",
-        "science": "La calidad del sueño impacta directamente la energía a través de la regulación hormonal y la recuperación neural."
-      },
-      "habitMastery": {
-        "title": "Patrón de Maestría de Hábito Identificado",
-        "description": "\"{habit}\" muestra tu racha más larga ({streak} días), indicando una fuerte formación de vías neurales.",
-        "recommendation": "Aplica las mismas estrategias de consistencia a otros hábitos para un crecimiento compuesto.",
-        "science": "La formación de hábitos requiere un promedio de 66+ días para la automoción basada en la neuroplasticidad."
-      },
-      "flowOptimization": {
-        "title": "Punto Óptimo del Estado de Flow Identificado",
-        "description": "Tus sesiones de mayor flow promedian {duration} minutos con {distractions} distracciones.",
-        "recommendation": "Estructura sesiones de {duration} minutos con un control estricto de las distracciones.",
-        "science": "El estado de Flow requiere un equilibrio entre desafío y habilidad y atención sostenida sin interrupción."
-      },
-      "cognitiveBreakthrough": {
-        "title": "Avance en el Rendimiento Cognitivo",
-        "description": "Las puntuaciones recientes de entrenamiento cognitivo ({recentAvg}%) exceden significativamente tu línea de base ({mean}%).",
-        "recommendation": "Aumenta la frecuencia de entrenamiento para capitalizar esta ventana de neuroplasticidad.",
-        "science": "Los avances en el rendimiento indican períodos óptimos de activación de la neuroplasticidad."
-      },
-      "impacts": {
-        "high": "Alto Impacto",
-        "medium": "Medio Impacto",
-        "low": "Bajo Impacto"
-      },
-      "recommendation": "Recomendación Accionable",
-      "scientificBasis": "Base Científica",
-      "showDetails": "Mostrar Detalles Técnicos",
-      "hideDetails": "Ocultar Detalles Técnicos",
-      "rawData": "Datos Crudos"
-    },
     "optimizationCenter": {
       "title": "Centro de Optimización",
       "subtitle": "Tus recomendaciones de alta prioridad para un crecimiento acelerado.",
@@ -891,6 +806,38 @@
       "subtitle": "Exporta tus datos de Eixo OS en formato JSON.",
       "description": "Esto generará un archivo JSON que contiene todos tus datos, incluyendo check-ins, hábitos, tareas, metas, ideas y recomendaciones. Puedes usar este archivo para una copia de seguridad personal o para importar en otras herramientas.",
       "exportButton": "Exportar Todos los Datos"
+    },
+    "recommendations": {
+      "priorities": { "critical": "Crítico", "high": "Alta", "medium": "Media", "low": "Baja" },
+      "categories": { "foundation": "Fundamento", "enhancement": "Mejora", "performance": "Rendimiento", "system": "Sistema" },
+      "expectedImpact": "Impacto Esperado",
+      "implementationSteps": "Pasos de Implementación",
+      "timeframe": "Plazo",
+      "timeframes": { "immediate": "Inmediato", "weekly": "Semanal", "monthly": "Mensual" },
+      "sleep": {
+        "title": "Optimizar Protocolo de Sueño",
+        "description": "Tu calidad de sueño promedio de {quality} está por debajo del umbral óptimo. El sueño es la base de todo el rendimiento cognitivo y físico.",
+        "implementation": "Establece un horario de sueño constante (acostarse y despertarse)|Evita las pantallas 60 minutos antes de acostarte|Asegura oscuridad total y una temperatura fresca (18-20°C) en el dormitorio",
+        "science": "Un sueño de calidad consolida la memoria, regula las hormonas y elimina los desechos metabólicos del cerebro, lo que lo hace crucial para la función cognitiva."
+      },
+      "cognitive": {
+        "title": "Aumentar la Frecuencia del Entrenamiento Cognitivo",
+        "description": "Tu frecuencia de entrenamiento cognitivo de {frequency}/semana está por debajo de lo recomendado. La consistencia es clave para la neuroplasticidad.",
+        "implementation": "Programa 3-4 sesiones de 15 minutos por semana|Prueba diferentes módulos de entrenamiento para mantener el interés|Realiza una sesión corta antes de comenzar el trabajo enfocado",
+        "science": "El entrenamiento cognitivo regular induce la potenciación a largo plazo (LTP), el mecanismo molecular detrás del aprendizaje y la memoria."
+      },
+      "flow": {
+        "title": "Reducir las Distracciones Durante el Flow",
+        "description": "Tu promedio de {distractions} distracciones por sesión de flow está limitando tu profundidad de enfoque.",
+        "implementation": "Utiliza el bloqueador de distracciones del Flow Lab|Coloca tu teléfono en otra habitación y desactiva las notificaciones|Comunica tu necesidad de concentración a colegas o familiares",
+        "science": "Cada interrupción puede tardar hasta 23 minutos en recuperar el enfoque total, un fenómeno conocido como 'residuo de atención'."
+      },
+      "habit": {
+        "title": "Reforzar la Consistencia de los Hábitos",
+        "description": "Tu consistencia general de hábitos del {consistency}% está por debajo del umbral para formar la automaticidad.",
+        "implementation": "Revisa tus hábitos: ¿son lo suficientemente pequeños?|Usa el 'apilamiento de hábitos': vincula un nuevo hábito a uno ya existente|No rompas la cadena por más de un día ('regla de los dos días')",
+        "science": "La automaticidad de un hábito se logra a través de la repetición constante, fortaleciendo el circuito neural entre los ganglios basales y la corteza prefrontal."
+      }
     }
   }
 }

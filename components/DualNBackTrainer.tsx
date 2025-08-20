@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { CognitiveSession } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
@@ -10,84 +9,117 @@ interface DualNBackTrainerProps {
 const DualNBackTrainer: React.FC<DualNBackTrainerProps> = ({ onSessionComplete }) => {
   const { t } = useTranslation();
   const [gameState, setGameState] = useState<'setup' | 'playing' | 'results'>('setup');
-  const [currentLevel, setCurrentLevel] = useState(2); // Start with 2-back
+  const [currentLevel, setCurrentLevel] = useState(2);
   const [sequence, setSequence] = useState<{position: number, audio: number}[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [userResponses, setUserResponses] = useState<{position: boolean[], audio: boolean[]}>({
-    position: [],
-    audio: []
-  });
   const [score, setScore] = useState(0);
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
+  
+  // State for scoring
+  const scoreRef = useRef({
+      posHits: 0, posMisses: 0, posFalseAlarms: 0,
+      audioHits: 0, audioMisses: 0, audioFalseAlarms: 0,
+      posOpportunities: 0, audioOpportunities: 0
+  });
+  const userActionRef = useRef({ pos: false, audio: false });
 
   // Game configuration
   const GRID_SIZE = 9; // 3x3 grid
   const SEQUENCE_LENGTH = 20;
   const INTER_STIMULUS_INTERVAL = 2500; // ms
 
-  const generateSequence = useCallback(() => {
-    const newSequence: {position: number, audio: number}[] = [];
-    for (let i = 0; i < SEQUENCE_LENGTH; i++) {
-      newSequence.push({
-        position: Math.floor(Math.random() * GRID_SIZE),
-        audio: Math.floor(Math.random() * 8)
-      });
+  const generateSequence = useCallback((level: number) => {
+    let newSequence: {position: number, audio: number}[] = [];
+    for (let i = 0; i < SEQUENCE_LENGTH + level; i++) {
+        let posMatch = Math.random() < 0.25; // ~25% chance of match
+        let audioMatch = Math.random() < 0.25;
+        
+        let position = posMatch && i >= level ? newSequence[i - level].position : Math.floor(Math.random() * GRID_SIZE);
+        let audio = audioMatch && i >= level ? newSequence[i - level].audio : Math.floor(Math.random() * 8);
+
+        newSequence.push({ position, audio });
     }
     setSequence(newSequence);
-  }, []);
+  }, [GRID_SIZE, SEQUENCE_LENGTH]);
+
 
   const startGame = () => {
-    generateSequence();
+    generateSequence(currentLevel);
     setGameState('playing');
     setCurrentIndex(0);
-    setUserResponses({position: [], audio: []});
+    scoreRef.current = { posHits: 0, posMisses: 0, posFalseAlarms: 0, audioHits: 0, audioMisses: 0, audioFalseAlarms: 0, posOpportunities: 0, audioOpportunities: 0 };
     setScore(0);
     setSessionStartTime(Date.now());
   };
 
-  const handleResponse = (type: 'position' | 'audio') => {
-    const isMatch = (type === 'position' && sequence[currentIndex - 1]?.position === sequence[currentIndex - 1 - currentLevel]?.position) ||
-                    (type === 'audio' && sequence[currentIndex - 1]?.audio === sequence[currentIndex - 1 - currentLevel]?.audio);
-    
-    // This logic is a simplification. A real implementation would need to handle key presses and timing.
-    // For now, we assume any button click is an assertion of a match.
-    // A more complex state would be needed to track "no match" responses.
-  };
+  const handleResponse = useCallback((type: 'position' | 'audio') => {
+      if (gameState !== 'playing' || currentIndex < currentLevel) return;
+      userActionRef.current[type === 'position' ? 'pos' : 'audio'] = true;
+  }, [gameState, currentIndex, currentLevel]);
   
   // Keyboard listener
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-        if (gameState !== 'playing' || currentIndex <= currentLevel) return;
-        if (event.code === 'Space') {
-            event.preventDefault();
-            handleResponse('position');
-        }
-        if (event.code === 'Enter') {
-            event.preventDefault();
-            handleResponse('audio');
-        }
+        if (event.code === 'KeyA') handleResponse('position'); // 'A' for position
+        if (event.code === 'KeyL') handleResponse('audio');    // 'L' for audio
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameState, currentIndex, sequence, currentLevel]);
+  }, [handleResponse]);
 
+
+  const processTurn = useCallback(() => {
+    if (currentIndex < currentLevel) return;
+
+    const currentTurn = sequence[currentIndex];
+    const targetTurn = sequence[currentIndex - currentLevel];
+    
+    const isPosMatch = currentTurn.position === targetTurn.position;
+    const isAudioMatch = currentTurn.audio === targetTurn.audio;
+
+    if (isPosMatch) scoreRef.current.posOpportunities++;
+    if (isAudioMatch) scoreRef.current.audioOpportunities++;
+    
+    // Position scoring
+    if (userActionRef.current.pos) {
+        if (isPosMatch) scoreRef.current.posHits++;
+        else scoreRef.current.posFalseAlarms++;
+    } else {
+        if (isPosMatch) scoreRef.current.posMisses++;
+    }
+
+    // Audio scoring
+    if (userActionRef.current.audio) {
+        if (isAudioMatch) scoreRef.current.audioHits++;
+        else scoreRef.current.audioFalseAlarms++;
+    } else {
+        if (isAudioMatch) scoreRef.current.audioMisses++;
+    }
+
+    userActionRef.current = { pos: false, audio: false };
+  }, [currentIndex, currentLevel, sequence]);
 
   useEffect(() => {
     if (gameState !== 'playing') return;
+
     const timer = setInterval(() => {
-      if (currentIndex >= SEQUENCE_LENGTH) {
-        calculateScore();
-        setGameState('results');
-        return;
-      }
-      setCurrentIndex(prev => prev + 1);
+        processTurn();
+        if (currentIndex >= (SEQUENCE_LENGTH + currentLevel - 1)) {
+            calculateScore();
+            setGameState('results');
+            return;
+        }
+        setCurrentIndex(prev => prev + 1);
     }, INTER_STIMULUS_INTERVAL);
+    
     return () => clearInterval(timer);
-  }, [gameState, currentIndex]);
+  }, [gameState, currentIndex, processTurn]);
   
   const calculateScore = () => {
-    // This is a simplified scoring logic. A real implementation is more complex.
-    setScore(Math.floor(Math.random() * 41) + 60); // Random score between 60-100 for demo
+    const { posHits, posMisses, posFalseAlarms, audioHits, audioMisses, audioFalseAlarms, posOpportunities, audioOpportunities } = scoreRef.current;
+    const posAccuracy = posOpportunities > 0 ? (posHits / (posOpportunities + posFalseAlarms)) * 100 : 100;
+    const audioAccuracy = audioOpportunities > 0 ? (audioHits / (audioOpportunities + audioFalseAlarms)) * 100 : 100;
+    setScore(Math.round((posAccuracy + audioAccuracy) / 2));
   };
 
   const completeSession = () => {
@@ -105,8 +137,8 @@ const DualNBackTrainer: React.FC<DualNBackTrainerProps> = ({ onSessionComplete }
   };
 
   const renderStimulus = () => {
-    if (currentIndex === 0 || currentIndex > sequence.length) return null;
-    const currentStimulus = sequence[currentIndex - 1];
+    if (currentIndex >= sequence.length) return null;
+    const currentStimulus = sequence[currentIndex];
     return (
       <div className="mb-8">
         <div className="grid grid-cols-3 gap-2 w-64 h-64 mx-auto mb-6">
@@ -120,9 +152,6 @@ const DualNBackTrainer: React.FC<DualNBackTrainerProps> = ({ onSessionComplete }
           ))}
         </div>
         <div className="text-center">
-          <div className={`w-16 h-16 mx-auto rounded-full border-4 transition-all duration-300 ${
-            currentIndex % 2 === 0 ? 'bg-green-500 border-green-400' : 'bg-purple-500 border-purple-400'
-          }`} />
           <p className="text-sm text-gray-400 mt-2">Audio Tone: {currentStimulus.audio + 1}</p>
         </div>
       </div>
@@ -141,8 +170,8 @@ const DualNBackTrainer: React.FC<DualNBackTrainerProps> = ({ onSessionComplete }
             <h3 className="font-semibold mb-3">{t('dualNBack.instructionsTitle')}</h3>
             <ul className="text-sm text-gray-300 space-y-2 text-left">
               <li>{t('dualNBack.instruction1')}</li>
-              <li>{t('dualNBack.instruction2', { level: currentLevel })}</li>
-              <li>{t('dualNBack.instruction3', { level: currentLevel })}</li>
+              <li>Press 'A' for position match</li>
+              <li>Press 'L' for audio match</li>
               <li>{t('dualNBack.instruction4')}</li>
               <li>{t('dualNBack.instruction5')}</li>
             </ul>
@@ -172,13 +201,13 @@ const DualNBackTrainer: React.FC<DualNBackTrainerProps> = ({ onSessionComplete }
     return (
       <div className="text-center">
         <div className="mb-4">
-          <div className="text-lg font-bold">{t('dualNBack.trial')} {currentIndex} / {SEQUENCE_LENGTH}</div>
+          <div className="text-lg font-bold">{t('dualNBack.trial')} {currentIndex - currentLevel + 1} / {SEQUENCE_LENGTH}</div>
           <div className="text-sm text-gray-400">{currentLevel}-Back {t('dualNBack.levelLabel')}</div>
         </div>
         {renderStimulus()}
         <div className="flex justify-center gap-8 mb-8">
-          <button className="bg-blue-600 px-6 py-3 rounded-lg font-medium">{t('dualNBack.posMatch')}</button>
-          <button className="bg-green-600 px-6 py-3 rounded-lg font-medium">{t('dualNBack.audioMatch')}</button>
+          <button onClick={() => handleResponse('position')} className="bg-blue-600 px-6 py-3 rounded-lg font-medium">{t('dualNBack.posMatch')} (A)</button>
+          <button onClick={() => handleResponse('audio')} className="bg-green-600 px-6 py-3 rounded-lg font-medium">{t('dualNBack.audioMatch')} (L)</button>
         </div>
       </div>
     );

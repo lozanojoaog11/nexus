@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { CognitiveSession, TrainingModule } from '../types';
 import DualNBackTrainer from './DualNBackTrainer';
@@ -16,12 +15,25 @@ interface CognitiveTrainingProps {
 const CognitiveTraining: React.FC<CognitiveTrainingProps> = ({ sessions, onSessionComplete }) => {
   const { t, language } = useTranslation();
   const [activeModule, setActiveModule] = useState<string | null>(null);
-  const [weeklyProgress, setWeeklyProgress] = useState({
-    workingMemory: 0,
-    processingSpeed: 0,
-    memoryCapacity: 0,
-    readingSpeed: 250 // WPM baseline
-  });
+
+  const weeklyProgress = useMemo(() => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const recentSessions = sessions.filter(s => new Date(s.date) >= oneWeekAgo);
+
+    const dnbSessions = recentSessions.filter(s => s.type === 'dual-n-back');
+    const rtSessions = recentSessions.filter(s => s.type === 'reaction-time');
+    const mpSessions = recentSessions.filter(s => s.type === 'memory-palace');
+    const srSessions = recentSessions.filter(s => s.type === 'speed-reading');
+
+    return {
+      workingMemory: dnbSessions.length > 0 ? Math.max(...dnbSessions.map(s => s.level)) : 0,
+      processingSpeed: rtSessions.length > 0 ? Math.min(...rtSessions.map(s => s.score)) : 350,
+      memoryCapacity: mpSessions.length > 0 ? Math.max(...mpSessions.map(s => Math.round(s.score / 10))) : 0,
+      readingSpeed: srSessions.length > 0 ? Math.max(...srSessions.map(s => s.score)) : 250
+    };
+  }, [sessions]);
+
 
   const trainingModules: TrainingModule[] = useMemo(() => [
     {

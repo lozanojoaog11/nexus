@@ -11,7 +11,7 @@ interface GraphViewProps {
 
 const GraphView: React.FC<GraphViewProps> = ({ graphData, onNodeClick }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const fgRef = useRef<any>();
+  const fgRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const GraphView: React.FC<GraphViewProps> = ({ graphData, onNodeClick }) => {
 
     updateDimensions();
 
-    const resizeObserver = new ResizeObserver(() => updateDimensions());
+    const resizeObserver = new ResizeObserver(updateDimensions);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }

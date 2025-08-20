@@ -14,7 +14,7 @@ const ReactionTimeTracker: React.FC<ReactionTimeTrackerProps> = ({ onSessionComp
     const [gameState, setGameState] = useState<'setup' | 'waiting' | 'active' | 'too-soon' | 'results'>('setup');
     const [attempts, setAttempts] = useState<number[]>([]);
     const [sessionStartTime, setSessionStartTime] = useState<number>(0);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const clickStartTimeRef = useRef<number>(0);
 
     const startTrial = () => {

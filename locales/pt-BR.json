@@ -281,7 +281,7 @@
   "agenda": {
     "title": "Agenda",
     "subtitle": "Sua visão unificada do tempo.",
-    "today": "(Hoje)",
+    "today": "Hoje",
     "deadline": "Prazo Final",
     "task": "Prazo de Tarefa",
     "event": "Evento",
@@ -350,8 +350,8 @@
     "start": "Iniciar Treinamento",
     "trial": "Tentativa",
     "levelLabel": "Nível",
-    "posMatch": "Posição (ESPAÇO)",
-    "audioMatch": "Áudio (ENTER)",
+    "posMatch": "Posição (A)",
+    "audioMatch": "Áudio (L)",
     "resultsTitle": "Treinamento Concluído!",
     "accuracy": "Pontuação de Precisão",
     "duration": "Duração",
@@ -665,7 +665,7 @@
       "activity": {
         "add": "Adicionar Atividade",
         "type": "Tipo",
-        "types": { "meditation": "Meditação", "breathing": "Respiração", "stretching": "Alongamento", "massage": "Massagem", "nap": "Soneca" },
+        "types": { "meditation": "Medititação", "breathing": "Respiração", "stretching": "Alongamento", "massage": "Massagem", "nap": "Soneca" },
         "duration": "Duração (minutos)",
         "quality": "Qualidade"
       },
@@ -812,52 +812,6 @@
       "confidence": "Confiança",
       "recommendation": "RECOMENDAÇÃO"
     },
-    "recommendations": {
-      "expectedImpact": "Impacto Esperado",
-      "implementationSteps": "Passos de Implementação:",
-      "timeframe": "Prazo",
-      "priorities": {
-        "critical": "Crítico",
-        "high": "Alto",
-        "medium": "Médio",
-        "low": "Baixo"
-      },
-      "timeframes": {
-        "immediate": "Imediato",
-        "weekly": "Semanal",
-        "monthly": "Mensal"
-      },
-      "categories": {
-        "foundation": "Fundação Física",
-        "enhancement": "Aprimoramento Cognitivo",
-        "performance": "Otimização de Performance",
-        "system": "Construção de Sistemas"
-      },
-      "sleep": {
-        "title": "Melhora da Qualidade do Sono Necessária",
-        "description": "Qualidade do sono atual ({quality}/10) abaixo do limiar ótimo (7.5+). O sono é a base de todo aprimoramento cognitivo.",
-        "implementation": "Manter hora de dormir consistente ±15 minutos|Temperatura do quarto 18-20°C|Escuridão completa (cortinas blackout)|Sem telas 1 hora antes de dormir|Exposição à luz solar matinal 30 minutos após acordar",
-        "science": "A qualidade do sono impacta diretamente a consolidação da memória, capacidade de aprendizado e regulação emocional (Walker, 2017)"
-      },
-      "cognitive": {
-        "title": "Aumentar Frequência do Treinamento Cognitivo",
-        "description": "Frequência de treino atual ({frequency}/semana) abaixo do ótimo para ativação da neuroplasticidade (3-5x/semana).",
-        "implementation": "Agendar treino cognitivo em horários consistentes|Começar com sessões de 15 minutos se o tempo for limitado|Focar em dual n-back 3x/semana no mínimo|Acompanhar melhorias semanais para manter a motivação",
-        "science": "A neuroplasticidade requer estimulação consistente; 3-5x treinos semanais mostram ganhos ótimos na memória de trabalho (Jaeggi et al.)"
-      },
-      "flow": {
-        "title": "Controle de Distrações no Estado de Flow",
-        "description": "Média de distrações ({distractions}) excede o limiar ótimo de flow (≤2). Reduzir distrações pode aumentar a performance em 300-500%.",
-        "implementation": "Celular em modo avião durante sessões de flow|Usar bloqueadores de sites não essenciais|Informar outros do seu horário de trabalho profundo|Preparar todos os materiais antes do início da sessão|Usar fones de ouvido com cancelamento de ruído se necessário",
-        "science": "Estados de flow requerem atenção ininterrupta; interrupções podem levar 23 minutos para se recuperar (Mark et al.)"
-      },
-      "habit": {
-        "title": "Arquitetura de Consistência de Hábitos",
-        "description": "Consistência de hábitos ({consistency}%) needs improvement for compound growth effects.",
-        "implementation": "Começar com versões de 2 minutos dos hábitos|Usar intenções de implementação (\"Se X, então Y\")|Empilhar novos hábitos em rotinas existentes|Registrar a conclusão imediatamente após fazer|Focar na consistência sobre a perfeição",
-        "science": "Hábitos pequenos e consistentes criam automação neural; consistência importa mais que intensidade (Clear, 2018)"
-      }
-    },
     "patterns": {
       "title": "Análise de Padrões",
       "subtitle": "Insights profundos dos seus dados de {timeRange}",
@@ -877,45 +831,6 @@
       "noResults": "Nenhum padrão encontrado para os filtros selecionados.",
       "noResultsHint": "Tente ajustar seus critérios de filtro ou intervalo de dados."
     },
-    "insights": {
-      "positive": "positiva",
-      "negative": "negativa",
-      "energySleep": {
-        "title": "Forte Conexão Energia-Sono",
-        "description": "Seus níveis de energia mostram uma correlação {direction} ({correlation}%) com a qualidade do sono.",
-        "recommendationPositive": "Foque na otimização do sono para manter níveis altos de energia.",
-        "recommendationNegative": "Investigue possíveis disruptores do sono que afetam sua energia.",
-        "science": "A qualidade do sono impacta diretamente a energia através da regulação hormonal e recuperação neural."
-      },
-      "habitMastery": {
-        "title": "Padrão de Maestria de Hábito Identificado",
-        "description": "'{habit}' mostra sua maior sequência ({streak} dias), indicando forte formação de via neural.",
-        "recommendation": "Aplique as mesmas estratégias de consistência a outros hábitos para crescimento composto.",
-        "science": "A formação de hábitos requer em média 66+ dias para automação baseada em neuroplasticidade."
-      },
-      "flowOptimization": {
-        "title": "Ponto Ideal do Estado de Flow Identificado",
-        "description": "Suas sessões de maior flow têm em média {duration} minutos com {distractions} distrações.",
-        "recommendation": "Estruture sessões para {duration} minutos com controle rigoroso de distrações.",
-        "science": "O estado de Flow requer equilíbrio entre desafio e habilidade e atenção sustentada sem interrupção."
-      },
-      "cognitiveBreakthrough": {
-        "title": "Avanço no Desempenho Cognitivo",
-        "description": "Pontuações recentes de treinamento cognitivo ({recentAvg}%) excedem significativamente sua linha de base ({mean}%).",
-        "recommendation": "Aumente a frequência de treinamento para capitalizar esta janela de neuroplasticidade.",
-        "science": "Avanços de performance indicam períodos ótimos de ativação da neuroplasticidade."
-      },
-      "impacts": {
-        "high": "Alto Impacto",
-        "medium": "Médio Impacto",
-        "low": "Baixo Impacto"
-      },
-      "recommendation": "Recomendação Acionável",
-      "scientificBasis": "Base Científica",
-      "showDetails": "Mostrar Detalhes Técnicos",
-      "hideDetails": "Ocultar Detalhes Técnicos",
-      "rawData": "Dados Brutos"
-    },
     "optimizationCenter": {
       "title": "Centro de Otimização",
       "subtitle": "Suas recomendações de alta prioridade para crescimento acelerado.",
@@ -929,6 +844,38 @@
       "subtitle": "Exporte seus dados do Eixo OS em formato JSON.",
       "description": "Isto irá gerar um arquivo JSON contendo todos os seus dados, incluindo check-ins, hábitos, tarefas, metas, insights e recomendações. Você pode usar este arquivo para backup pessoal ou para importar em outras ferramentas.",
       "exportButton": "Exportar Todos os Dados"
+    },
+    "recommendations": {
+      "priorities": { "critical": "Crítico", "high": "Alta", "medium": "Média", "low": "Baixa" },
+      "categories": { "foundation": "Fundação", "enhancement": "Aprimoramento", "performance": "Performance", "system": "Sistema" },
+      "expectedImpact": "Impacto Esperado",
+      "implementationSteps": "Passos de Implementação",
+      "timeframe": "Prazo",
+      "timeframes": { "immediate": "Imediato", "weekly": "Semanal", "monthly": "Mensal" },
+      "sleep": {
+        "title": "Otimizar Protocolo de Sono",
+        "description": "Sua qualidade média de sono de {quality} está abaixo do ideal. O sono é a base para toda performance cognitiva e física.",
+        "implementation": "Estabeleça um horário de sono consistente (deitar e acordar)|Evite telas 60 minutos antes de dormir|Garanta escuridão total e temperatura amena (18-20°C) no quarto",
+        "science": "O sono de qualidade consolida a memória, regula hormônios e limpa resíduos metabólicos do cérebro, sendo crucial para a função cognitiva."
+      },
+      "cognitive": {
+        "title": "Aumentar Frequência de Treino Cognitivo",
+        "description": "Sua frequência de treino cognitivo de {frequency}/semana está abaixo do recomendado. A consistência é chave para a neuroplasticidade.",
+        "implementation": "Agende 3-4 sessões de 15 minutos por semana|Experimente diferentes módulos de treino para manter o engajamento|Faça uma sessão curta antes de iniciar o trabalho focado",
+        "science": "O treinamento cognitivo regular induz a potenciação de longo prazo (LTP), o mecanismo molecular por trás da aprendizagem e memória."
+      },
+      "flow": {
+        "title": "Reduzir Distrações Durante o Flow",
+        "description": "O número médio de {distractions} distrações por sessão de flow está limitando sua profundidade de foco.",
+        "implementation": "Utilize o bloqueador de distrações do Flow Lab|Coloque o celular em outro cômodo e desative notificações|Comunique sua necessidade de foco para colegas ou família",
+        "science": "Cada interrupção pode levar até 23 minutos para recuperar o foco total, um fenômeno conhecido como 'resíduo de atenção'."
+      },
+      "habit": {
+        "title": "Reforçar Consistência de Hábitos",
+        "description": "Sua consistência geral de hábitos de {consistency} está abaixo do limiar para formação de automaticidade.",
+        "implementation": "Revise seus hábitos: eles são pequenos o suficiente?|Use a técnica de 'empilhamento de hábitos': vincule um novo hábito a um já existente|Não quebre a corrente por mais de um dia ('regra dos dois dias')",
+        "science": "A automaticidade de um hábito é alcançada através da repetição consistente, fortalecendo o circuito neural entre o gânglio basal e o córtex pré-frontal."
+      }
     }
   }
 }
