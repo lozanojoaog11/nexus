@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 import { z } from 'zod';
 
 // --- Função de Inicialização do Firebase Admin SDK ---
