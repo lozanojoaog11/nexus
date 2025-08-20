@@ -1,8 +1,6 @@
-
-
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { askGuardian } from '../services/geminiService';
-import { Message, DailyCheckin, Habit, Task, Goal, DevelopmentNode, DailyStrategy } from '../types';
+import { Message, DailyCheckin, Habit, Task, Goal, DevelopmentNode, DailyStrategy, UserProfile } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
 // NOVOS TIPOS:
@@ -24,6 +22,7 @@ interface SessionContext {
 }
 
 interface NeuralArchitectProps {
+  profile: UserProfile | null;
   checkin: DailyCheckin | null;
   habits: Habit[];
   goals: Goal[];
@@ -32,7 +31,7 @@ interface NeuralArchitectProps {
 }
 
 const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({ 
-  checkin, habits, goals, tasks, developmentNodes 
+  profile, checkin, habits, goals, tasks, developmentNodes 
 }) => {
   const { t, language } = useTranslation();
   const [messages, setMessages] = useState<Message[]>([
@@ -135,7 +134,7 @@ ${developmentNodes.map(node => `- ${node.type}: ${node.label}`).join('\n')}
 `;
 
       let query = `${currentInput}\n\nCONTEXT: ${contextString}`;
-      const systemPrompt = t('neuralArchitect.systemPrompt');
+      const systemPrompt = profile?.customSystemPrompt || t('neuralArchitect.systemPrompt');
 
       const module = selectedModule ? coachingModules.find(m => m.id === selectedModule) : null;
       if (module && module.prompt) {

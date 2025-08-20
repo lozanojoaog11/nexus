@@ -77,6 +77,7 @@ const MainApp: React.FC = () => {
     signIn, signUp, signOut, signInAnonymously,
     dailyCheckin, allDailyCheckins, handleCheckinConfirm,
     completeStandardOnboarding,
+    updateProfile,
     habits, addHabit, deleteHabit, toggleHabitCompletion, addXp,
     yesterdaysIncompleteKeystoneHabits,
     projects, addProject, deleteProject, selectedProjectId, setSelectedProjectId,
@@ -212,7 +213,7 @@ const MainApp: React.FC = () => {
       case 'biohacking': return <BiohackingSuite checkin={dailyCheckin} habits={habits} metricsHistory={biohackingMetrics} onMetricsSave={saveBiohackingMetrics} />;
       case 'achievements': return <AchievementConstellation achievements={achievements} userLevel={userLevel} activeStreaks={activeStreaks} totalXP={profile?.totalXp || 0} />;
       case 'analytics': return <NeuralAnalytics checkins={allDailyCheckins} habits={habits} tasks={allTasks} goals={goals} flowSessions={flowSessions} cognitiveSessions={cognitiveSessions} biohackingData={biohackingMetrics} achievements={achievements} />;
-      case 'guardian': return <NeuralArchitectAI checkin={dailyCheckin} habits={habits} goals={goals} tasks={allTasks} developmentNodes={developmentGraph.nodes} />;
+      case 'guardian': return <NeuralArchitectAI profile={profile} checkin={dailyCheckin} habits={habits} goals={goals} tasks={allTasks} developmentNodes={developmentGraph.nodes} />;
       case 'library': return <Library books={books} backlinks={backlinks} addNoteToBook={addNoteToBook} onDeleteBook={deleteBook} onUpdateNote={updateNote} onDeleteNote={deleteNote} />;
       default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} allDailyCheckins={allDailyCheckins} biohackingMetrics={biohackingMetrics} activeStreaks={activeStreaks} />;
     }
@@ -245,6 +246,7 @@ const MainApp: React.FC = () => {
         addTask={addTask}
         saveDevelopmentNode={saveDevelopmentNode}
         saveDevelopmentEdge={saveDevelopmentEdge}
+        updateProfile={updateProfile}
       />
     );
   }

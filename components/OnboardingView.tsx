@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { generateInitialEcosystem } from '../services/geminiService';
-import { Habit, Project, Task, DevelopmentNode, DevelopmentEdge } from '../types';
+import { Habit, Project, Task, DevelopmentNode, DevelopmentEdge, UserProfile } from '../types';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface OnboardingViewProps {
     onOnboardingComplete: () => void;
@@ -9,32 +10,58 @@ interface OnboardingViewProps {
     addTask: (projectId: string, content: string, isMIT?: boolean) => Promise<void>;
     saveDevelopmentNode: (node: DevelopmentNode) => Promise<string | null>;
     saveDevelopmentEdge: (edge: Omit<DevelopmentEdge, 'id'>) => Promise<void>;
+    updateProfile: (profileData: Partial<UserProfile>) => Promise<void>;
 }
 
 type FlowState = 'choice' | 'conversation' | 'generating' | 'complete';
 
 const questions = [
-    "Qual é o seu maior objetivo profissional ou projeto para os próximos 12 meses?",
-    "Qual é o maior obstáculo interno que te impede de alcançar esse objetivo (ex: procrastinação, falta de foco, desorganização)?",
-    "Qual hábito, se você o construísse consistentemente, teria o maior impacto positivo na sua vida?",
-    "Para finalizar, descreva um dia em que você se sentiu absolutamente imparável. O que você estava fazendo? Como se sentia? Isso nos ajuda a entender seu estado de 'flow' ideal."
+  "Primeiro, qual é a sua grande missão? O 'Ponto de Fuga' que, se alcançado, mudaria tudo para você nos próximos 1-2 anos?",
+  "Todo herói tem um 'dragão' para derrotar. Qual é o seu principal obstáculo interno? (Ex: procrastinação, falta de consistência, paralisia por análise, dificuldade em dizer não)",
+  "Descreva seu 'estado de flow' ideal. Em que tipo de tarefa ou ambiente você se sente mais poderoso e focado?",
+  "Como você prefere trabalhar? A) Com um plano claro e estruturado (Arquiteto). B) Explorando e conectando ideias de forma livre (Explorador). C) Focado em resultados e eficiência máxima (Executor).",
+  "Para finalizar, qual é a primeira vitória, por menor que seja, que você gostaria de conquistar com a ajuda do Eixo OS na próxima semana?"
 ];
 
 const OnboardingView: React.FC<OnboardingViewProps> = ({ 
-    onOnboardingComplete, addHabit, addProject, addTask, saveDevelopmentNode, saveDevelopmentEdge
+    onOnboardingComplete, addHabit, addProject, addTask, saveDevelopmentNode, saveDevelopmentEdge, updateProfile
 }) => {
+    const { language } = useTranslation();
     const [flowState, setFlowState] = useState<FlowState>('choice');
     const [conversation, setConversation] = useState<{ q: string, a: string }[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [userInput, setUserInput] = useState('');
     const [error, setError] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
+    const [isListening, setIsListening] = useState(false);
+    const recognitionRef = useRef<any>(null);
 
     useEffect(() => {
         if (flowState === 'conversation') {
             inputRef.current?.focus();
         }
     }, [flowState, currentQuestionIndex]);
+    
+    useEffect(() => {
+        if ('webkitSpeechRecognition' in window) {
+            recognitionRef.current = new (window as any).webkitSpeechRecognition();
+            recognitionRef.current.continuous = false;
+            recognitionRef.current.interimResults = false;
+            recognitionRef.current.lang = language;
+            recognitionRef.current.onresult = (event: any) => {
+                setUserInput(event.results[0][0].transcript);
+                setIsListening(false);
+            };
+            recognitionRef.current.onerror = () => setIsListening(false);
+        }
+    }, [language]);
+    
+    const startListening = () => {
+        if (recognitionRef.current) {
+            setIsListening(true);
+            recognitionRef.current.start();
+        }
+    };
 
     const handleStartConversation = () => {
         setFlowState('conversation');
@@ -61,7 +88,7 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({
         const transcript = finalConversation.map(item => `P: ${item.q}\nR: ${item.a}`).join('\n\n');
 
         try {
-            const ecosystem = await generateInitialEcosystem(transcript);
+            const { ecosystem, profileUpdate } = await generateInitialEcosystem(transcript);
 
             const idMap = new Map<string, string>();
             
@@ -88,9 +115,13 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({
             });
 
             await Promise.all([...habitPromises, ...taskPromises, ...edgePromises]);
+
+            // FIX: Atomically update profile and set onboarding as completed.
+            // This prevents the standard onboarding data from overwriting our personalized data.
+            await updateProfile({ ...profileUpdate, onboardingCompleted: true });
             
             setFlowState('complete');
-            onOnboardingComplete();
+            // DO NOT call onOnboardingComplete() here, as it triggers the standard data load.
 
         } catch (e: any) {
             setError(e.message || "Ocorreu um erro desconhecido.");
@@ -127,16 +158,31 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({
                 return (
                     <div className="w-full text-left">
                         <p className="text-gray-300 mb-4">{questions[currentQuestionIndex]}</p>
-                        <div className="flex gap-2">
-                           <input
-                                ref={inputRef}
-                                type="text"
-                                value={userInput}
-                                onChange={(e) => setUserInput(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleUserResponse()}
-                                className="w-full bg-gray-800/60 text-white p-3 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#00A9FF]"
-                                placeholder="Sua resposta..."
-                            />
+                        <div className="flex gap-2 items-center">
+                           <div className="flex-1 relative">
+                               <input
+                                    ref={inputRef}
+                                    type="text"
+                                    value={userInput}
+                                    onChange={(e) => setUserInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleUserResponse()}
+                                    className="w-full bg-gray-800/60 text-white p-3 pr-12 rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#00A9FF]"
+                                    placeholder="Sua resposta..."
+                                />
+                                <button
+                                    onClick={startListening}
+                                    disabled={isListening}
+                                    className={`absolute right-3 top-1/2 transform -translate-y-1/2 p-2 rounded-lg transition-all ${
+                                        isListening 
+                                        ? 'bg-red-500 text-white animate-pulse' 
+                                        : 'bg-gray-700 text-gray-400 hover:text-white hover:bg-gray-600'
+                                    }`}
+                                >
+                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                                    </svg>
+                                </button>
+                           </div>
                             <button onClick={handleUserResponse} className="bg-[#00A9FF] text-black font-bold px-6 py-3 rounded-lg hover:bg-opacity-80">Enviar</button>
                         </div>
                         {error && <p className="text-red-400 mt-4 text-center">{error}</p>}
@@ -150,6 +196,16 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({
                         <p className="text-gray-400 mt-2">Calibrando protocolos e forjando seu primeiro projeto.</p>
                     </div>
                 )
+             case 'complete':
+                return (
+                    <div className="text-center">
+                         <svg className="w-16 h-16 text-green-400 mx-auto mb-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <h2 className="text-2xl font-bold">Eixo OS Configurado!</h2>
+                        <p className="text-gray-400 mt-2">Seu ambiente personalizado está pronto. O sistema será reiniciado.</p>
+                    </div>
+                );
             default:
                 return null;
         }

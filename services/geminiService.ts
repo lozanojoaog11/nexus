@@ -1,5 +1,3 @@
-
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { DailyCheckin, Habit, Project, Task, DevelopmentNode, DevelopmentEdge } from '../types';
 
@@ -95,15 +93,29 @@ export const generateInitialEcosystem = async (conversationTranscript: string): 
     throw new Error("API Key for Gemini is not configured. The AI is offline.");
   }
 
-  const systemPrompt = `Você é um especialista em produtividade e coach de alta performance, configurando o sistema Eixo OS para um novo usuário. Com base na transcrição da conversa de diagnóstico, sua tarefa é gerar um objeto JSON que represente a configuração inicial ideal para este operador. O JSON deve ser conciso, acionável e perfeitamente alinhado com as respostas do usuário.
+  const systemPrompt = `Você é um Coach de Performance de elite e Arquiteto de Sistemas de Produtividade, especializado em psicologia (DISC, Eneagrama) e neurociência. Sua missão é analisar a transcrição de uma conversa de diagnóstico com um novo usuário do Eixo OS e gerar uma configuração inicial perfeitamente personalizada.
 
-Estruture o JSON da seguinte forma:
-- habits: 2-3 hábitos. Um deve ser o hábito que o usuário mencionou. Os outros devem combater diretamente o obstáculo que ele descreveu. Categoria deve ser 'Mente', 'Corpo' ou 'Execução'. Frequência é o número de vezes por semana (1-7).
-- projects: 1 projeto baseado no objetivo principal do usuário.
-- tasks: 2-3 tarefas para o projeto, sendo a primeira a "Tarefa Mais Importante" (isMIT: true). Devem ser os primeiros passos concretos.
-- developmentGraph: Um 'node' do tipo 'Objetivo' para a meta principal e um 'node' do tipo 'Skill' para superar o obstáculo. Crie uma 'edge' ligando a skill ao objetivo.
+**Sua análise tem duas saídas:**
 
-Use IDs temporários e simples como 'h1', 'p1', 't1', 'obj1', 'skill1', 'e1'. Seja criativo e inspirador nos nomes e descrições. O sistema traduzirá o conteúdo, então responda em Português do Brasil.`;
+**SAÍDA 1: DIAGNÓSTICO DE ARQUÉTIPO**
+Com base na resposta à pergunta sobre o estilo de trabalho e no tom geral, classifique o usuário em um dos três arquétipos:
+- **Arquiteto**: Se ele prefere planos claros e estrutura.
+- **Explorador**: Se ele prefere explorar e conectar ideias de forma livre.
+- **Executor**: Se ele é focado em resultados e eficiência.
+
+**SAÍDA 2: GERAÇÃO DO ECOSSISTEMA INICIAL (JSON)**
+Com base na transcrição E no arquétipo diagnosticado, gere um objeto JSON contendo:
+- **habits**: 2-3 hábitos. Um deve ser o hábito que o usuário mencionou. Os outros devem combater o obstáculo que ele descreveu, adaptados ao arquétipo dele.
+- **projects**: 1 projeto baseado no "Ponto de Fuga" do usuário.
+- **tasks**: 2 tarefas iniciais para o projeto. A primeira deve ser a MIT e deve ser acionável para a "primeira vitória" que ele mencionou.
+- **developmentGraph**: Um 'node' tipo 'Ponto de Fuga' para a missão, um 'node' tipo 'Skill' para superar o obstáculo, e uma 'edge' ligando os dois.
+
+**SAÍDA 3: GERAÇÃO DO SYSTEM PROMPT PERSONALIZADO**
+Crie um \`systemPrompt\` para o \`NeuralArchitectAI\` interno do app. Ele deve ser adaptado ao arquétipo e aos objetivos do usuário.
+- **Exemplo para Arquiteto**: "Você é o Neural Architect AI. Seu operador é um Arquiteto, que prospera com estrutura e clareza. Sempre forneça planos passo a passo e ajude-o a construir sistemas robustos para alcançar [OBJETIVO DO USUÁRIO]."
+- **Exemplo para Explorador**: "Você é o Neural Architect AI. Seu operador é um Explorador, que se energiza conectando ideias. Ajude-o a visualizar possibilidades e a canalizar sua criatividade para o [OBJETIVO DO USUÁRIO], fornecendo ferramentas para evitar a dispersão."
+
+**Sua resposta final DEVE ser um único objeto JSON contendo as chaves \`ecosystem\` e \`profileUpdate\`.**`;
 
   const userPrompt = `
 --- TRANSCRIÇÃO DA CONVERSA DE DIAGNÓSTICO ---
@@ -122,77 +134,96 @@ Gere o objeto JSON de configuração inicial para este usuário.`;
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            habits: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  id: { type: Type.STRING },
-                  name: { type: Type.STRING },
-                  category: { type: Type.STRING, enum: ['Mente', 'Corpo', 'Execução'] },
-                  frequency: { type: Type.INTEGER }
-                },
-                required: ['id', 'name', 'category', 'frequency']
-              }
-            },
-            projects: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  id: { type: Type.STRING },
-                  name: { type: Type.STRING }
-                },
-                required: ['id', 'name']
-              }
-            },
-            tasks: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  id: { type: Type.STRING },
-                  content: { type: Type.STRING },
-                  isMIT: { type: Type.BOOLEAN },
-                  projectId: { type: Type.STRING }
-                },
-                required: ['id', 'content', 'isMIT', 'projectId']
-              }
-            },
-            developmentGraph: {
+            ecosystem: {
               type: Type.OBJECT,
               properties: {
-                nodes: {
+                habits: {
                   type: Type.ARRAY,
                   items: {
                     type: Type.OBJECT,
                     properties: {
                       id: { type: Type.STRING },
-                      type: { type: Type.STRING, enum: ['Objetivo', 'Skill'] },
-                      label: { type: Type.STRING },
-                      description: { type: Type.STRING }
+                      name: { type: Type.STRING },
+                      category: { type: Type.STRING, enum: ['Mente', 'Corpo', 'Execução'] },
+                      frequency: { type: Type.INTEGER }
                     },
-                    required: ['id', 'type', 'label', 'description']
+                    required: ['id', 'name', 'category', 'frequency']
                   }
                 },
-                edges: {
+                projects: {
                   type: Type.ARRAY,
                   items: {
                     type: Type.OBJECT,
                     properties: {
                       id: { type: Type.STRING },
-                      source: { type: Type.STRING },
-                      target: { type: Type.STRING },
-                      label: { type: Type.STRING, enum: ['desenvolve'] }
+                      name: { type: Type.STRING }
                     },
-                    required: ['id', 'source', 'target', 'label']
+                    required: ['id', 'name']
                   }
+                },
+                tasks: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      id: { type: Type.STRING },
+                      content: { type: Type.STRING },
+                      isMIT: { type: Type.BOOLEAN },
+                      projectId: { type: Type.STRING }
+                    },
+                    required: ['id', 'content', 'isMIT', 'projectId']
+                  }
+                },
+                developmentGraph: {
+                  type: Type.OBJECT,
+                  properties: {
+                    nodes: {
+                      type: Type.ARRAY,
+                      items: {
+                        type: Type.OBJECT,
+                        properties: {
+                          id: { type: Type.STRING },
+                          type: { type: Type.STRING, enum: ['Ponto de Fuga', 'Objetivo', 'Skill'] },
+                          label: { type: Type.STRING },
+                          description: { type: Type.STRING }
+                        },
+                        required: ['id', 'type', 'label', 'description']
+                      }
+                    },
+                    edges: {
+                      type: Type.ARRAY,
+                      items: {
+                        type: Type.OBJECT,
+                        properties: {
+                          id: { type: Type.STRING },
+                          source: { type: Type.STRING },
+                          target: { type: Type.STRING },
+                          label: { type: Type.STRING, enum: ['desenvolve', 'viabiliza'] }
+                        },
+                        required: ['id', 'source', 'target', 'label']
+                      }
+                    }
+                  },
+                  required: ['nodes', 'edges']
                 }
               },
-              required: ['nodes', 'edges']
+              required: ['habits', 'projects', 'tasks', 'developmentGraph']
+            },
+            profileUpdate: {
+              type: Type.OBJECT,
+              properties: {
+                personalityArchetype: {
+                  type: Type.STRING,
+                  enum: ['Arquiteto', 'Explorador', 'Executor', 'Padrão']
+                },
+                customSystemPrompt: {
+                  type: Type.STRING
+                }
+              },
+              required: ['personalityArchetype', 'customSystemPrompt']
             }
           },
-          required: ['habits', 'projects', 'tasks', 'developmentGraph']
+          required: ['ecosystem', 'profileUpdate']
         }
       }
     });

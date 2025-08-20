@@ -1,11 +1,15 @@
 
 
+export type PersonalityArchetype = 'Arquiteto' | 'Explorador' | 'Executor' | 'Padrão';
+
 export type UserProfile = {
   email: string;
   createdAt: string; // ISO 8601
   name?: string;
   totalXp?: number;
   onboardingCompleted?: boolean;
+  personalityArchetype?: PersonalityArchetype;
+  customSystemPrompt?: string;
 };
 
 export type DailyStrategy = 'eat_the_frog' | 'small_wins' | 'deep_work_focus' | null;

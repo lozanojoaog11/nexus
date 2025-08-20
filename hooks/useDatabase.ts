@@ -121,6 +121,10 @@ export default function useDatabase(language: string, userManifesto: string) {
     await dataService.updateData('profile', { totalXp: currentXp + amount });
   }, [profile]);
 
+  const updateProfile = useCallback(async (profileData: Partial<UserProfile>) => {
+    await dataService.updateData('profile', profileData);
+  }, []);
+
   const completeStandardOnboarding = useCallback(async () => {
     const initialData = getInitialEcosystemData();
     const updates = {
@@ -441,6 +445,7 @@ export default function useDatabase(language: string, userManifesto: string) {
     allDailyCheckins,
     handleCheckinConfirm,
     completeStandardOnboarding,
+    updateProfile,
     habits,
     addHabit,
     deleteHabit,
