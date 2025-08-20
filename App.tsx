@@ -72,6 +72,7 @@ const MainApp: React.FC = () => {
   
   const {
     loading,
+    userId,
     profile,
     isAuthenticated, isAuthReady,
     signIn, signUp, signOut, signInAnonymously,
@@ -163,7 +164,7 @@ const MainApp: React.FC = () => {
   }, [profile, evolutionTitles]);
   
   const activeStreaks = useMemo((): StreakData[] => {
-    const checkinStreak = calculateDateStreak(allDailyCheckins.map(c => c.date));
+    const checkinStreak = calculateDateStreak(allDailyCheckins.map((c: DailyCheckin) => c.date));
     const habitStreak = Math.max(0, ...habits.map(h => h.currentStreak || 0));
     const flowStreak = calculateDateStreak(flowSessions.map(s => s.startTime.split('T')[0]));
     
@@ -209,7 +210,7 @@ const MainApp: React.FC = () => {
       case 'biohacking': return <BiohackingSuite checkin={dailyCheckin} habits={habits} metricsHistory={biohackingMetrics} onMetricsSave={saveBiohackingMetrics} />;
       case 'achievements': return <AchievementConstellation achievements={achievements} userLevel={userLevel} activeStreaks={activeStreaks} totalXP={profile?.totalXp || 0} />;
       case 'analytics': return <NeuralAnalytics checkins={allDailyCheckins} habits={habits} tasks={allTasks} goals={goals} flowSessions={flowSessions} cognitiveSessions={cognitiveSessions} biohackingData={biohackingMetrics} achievements={achievements} />;
-      case 'guardian': return <NeuralArchitectAI profile={profile} checkin={dailyCheckin} habits={habits} goals={goals} tasks={allTasks} developmentNodes={developmentGraph.nodes} />;
+      case 'guardian': return <NeuralArchitectAI userId={userId} profile={profile} checkin={dailyCheckin} habits={habits} goals={goals} tasks={allTasks} developmentNodes={developmentGraph.nodes} />;
       case 'library': return <Library books={books} backlinks={backlinks} addNoteToBook={addNoteToBook} onDeleteBook={deleteBook} onUpdateNote={updateNote} onDeleteNote={deleteNote} />;
       default: return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} allDailyCheckins={allDailyCheckins} biohackingMetrics={biohackingMetrics} activeStreaks={activeStreaks} />;
     }

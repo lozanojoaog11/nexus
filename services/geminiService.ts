@@ -74,13 +74,37 @@ export const askGuardian = async (query: string, systemPrompt: string, language:
     'en-US': 'Always respond in English (US).',
     'es-ES': 'Always respond in Spanish (Spain).'
   }[language] || 'Always respond in Portuguese (Brazil).';
+
+  // Definição das ferramentas disponíveis que a IA pode usar
+  const availableTools = `
+  --- FERRAMENTAS DISPONÍVEIS ---
+  Você tem acesso às seguintes ferramentas. Para usá-las, sua resposta DEVE ser um objeto JSON contendo as chaves "tool" e "params".
+  
+  1. habits.create
+     - Descrição: Cria um novo hábito no sistema Eixo OS. O ID do usuário será tratado automaticamente.
+     - Parâmetros (params):
+       - name (string, obrigatório): O nome do novo hábito (Ex: "Meditação Matinal").
+       - category (string, obrigatório, valores possíveis: 'Mente', 'Corpo', 'Execução').
+       - frequency (number, obrigatório): A frequência semanal (1 a 7).
+     - Exemplo de uso em JSON:
+       {
+         "tool": "habits.create",
+         "params": {
+           "name": "Ler 10 páginas por dia",
+           "category": "Mente",
+           "frequency": 7
+         }
+       }
+  --- FIM DAS FERRAMENTAS ---
+  `;
   
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: query,
       config: {
-        systemInstruction: `${systemPrompt}\n\n${langInstruction}`
+        // Injeta a definição das ferramentas no prompt do sistema
+        systemInstruction: `${systemPrompt}\n\n${availableTools}\n\n${langInstruction}`
       }
     });
     
