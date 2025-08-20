@@ -5,15 +5,15 @@ import 'firebase/compat/auth';
 import { INITIAL_HABITS, INITIAL_PROJECTS, INITIAL_BOOKS, INITIAL_DEVELOPMENT_DATA, INITIAL_AGENDA_EVENTS, INITIAL_GOALS } from '../constants';
 import { Project, Book, Goal, Habit } from '../types';
 
-// Carrega a configuração do Firebase a partir das variáveis de ambiente
+// Carrega a configuração do Firebase a partir das variáveis de ambiente com prefixo VITE_
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VITE_FIREBASE_APP_ID
 };
 
 // Verifica se todas as variáveis de ambiente necessárias estão presentes
