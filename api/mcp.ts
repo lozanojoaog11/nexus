@@ -1,130 +1,116 @@
-// Importa os tipos necessários da Vercel e do Firebase Admin
+// Caminho do arquivo: /api/mcp.ts
+
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import * as admin from 'firebase-admin';
 
-// --- Função de Inicialização Segura do Firebase Admin ---
-// Garante que o SDK seja inicializado apenas uma vez e lida com erros de configuração.
+// --- Função de Inicialização do Firebase Admin ---
+// Esta função garante que o Firebase seja inicializado apenas uma vez por "instância" da função.
 function initializeFirebaseAdmin() {
-  // Se o app já estiver inicializado, retorna a instância existente.
-  if (admin.apps.length) {
-    return admin.app();
+  // CORREÇÃO: Verifica se 'admin.apps' existe ANTES de checar seu tamanho.
+  if (admin.apps && admin.apps.length > 0) {
+    return;
   }
 
-  console.log('Tentando inicializar o Firebase Admin SDK...');
+  console.log("Tentando inicializar o Firebase Admin...");
+
+  const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  const databaseURL = process.env.VITE_FIREBASE_DATABASE_URL;
+
+  if (!serviceAccountJson || !databaseURL) {
+    console.error("ERRO CRÍTICO: Variáveis de ambiente FIREBASE_SERVICE_ACCOUNT_JSON ou VITE_FIREBASE_DATABASE_URL não encontradas.");
+    throw new Error("Configuração do servidor Firebase incompleta. Verifique as variáveis de ambiente na Vercel.");
+  }
 
   try {
-    const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
-    const databaseURL = process.env.VITE_FIREBASE_DATABASE_URL;
-
-    // Câmera 1: Verifica se as variáveis de ambiente essenciais existem.
-    if (!serviceAccountJson) {
-      throw new Error('Variável de ambiente FIREBASE_SERVICE_ACCOUNT_JSON não encontrada.');
-    }
-    if (!databaseURL) {
-      throw new Error('Variável de ambiente VITE_FIREBASE_DATABASE_URL não encontrada.');
-    }
-
-    // Câmera 2: Tenta fazer o parse do JSON da service account.
     const serviceAccount = JSON.parse(serviceAccountJson);
-
-    const app = admin.initializeApp({
+    admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       databaseURL: databaseURL,
     });
-
-    console.log('Firebase Admin SDK inicializado com sucesso.');
-    return app;
+    console.log("Firebase Admin SDK inicializado com SUCESSO.");
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
-    // Câmera 3: Loga o erro exato da inicialização.
-    console.error('Erro CRÍTICO ao inicializar o Firebase Admin SDK:', errorMessage);
-    // Lança o erro para que o handler principal possa capturá-lo e reportá-lo.
-    throw new Error(`Falha na configuração do Firebase: ${errorMessage}`);
+    const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+    console.error("ERRO ao inicializar Firebase Admin:", errorMessage);
+    throw new Error(`Falha na inicialização do Firebase Admin: ${errorMessage}`);
   }
+}
+
+// --- Lógica das Ferramentas ---
+
+async function createHabit(params: any) {
+  const { userId, name, category, frequency } = params;
+  console.log(`Ferramenta 'habits.create' chamada com:`, { userId, name, category, frequency });
+
+  if (!userId || !name || !category || !frequency) {
+    throw new Error("Parâmetros inválidos para criar hábito. 'userId', 'name', 'category', e 'frequency' são obrigatórios.");
+  }
+
+  const db = admin.database();
+  const habitsRef = db.ref(`users/${userId}/habits`);
+  const newHabitRef = habitsRef.push();
+  const newHabitId = newHabitRef.key;
+
+  if (!newHabitId) {
+    throw new Error("Não foi possível gerar um ID para o novo hábito no Firebase.");
+  }
+
+  const newHabitData = {
+    id: newHabitId,
+    name,
+    category,
+    frequency,
+    bestStreak: 0,
+    currentStreak: 0,
+  };
+
+  console.log("Salvando novo hábito no Firebase com os dados:", newHabitData);
+  await newHabitRef.set(newHabitData);
+  console.log("Hábito salvo com sucesso no Firebase.");
+
+  return `Hábito '${name}' criado com sucesso!`;
 }
 
 // --- Handler Principal da Função Serverless ---
 
-export default async function handler(
-  request: VercelRequest,
-  response: VercelResponse,
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Configuração do CORS
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Para desenvolvimento. Em produção, restrinja para o seu domínio.
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  if (request.method === 'OPTIONS') {
-    return response.status(200).end();
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  if (request.method !== 'POST') {
-    return response.status(405).json({ error: 'Método não permitido. Use POST.' });
-  }
-
-  // Câmera 4: Log de início da requisição.
-  console.log(`Recebida requisição para a ferramenta: ${request.body?.tool || 'desconhecida'}`);
+  console.log(`[${new Date().toISOString()}] Função /api/mcp recebendo uma requisição POST...`);
 
   try {
-    // Garante que o Firebase está inicializado antes de prosseguir.
     initializeFirebaseAdmin();
-    const db = admin.database();
 
-    const { tool, params } = request.body;
-
-    if (!tool || !params) {
-      return response.status(400).json({ error: 'Requisição inválida. "tool" e "params" são obrigatórios.' });
-    }
+    const { tool, params } = req.body;
+    console.log(`Requisição para a ferramenta: '${tool}' com parâmetros:`, params);
 
     let result;
-
-    // Roteador de Ferramentas
     switch (tool) {
       case 'habits.create':
-        // Câmera 5: Log específico para a ferramenta 'habits.create'.
-        console.log('Executando a ferramenta "habits.create" com os parâmetros:', params);
-        
-        const { userId, name, category, frequency } = params;
-        if (!userId || !name || !category || !frequency) {
-          return response.status(400).json({ error: 'Parâmetros faltando para habits.create: userId, name, category, frequency são necessários.' });
-        }
-
-        const habitsRef = db.ref(`users/${userId}/habits`);
-        const newHabitRef = habitsRef.push();
-        const newHabitId = newHabitRef.key;
-
-        if (!newHabitId) {
-          throw new Error('Não foi possível gerar um ID para o novo hábito no Firebase.');
-        }
-
-        const newHabitData = {
-          id: newHabitId,
-          name,
-          category,
-          frequency,
-          bestStreak: 0,
-          currentStreak: 0,
-        };
-
-        await newHabitRef.set(newHabitData);
-
-        console.log(`Hábito '${name}' criado com sucesso para o usuário ${userId}.`);
-        result = `Hábito '${name}' criado com sucesso!`;
+        result = await createHabit(params);
         break;
-
       default:
-        console.warn(`Tentativa de chamada de ferramenta não encontrada: "${tool}"`);
-        return response.status(404).json({ error: `Ferramenta "${tool}" não encontrada.` });
+        throw new Error(`Ferramenta desconhecida: '${tool}'`);
     }
 
-    return response.status(200).json({ result });
+    console.log("Execução da ferramenta bem-sucedida. Enviando resposta.");
+    return res.status(200).json({ result });
 
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido no servidor.';
-    // Câmera 6: Log do erro final capturado pelo handler.
-    console.error('Erro ao executar a ferramenta:', error);
-    
-    // Retorna a mensagem de erro específica para o cliente para facilitar a depuração.
-    return response.status(500).json({ error: `Falha na execução da função: ${errorMessage}` });
+    const errorMessage = error instanceof Error ? error.message : "Ocorreu um erro desconhecido no servidor.";
+    console.error("ERRO GERAL NA FUNÇÃO:", errorMessage);
+    return res.status(500).json({ error: `Falha na execução da função: ${errorMessage}` });
   }
 }
