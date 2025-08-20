@@ -5,7 +5,8 @@ import { z } from 'zod';
 // --- Função de Inicialização do Firebase Admin SDK ---
 // Garante que a inicialização ocorra apenas uma vez (singleton pattern)
 function initializeFirebaseAdmin() {
-  if (!admin.apps.length) {
+  // Verificação robusta: checa se admin.apps existe ANTES de checar seu tamanho.
+  if (!admin.apps || !admin.apps.length) {
     const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
     if (!serviceAccountJson) {
       throw new Error('A variável de ambiente FIREBASE_SERVICE_ACCOUNT_JSON não está definida.');
