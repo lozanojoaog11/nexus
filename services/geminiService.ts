@@ -39,7 +39,6 @@ const JARVIS_MANIFESTO = `Você é Jarvis, o co-piloto de IA do sistema operacio
 - Se a solicitação do usuário for ambígua, NÃO adivinhe. Faça uma pergunta para obter os detalhes que faltam.
 - Se a solicitação não exigir uma ferramenta, responda normalmente como texto.`;
 
-// Function to generate a text description of tools for the prompt
 function generateToolDescription(): string {
     let description = "\n--- FERRAMENTAS DISPONÍVEIS ---\n";
     JARVIS_TOOLS.forEach((tool, index) => {
@@ -49,7 +48,8 @@ function generateToolDescription(): string {
         const params = tool.parameters.properties as { [key: string]: any };
         for (const key in params) {
             const req = tool.parameters.required?.includes(key) ? "obrigatório" : "opcional";
-            description += `     - ${key} (${params[key].type}, ${req}): ${params[key].description}\n`;
+            const typeName = (params[key].type as string).replace('Type.', ''); // Make it readable
+            description += `     - ${key} (${typeName}, ${req}): ${params[key].description}\n`;
         }
     });
     description += "--- FIM DAS FERRAMENTAS ---\n";
@@ -93,32 +93,44 @@ export const askGuardian = async (
     const systemPrompt = `${JARVIS_MANIFESTO}\n${generateToolDescription()}\n${contextSummary}\n${langInstruction}`;
 
     try {
-        const response = await ai.models.generateContent({
+        // Step 1: First call to decide if a tool is needed
+        const decisionResponse = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: query,
-            config: {
-                systemInstruction: systemPrompt,
-            }
+            config: { systemInstruction: systemPrompt }
         });
 
-        const responseText = response.text.trim();
+        const responseText = decisionResponse.text.trim();
         
-        // Check if the response is a JSON object for a tool call
+        let toolCall;
         if (responseText.startsWith('{') && responseText.endsWith('}')) {
             try {
-                const toolCall = JSON.parse(responseText);
-                if (toolCall.tool && toolCall.params) {
-                    console.log("Jarvis decided to use a tool:", toolCall.tool, "with args:", toolCall.params);
-                    const apiResult = await callMcpTool(toolCall.tool, toolCall.params, userId);
-                    // Return a simple confirmation message after tool execution
-                    return `Ação '${toolCall.tool}' executada. Resultado: ${JSON.stringify(apiResult)}`;
+                const parsedJson = JSON.parse(responseText);
+                if (parsedJson.tool && parsedJson.params) {
+                    toolCall = parsedJson;
                 }
             } catch (e) {
-                // Not a valid JSON or not a tool call, so treat as plain text
-                return responseText;
+                // Not a valid JSON, treat as plain text
             }
         }
+
+        // Step 2: If a tool is called, execute it and make a second call for a natural response
+        if (toolCall) {
+            console.log("Jarvis decided to use a tool:", toolCall.tool, "with args:", toolCall.params);
+            const apiResult = await callMcpTool(toolCall.tool, toolCall.params, userId);
+            
+            const summarizationQuery = `Eu pedi para você fazer o seguinte: "${query}". Você usou a ferramenta '${toolCall.tool}' e o resultado foi: ${JSON.stringify(apiResult)}. Formule uma resposta curta e amigável para o Arquiteto confirmando que a ação foi concluída.`;
+
+            const finalResponse = await ai.models.generateContent({
+                model: 'gemini-1.5-flash',
+                contents: summarizationQuery,
+                config: { systemInstruction: systemPrompt } // Re-use the same persona
+            });
+
+            return finalResponse.text;
+        }
         
+        // If no tool call, just return the initial text response
         return responseText;
 
     } catch (error) {
