@@ -11,13 +11,21 @@ try {
       throw new Error('A variável de ambiente FIREBASE_SERVICE_ACCOUNT_JSON não está definida.');
     }
     const serviceAccount = JSON.parse(serviceAccountJson);
+    
+    // Leitura inteligente de variáveis: funciona em dev (VITE_) e prod
+    const databaseURL = process.env.VITE_FIREBASE_DATABASE_URL || process.env.FIREBASE_DATABASE_URL;
+    if (!databaseURL) {
+        throw new Error('A URL do banco de dados do Firebase não foi encontrada nas variáveis de ambiente.');
+    }
+
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
+      databaseURL: databaseURL,
     });
   }
 } catch (error) {
   console.error('Erro ao inicializar o Firebase Admin SDK:', error);
+  // Não quebra a aplicação aqui, mas o erro será capturado no handler
 }
 
 const db = admin.database();
@@ -91,8 +99,19 @@ export default async function handler(
     return response.status(200).json({ result });
 
   } catch (error) {
-    console.error('Erro ao executar a ferramenta:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido.';
+    console.error('Erro na API /api/mcp:', error);
+    
+    let errorMessage = 'Ocorreu um erro desconhecido no servidor.';
+    if (error instanceof z.ZodError) {
+        // Erro de validação do Zod, mais informativo para o dev
+        errorMessage = `Erro de validação nos parâmetros: ${error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')}`;
+        return response.status(400).json({ error: errorMessage });
+    }
+    if (error instanceof Error) {
+        errorMessage = error.message;
+    }
+    
+    // Garante que a resposta seja sempre um JSON válido
     return response.status(500).json({ error: errorMessage });
   }
 }
