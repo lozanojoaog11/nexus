@@ -22,6 +22,7 @@ interface SessionContext {
 }
 
 interface NeuralArchitectProps {
+  userId: string | null;
   profile: UserProfile | null;
   checkin: DailyCheckin | null;
   habits: Habit[];
@@ -31,7 +32,7 @@ interface NeuralArchitectProps {
 }
 
 const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({ 
-  profile, checkin, habits, goals, tasks, developmentNodes 
+  userId, profile, checkin, habits, goals, tasks, developmentNodes 
 }) => {
   const { t, language } = useTranslation();
   const [messages, setMessages] = useState<Message[]>([
@@ -77,6 +78,34 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
       checkinData: checkin,
       userState
     };
+  };
+
+  const invokeTool = async (toolName: string, params: any) => {
+    try {
+      // Chama a nossa nova rota de API interna, que agora funciona como o gateway
+      const response = await fetch('/api/mcp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tool: toolName,
+          params: params,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `A execução da ferramenta falhou com o status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      return result.result; // O servidor encapsula o resultado em uma chave 'result'
+    } catch (error) {
+      console.error(`Erro ao invocar a ferramenta ${toolName}:`, error);
+      const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido';
+      return `Erro ao executar a ferramenta: ${errorMessage}`;
+    }
   };
 
   useEffect(() => {
@@ -146,7 +175,57 @@ ${developmentNodes.map(node => `- ${node.type}: ${node.label}`).join('\n')}
       }
 
       const response = await askGuardian(query, systemPrompt, language);
-      setMessages(prev => [...prev, { sender: 'guardian', text: response }]);
+      
+      // Extrai o texto antes do JSON e o próprio JSON
+      const jsonRegex = /```json\s*([\s\S]*?)\s*```/;
+      const match = response.match(jsonRegex);
+      
+      let introductoryText = response;
+      let toolCallResult: Message | null = null;
+
+      if (match && match[1]) {
+        const jsonString = match[1];
+        introductoryText = response.substring(0, match.index).trim();
+        
+        try {
+          const potentialToolCall = JSON.parse(jsonString);
+          if (potentialToolCall.tool && potentialToolCall.params) {
+            if (!userId) {
+              throw new Error("ID do usuário não encontrado. Não é possível executar a ferramenta.");
+            }
+            
+            const { tool, params } = potentialToolCall;
+            
+            // Injeta o userId automaticamente nos parâmetros da ferramenta
+            const finalParams = { ...params, userId };
+
+            // Invoca a ferramenta através da nossa função de gateway interno
+            const result = await invokeTool(tool, finalParams);
+            
+            toolCallResult = { sender: 'guardian', text: `**[Ação Executada]**\n${result}` };
+          }
+        } catch (e) {
+            const errorMessage = e instanceof Error ? e.message : 'Formato de JSON inválido.';
+            toolCallResult = { sender: 'guardian', text: `**[Falha na Ação]**\n${errorMessage}` };
+        }
+      }
+
+      // Adiciona as mensagens na ordem correta
+      const newMessages: Message[] = [];
+      if (introductoryText) {
+        newMessages.push({ sender: 'guardian', text: introductoryText });
+      }
+      if (toolCallResult) {
+        newMessages.push(toolCallResult);
+      }
+      
+      if (newMessages.length > 0) {
+        setMessages(prev => [...prev, ...newMessages]);
+      } else {
+        // Fallback para o caso de não haver nem texto introdutório nem chamada de ferramenta
+        setMessages(prev => [...prev, { sender: 'guardian', text: response }]);
+      }
+
     } catch (error) {
       setMessages(prev => [...prev, { sender: 'guardian', text: t('neuralArchitect.error') }]);
     } finally {

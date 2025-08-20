@@ -116,6 +116,8 @@ export default function useDatabase(language: string, userManifesto: string) {
     return dataService.signInAnonymously();
   }, []);
 
+  const userId = useMemo(() => user?.uid || null, [user]);
+
   const addXp = useCallback(async (amount: number) => {
     const currentXp = profile?.totalXp || 0;
     await dataService.updateData('profile', { totalXp: currentXp + amount });
@@ -138,7 +140,7 @@ export default function useDatabase(language: string, userManifesto: string) {
   // --- DATA TRANSFORMATION MEMOS ---
 
   const habits = useMemo((): Habit[] => {
-    return Object.values(data.habits).map(h => {
+    return Object.values(data.habits).map((h: AppState['habits'][string]) => {
         const history = Object.entries(h.history || {}).map(([date, completed]) => ({ date, completed: !!completed }));
         return {
             ...h,
@@ -153,7 +155,7 @@ export default function useDatabase(language: string, userManifesto: string) {
   const tasks = useMemo((): Task[] => Object.values(data.tasks), [data.tasks]);
   
   const projects = useMemo((): Project[] => {
-      return Object.values(data.projects).map(p => ({
+      return Object.values(data.projects).map((p: AppState['projects'][string]) => ({
           ...p,
           id: p.id!,
           tasks: tasks.filter(t => t.projectId === p.id),
@@ -161,7 +163,7 @@ export default function useDatabase(language: string, userManifesto: string) {
   }, [data.projects, tasks]);
   
   const books = useMemo((): Book[] => {
-    return Object.values(data.books).map(b => ({
+    return Object.values(data.books).map((b: AppState['books'][string]) => ({
       ...b,
       id: b.id!,
       notes: Object.values(data.bookNotes[b.id!] || {}),
@@ -215,14 +217,14 @@ export default function useDatabase(language: string, userManifesto: string) {
   }, [data.developmentGraph]);
   
   const goals = useMemo((): Goal[] => {
-      return Object.values(data.goals).map(g => ({
+      return Object.values(data.goals).map((g: AppState['goals'][string]) => ({
           ...g,
           id: g.id!,
           milestones: Object.values(data.milestones[g.id!] || {}),
       }));
   }, [data.goals, data.milestones]);
 
-  const allDailyCheckins = useMemo(() => Object.values(data.dailyCheckins).sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), [data.dailyCheckins]);
+  const allDailyCheckins = useMemo(() => Object.values(data.dailyCheckins).sort((a: DailyCheckin, b: DailyCheckin) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), [data.dailyCheckins]);
   
   const dailyCheckin = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -395,7 +397,7 @@ export default function useDatabase(language: string, userManifesto: string) {
     await dataService.removeData(`developmentGraph/nodes/${nodeId}`);
     const edges = Object.values(data.developmentGraph.edges || {});
     const updates: Record<string, null> = {};
-    edges.forEach(edge => {
+    edges.forEach((edge: DevelopmentEdge) => {
       if(edge.source === nodeId || edge.target === nodeId) {
         updates[`developmentGraph/edges/${edge.id}`] = null;
       }
@@ -433,6 +435,7 @@ export default function useDatabase(language: string, userManifesto: string) {
 
   return {
     loading,
+    userId,
     profile,
     isAuthenticated,
     isAuthReady,
