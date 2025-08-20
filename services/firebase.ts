@@ -5,7 +5,7 @@ import 'firebase/compat/auth';
 import { INITIAL_HABITS, INITIAL_PROJECTS, INITIAL_BOOKS, INITIAL_DEVELOPMENT_DATA, INITIAL_AGENDA_EVENTS, INITIAL_GOALS } from '../constants';
 import { Project, Book, Goal, Habit } from '../types';
 
-// Carrega a configuração do Firebase a partir das variáveis de ambiente com prefixo VITE_
+// Environment variables are used for Firebase configuration.
 const firebaseConfig = {
   apiKey: process.env.VITE_FIREBASE_API_KEY,
   authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -26,7 +26,7 @@ let auth: firebase.auth.Auth;
 let firebaseAvailable = false;
 
 if (missingKeys.length > 0) {
-  console.error(`❌ Falha ao inicializar o Firebase. Variáveis de ambiente faltando: ${missingKeys.join(', ')}`);
+  console.error(`❌ Falha ao inicializar o Firebase. Variáveis de ambiente faltando: ${missingKeys.map(k => `VITE_FIREBASE_${k.toUpperCase()}`).join(', ')}`);
 } else {
   try {
     if (!firebase.apps.length) {

@@ -1,16 +1,14 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { DailyCheckin, Habit, Project, Task, DevelopmentNode, DevelopmentEdge } from '../types';
 
-const API_KEY = process.env.API_KEY;
-
-if (!API_KEY) {
+if (!process.env.API_KEY) {
   console.warn("API_KEY environment variable not set. Guardian module will not work.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY! });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 export const generateDailyDirective = async (checkin: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp'>, userContext: string, language: string): Promise<string> => {
-    if (!API_KEY) {
+    if (!process.env.API_KEY) {
         return Promise.resolve("Diretriz offline. API Key não configurada.");
     }
 
@@ -62,7 +60,7 @@ Be direct, inspiring, and strategic. Provide ONE main directive in a maximum of 
 
 
 export const askGuardian = async (query: string, systemPrompt: string, language: string): Promise<string> => {
-  if (!API_KEY) {
+  if (!process.env.API_KEY) {
     return Promise.resolve("API Key for Gemini is not configured. The AI is offline.");
   }
 
@@ -89,7 +87,7 @@ export const askGuardian = async (query: string, systemPrompt: string, language:
 };
 
 export const generateInitialEcosystem = async (conversationTranscript: string): Promise<any> => {
-  if (!API_KEY) {
+  if (!process.env.API_KEY) {
     throw new Error("API Key for Gemini is not configured. The AI is offline.");
   }
 
