@@ -95,8 +95,14 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `A execução da ferramenta falhou com o status: ${response.status}`);
+        // Tenta ler a resposta como JSON, mas se falhar, usa o texto bruto
+        try {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `A execução da ferramenta falhou com o status: ${response.status}`);
+        } catch (e) {
+            const errorText = await response.text();
+            throw new Error(`A execução da ferramenta falhou com o status ${response.status}: ${errorText}`);
+        }
       }
 
       const result = await response.json();
