@@ -280,6 +280,76 @@ async function createGoal(params: any) {
     return { goalId: newGoalId };
 }
 
+// 🔥 Função para atualizar meta
+async function updateGoal(params: any) {
+    const { userId, goalId, updates } = params;
+    if (!userId || !goalId || !updates || typeof updates !== 'object') {
+        throw new Error("Parâmetros inválidos: userId, goalId e um objeto 'updates' são obrigatórios.");
+    }
+    // Add validation for allowed fields if necessary
+    const db = admin.database();
+    const goalRef = db.ref(`users/${userId}/goals/${goalId}`);
+    await goalRef.update(updates);
+    return { message: "Meta atualizada com sucesso." };
+}
+
+// 🔥 Função para deletar meta
+async function deleteGoal(params: any) {
+    const { userId, goalId } = params;
+    if (!userId || !goalId) {
+        throw new Error("Parâmetros inválidos: userId e goalId são obrigatórios.");
+    }
+    const db = admin.database();
+    const updates: { [key: string]: null } = {};
+    updates[`/users/${userId}/goals/${goalId}`] = null;
+    updates[`/users/${userId}/milestones/${goalId}`] = null; // Also delete milestones
+    await db.ref().update(updates);
+    return { message: "Meta e seus marcos foram deletados com sucesso." };
+}
+
+// 🔥 Função para criar marco (milestone)
+async function createMilestone(params: any) {
+    const { userId, goalId, name, date } = params;
+    if (!userId || !goalId || !name || !date) {
+        throw new Error("Parâmetros inválidos: userId, goalId, name e date são obrigatórios.");
+    }
+    const db = admin.database();
+    const milestonesRef = db.ref(`users/${userId}/milestones/${goalId}`);
+    const newMilestoneRef = milestonesRef.push();
+    const newMilestoneId = newMilestoneRef.key;
+    if (!newMilestoneId) {
+        throw new Error("Não foi possível gerar um ID para o novo marco.");
+    }
+    const newMilestoneData = { id: newMilestoneId, name, date };
+    await newMilestoneRef.set(newMilestoneData);
+    return { milestoneId: newMilestoneId };
+}
+
+// 🔥 Função para atualizar marco (milestone)
+async function updateMilestone(params: any) {
+    const { userId, goalId, milestoneId, updates } = params;
+    if (!userId || !goalId || !milestoneId || !updates || typeof updates !== 'object') {
+        throw new Error("Parâmetros inválidos: userId, goalId, milestoneId e um objeto 'updates' são obrigatórios.");
+    }
+    const db = admin.database();
+    const milestoneRef = db.ref(`users/${userId}/milestones/${goalId}/${milestoneId}`);
+    await milestoneRef.update(updates);
+    return { message: "Marco atualizado com sucesso." };
+}
+
+// 🔥 Função para deletar marco (milestone)
+async function deleteMilestone(params: any) {
+    const { userId, goalId, milestoneId } = params;
+    if (!userId || !goalId || !milestoneId) {
+        throw new Error("Parâmetros inválidos: userId, goalId e milestoneId são obrigatórios.");
+    }
+    const db = admin.database();
+    const milestoneRef = db.ref(`users/${userId}/milestones/${goalId}/${milestoneId}`);
+    await milestoneRef.remove();
+    return { message: "Marco deletado com sucesso." };
+}
+
+
 // 🔥 Handler principal da API
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -329,6 +399,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         break;
       case "goals.create":
         result = await createGoal(params);
+        break;
+      case "goals.update":
+        result = await updateGoal(params);
+        break;
+      case "goals.delete":
+        result = await deleteGoal(params);
+        break;
+      case "milestones.create":
+        result = await createMilestone(params);
+        break;
+      case "milestones.update":
+        result = await updateMilestone(params);
+        break;
+      case "milestones.delete":
+        result = await deleteMilestone(params);
         break;
       default:
         throw new Error(`Ferramenta desconhecida: '${tool}'`);

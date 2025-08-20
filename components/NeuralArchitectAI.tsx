@@ -80,41 +80,6 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
     };
   };
 
-  const invokeTool = async (toolName: string, params: any) => {
-    try {
-      // Chama a nossa nova rota de API interna, que agora funciona como o gateway
-      const response = await fetch('/api/mcp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tool: toolName,
-          params: params,
-        }),
-      });
-
-if (!response.ok) {
-const errorText = await response.text();
-try {
-// Tenta interpretar o erro como JSON, que é o formato esperado da nossa API
-const errorData = JSON.parse(errorText);
-throw new Error(errorData.error || `A execução da ferramenta falhou com o status: ${response.status}`);
-} catch (e) {
-// Se não for JSON, usa o texto bruto do erro (ex: erro de gateway, HTML de erro)
-throw new Error(`A execução da ferramenta falhou com o status ${response.status}: ${errorText}`);
-}
-}
-
-      const result = await response.json();
-      return result.result; // O servidor encapsula o resultado em uma chave 'result'
-    } catch (error) {
-      console.error(`Erro ao invocar a ferramenta ${toolName}:`, error);
-      const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido';
-      return `Erro ao executar a ferramenta: ${errorMessage}`;
-    }
-  };
-
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
       recognitionRef.current = new (window as any).webkitSpeechRecognition();
@@ -145,93 +110,26 @@ throw new Error(`A execução da ferramenta falhou com o status ${response.statu
     setIsLoading(true);
 
     try {
-      const context = generateSessionContext();
-      const strategyKeyMap: { [key in Exclude<DailyStrategy, null>]: string } = {
-          'eat_the_frog': 'eatTheFrog',
-          'small_wins': 'smallWins',
-          'deep_work_focus': 'deepWorkFocus'
-      };
-      const strategyNameKey = checkin?.activeStrategy ? `todayView.strategy.names.${strategyKeyMap[checkin.activeStrategy]}` : 'todayView.strategy.names.none';
-      const strategyName = t(strategyNameKey);
+      if (!userId) {
+        throw new Error("ID do usuário não encontrado. Não é possível se comunicar com o Jarvis.");
+      }
 
-      const contextString = `
-${t('neuralArchitect.context.currentState')}
-- ${t('neuralArchitect.context.energy')}: ${context.checkinData?.energia || 'N/A'}/10
-- ${t('neuralArchitect.context.clarity')}: ${context.checkinData?.clareza || 'N/A'}/10  
-- ${t('neuralArchitect.context.momentum')}: ${context.checkinData?.momentum || 'N/A'}/10
-- ${t('neuralArchitect.context.userState')}: ${context.userState}
-- ${t('neuralArchitect.context.activeStrategy')}: ${strategyName}
-- ${t('neuralArchitect.context.activeGoals')}: ${context.currentGoals.map(g => g.name).join(', ')}
-- ${t('neuralArchitect.context.habitsToday')}: ${context.todayHabits.length}
-- ${t('neuralArchitect.context.pendingTasks')}: ${context.recentTasks.length}
-
-${t('neuralArchitect.context.focusAreas')}
-${developmentNodes.map(node => `- ${node.type}: ${node.label}`).join('\n')}
-`;
-
-      let query = `${currentInput}\n\nCONTEXT: ${contextString}`;
-      const systemPrompt = profile?.customSystemPrompt || t('neuralArchitect.systemPrompt');
-
+      // O novo geminiService lida com a construção do contexto e do prompt.
+      // Apenas passamos os dados brutos.
+      const jarvisContext = { profile, checkin, habits, goals, tasks, developmentNodes };
+      
+      // A lógica do módulo pode ser simplificada para apenas pré-formatar a query do usuário.
       const module = selectedModule ? coachingModules.find(m => m.id === selectedModule) : null;
-      if (module && module.prompt) {
-          let modulePrompt = module.prompt.replace('{{CONTEXT}}', contextString);
-           if (module.id === 'strategy') {
-              modulePrompt = modulePrompt.replace('{{STRATEGY}}', strategyName);
-           }
-          query = modulePrompt + `\n\n${t('neuralArchitect.userQueryLabel')}: ${currentInput}`;
+      let finalQuery = currentInput;
+      if (module) {
+        finalQuery = `${module.prompt}\n\nConsulta do Arquiteto: ${currentInput}`;
       }
 
-      const response = await askGuardian(query, systemPrompt, language);
+      const response = await askGuardian(finalQuery, userId, jarvisContext, language);
       
-      // Extrai o texto antes do JSON e o próprio JSON
-      const jsonRegex = /```json\s*([\s\S]*?)\s*```/;
-      const match = response.match(jsonRegex);
-      
-      let introductoryText = response;
-      let toolCallResult: Message | null = null;
-
-      if (match && match[1]) {
-        const jsonString = match[1];
-        introductoryText = response.substring(0, match.index).trim();
-        
-        try {
-          const potentialToolCall = JSON.parse(jsonString);
-          if (potentialToolCall.tool && potentialToolCall.params) {
-            if (!userId) {
-              throw new Error("ID do usuário não encontrado. Não é possível executar a ferramenta.");
-            }
-            
-            const { tool, params } = potentialToolCall;
-            
-            // Injeta o userId automaticamente nos parâmetros da ferramenta
-            const finalParams = { ...params, userId };
-
-            // Invoca a ferramenta através da nossa função de gateway interno
-            const result = await invokeTool(tool, finalParams);
-            
-            toolCallResult = { sender: 'guardian', text: `**[Ação Executada]**\n${result}` };
-          }
-        } catch (e) {
-            const errorMessage = e instanceof Error ? e.message : 'Formato de JSON inválido.';
-            toolCallResult = { sender: 'guardian', text: `**[Falha na Ação]**\n${errorMessage}` };
-        }
-      }
-
-      // Adiciona as mensagens na ordem correta
-      const newMessages: Message[] = [];
-      if (introductoryText) {
-        newMessages.push({ sender: 'guardian', text: introductoryText });
-      }
-      if (toolCallResult) {
-        newMessages.push(toolCallResult);
-      }
-      
-      if (newMessages.length > 0) {
-        setMessages(prev => [...prev, ...newMessages]);
-      } else {
-        // Fallback para o caso de não haver nem texto introdutório nem chamada de ferramenta
-        setMessages(prev => [...prev, { sender: 'guardian', text: response }]);
-      }
+      // A nova askGuardian retorna uma resposta em linguagem natural, já tendo executado a ferramenta.
+      const guardianMessage: Message = { sender: 'guardian', text: response };
+      setMessages(prev => [...prev, guardianMessage]);
 
     } catch (error) {
       setMessages(prev => [...prev, { sender: 'guardian', text: t('neuralArchitect.error') }]);
@@ -243,25 +141,14 @@ ${developmentNodes.map(node => `- ${node.type}: ${node.label}`).join('\n')}
 
   const generateContextAnalysis = async () => {
     setIsLoading(true);
-    const context = generateSessionContext();
-    const completedHabits = (context.todayHabits || []).filter(h => {
-        const today = new Date().toISOString().split('T')[0];
-        return (h.history || []).some(entry => entry.date === today && entry.completed);
-    }).length;
-    
-    const contextString = `
-${t('neuralArchitect.context.currentState')}
-- ${t('neuralArchitect.context.energy')}: ${context.checkinData?.energia || 'N/A'}/10
-- ${t('neuralArchitect.context.clarity')}: ${context.checkinData?.clareza || 'N/A'}/10  
-- ${t('neuralArchitect.context.momentum')}: ${context.checkinData?.momentum || 'N/A'}/10
-- ${t('neuralArchitect.context.userState')}: ${context.userState}
-- ${t('neuralArchitect.context.activeGoals')}: ${context.currentGoals.map(g => g.name).join(', ')}
-- ${t('neuralArchitect.context.completedHabits')}: ${completedHabits}/${(context.todayHabits || []).length}
-- ${t('neuralArchitect.context.pendingMITs')}: ${context.recentTasks.filter(t => t.isMIT).length}`;
-
-    const analysisPrompt = t('neuralArchitect.contextAnalysisPrompt', { context: contextString });
     try {
-      const response = await askGuardian(analysisPrompt, t('neuralArchitect.contextAnalysisSystemPrompt'), language);
+      if (!userId) {
+        throw new Error("ID do usuário não encontrado.");
+      }
+      const jarvisContext = { profile, checkin, habits, goals, tasks, developmentNodes };
+      const analysisPrompt = t('neuralArchitect.contextAnalysisPrompt'); // O contexto agora é passado diretamente
+      
+      const response = await askGuardian(analysisPrompt, userId, jarvisContext, language);
       setMessages(prev => [...prev, { sender: 'guardian', text: response }]);
     } catch (error) {
       setMessages(prev => [...prev, { sender: 'guardian', text: t('neuralArchitect.analysisError') }]);
