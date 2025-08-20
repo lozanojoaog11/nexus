@@ -1,13 +1,12 @@
 // Caminho do arquivo: /api/mcp.ts
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-// CORREÇÃO CRÍTICA: Importa de 'firebase-admin' em vez de 'firebase'.
-import * as admin from 'firebase-admin'; 
+import admin from 'firebase-admin';
 
 // --- Função de Inicialização do Firebase Admin ---
 function initializeFirebaseAdmin() {
-  // A verificação agora está correta e segura.
-  if (admin.apps && admin.apps.length > 0) {
+  if (admin.apps.length > 0) {
+    console.log("Firebase Admin já está inicializado.");
     return;
   }
 
@@ -16,13 +15,35 @@ function initializeFirebaseAdmin() {
   const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   const databaseURL = process.env.VITE_FIREBASE_DATABASE_URL;
 
-  if (!serviceAccountJson || !databaseURL) {
-    console.error("ERRO CRÍTICO: Variáveis de ambiente FIREBASE_SERVICE_ACCOUNT_JSON ou VITE_FIREBASE_DATABASE_URL não encontradas.");
-    throw new Error("Configuração do servidor Firebase incompleta. Verifique as variáveis de ambiente na Vercel.");
+  // LOG DE VERIFICAÇÃO 1: As variáveis existem?
+  if (!serviceAccountJson) {
+    console.error("ERRO CRÍTICO: Variável de ambiente FIREBASE_SERVICE_ACCOUNT_JSON não encontrada.");
+    throw new Error("Credencial de serviço do Firebase não encontrada no ambiente da Vercel.");
+  }
+  if (!databaseURL) {
+    console.error("ERRO CRÍTICO: Variável de ambiente VITE_FIREBASE_DATABASE_URL não encontrada.");
+    throw new Error("URL do banco de dados Firebase não encontrada no ambiente da Vercel.");
+  }
+
+  // LOG DE VERIFICAÇÃO 2: A credencial é um JSON válido?
+  let serviceAccount;
+  try {
+    serviceAccount = JSON.parse(serviceAccountJson);
+    console.log("JSON da credencial de serviço foi parseado com sucesso.");
+  } catch (error) {
+    console.error("ERRO CRÍTICO ao parsear FIREBASE_SERVICE_ACCOUNT_JSON:", error);
+    // Loga os primeiros 50 caracteres para depuração, escondendo o resto.
+    console.error("Início do JSON recebido:", serviceAccountJson.substring(0, 50) + "..."); 
+    throw new Error("O valor em FIREBASE_SERVICE_ACCOUNT_JSON não é um JSON válido.");
+  }
+
+  // LOG DE VERIFICAÇÃO 3: O objeto 'admin.credential' existe?
+  if (!admin.credential || typeof admin.credential.cert !== 'function') {
+      console.error("ERRO CRÍTICO: 'admin.credential.cert' não é uma função. O pacote 'firebase-admin' pode não estar carregado corretamente.");
+      throw new Error("O SDK do Firebase Admin parece estar corrompido ou não foi importado corretamente.");
   }
 
   try {
-    const serviceAccount = JSON.parse(serviceAccountJson);
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       databaseURL: databaseURL,
@@ -30,49 +51,31 @@ function initializeFirebaseAdmin() {
     console.log("Firebase Admin SDK inicializado com SUCESSO.");
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
-    console.error("ERRO ao inicializar Firebase Admin:", errorMessage);
+    console.error("ERRO na chamada de admin.initializeApp:", errorMessage);
     throw new Error(`Falha na inicialização do Firebase Admin: ${errorMessage}`);
   }
 }
 
 // --- Lógica das Ferramentas (sem alterações) ---
-
 async function createHabit(params: any) {
   const { userId, name, category, frequency } = params;
-  console.log(`Ferramenta 'habits.create' chamada com:`, { userId, name, category, frequency });
-
   if (!userId || !name || !category || !frequency) {
     throw new Error("Parâmetros inválidos para criar hábito. 'userId', 'name', 'category', e 'frequency' são obrigatórios.");
   }
-
   const db = admin.database();
   const habitsRef = db.ref(`users/${userId}/habits`);
   const newHabitRef = habitsRef.push();
   const newHabitId = newHabitRef.key;
-
   if (!newHabitId) {
     throw new Error("Não foi possível gerar um ID para o novo hábito no Firebase.");
   }
-
-  const newHabitData = {
-    id: newHabitId,
-    name,
-    category,
-    frequency,
-    bestStreak: 0,
-    currentStreak: 0,
-  };
-
+  const newHabitData = { id: newHabitId, name, category, frequency, bestStreak: 0, currentStreak: 0 };
   await newHabitRef.set(newHabitData);
-  console.log("Hábito salvo com sucesso no Firebase.");
-
   return `Hábito '${name}' criado com sucesso!`;
 }
 
-// --- Handler Principal da Função Serverless (sem alterações) ---
-
+// --- Handler Principal (sem alterações) ---
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*'); 
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -80,20 +83,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
   if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  console.log(`[${new Date().toISOString()}] Função /api/mcp recebendo uma requisição POST...`);
-
   try {
     initializeFirebaseAdmin();
-
     const { tool, params } = req.body;
-    console.log(`Requisição para a ferramenta: '${tool}' com parâmetros:`, params);
-
     let result;
     switch (tool) {
       case 'habits.create':
@@ -102,10 +98,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       default:
         throw new Error(`Ferramenta desconhecida: '${tool}'`);
     }
-
-    console.log("Execução da ferramenta bem-sucedida. Enviando resposta.");
     return res.status(200).json({ result });
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Ocorreu um erro desconhecido no servidor.";
     console.error("ERRO GERAL NA FUNÇÃO:", errorMessage);
