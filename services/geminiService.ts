@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { DailyCheckin, Habit, Project, Task, DevelopmentNode, DevelopmentEdge } from '../types';
 
-const apiKey = process.env.API_KEY;
+const apiKey = import.meta.env.VITE_API_KEY;
 
 // Log an error if the key is missing during initialization
 if (!apiKey) {
