@@ -26,7 +26,7 @@ let auth: firebase.auth.Auth;
 let firebaseAvailable = false;
 
 if (missingKeys.length > 0) {
-  console.error(`❌ Falha ao inicializar o Firebase. Variáveis de ambiente faltando: ${missingKeys.map(k => `VITE_FIREBASE_${k.toUpperCase()}`).join(', ')}`);
+  console.error(`❌ Falha ao inicializar o Firebase. Variáveis de ambiente faltando: ${missingKeys.join(', ')}`);
 } else {
   try {
     if (!firebase.apps.length) {
