@@ -1,11 +1,32 @@
-// Caminho: /api/mcp.ts
+/// api/mcp.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { initializeFirebaseAdmin } from "../lib/firebaseAdmin";
 import admin from "firebase-admin";
 
+// 🔥 Inicialização do Firebase Admin direto no mesmo arquivo
+function initializeFirebaseAdmin() {
+  if (admin.apps.length > 0) return;
+
+  const base64 = process.env.FIREBASE_SERVICE_ACCOUNT_BASE64;
+  if (!base64) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT_BASE64 não definida nas variáveis de ambiente.");
+  }
+
+  // Decodifica o JSON inteiro do service account
+  const serviceAccount = JSON.parse(
+    Buffer.from(base64, "base64").toString("utf8")
+  );
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: process.env.VITE_FIREBASE_DATABASE_URL,
+  });
+
+  console.log("✅ Firebase Admin inicializado com sucesso!");
+}
+
+// 🔥 Função para criar hábito
 async function createHabit(params: any) {
   const { userId, name, category, frequency } = params;
-
   if (!userId || !name || !category || !frequency) {
     throw new Error("Parâmetros inválidos para criar hábito.");
   }
@@ -29,10 +50,10 @@ async function createHabit(params: any) {
   };
 
   await newHabitRef.set(newHabitData);
-
   return `Hábito '${name}' criado com sucesso!`;
 }
 
+// 🔥 Handler principal da API
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
