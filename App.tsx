@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData } from './types';
+import { View, Habit, Project, Task, Book, DevelopmentGraph, CalendarEvent, Goal, DevelopmentNode, DailyCheckin, FlowSession, CognitiveSession, BiohackingMetrics, Achievement, UserLevel, StreakData, DevelopmentEdge } from './types';
 import useDatabase from './hooks/useDatabase';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
@@ -26,15 +26,16 @@ import TodayView from './components/TodayView';
 import { LanguageProvider, useTranslation } from './contexts/LanguageContext';
 import { UIProvider, useUI } from './contexts/UIContext';
 import { calculateDateStreak } from './utils/streak';
+import OnboardingView from './components/OnboardingView';
 
 const AppModals: React.FC<{
     projects: Project[];
     developmentGraph: DevelopmentGraph;
     saveGoal: (goal: Goal) => Promise<void>;
-    saveDevelopmentNode: (node: DevelopmentNode) => Promise<void>;
+    saveDevelopmentNode: (node: DevelopmentNode) => Promise<string | null>;
     saveBook: (book: Book) => Promise<void>;
     addHabit: (name: string, category: "Corpo" | "Mente" | "Execução", frequency: number) => Promise<void>;
-    addProject: (name: string) => Promise<void>;
+    addProject: (name: string) => Promise<string | null>;
 }> = ({ projects, developmentGraph, saveGoal, saveDevelopmentNode, saveBook, addHabit, addProject }) => {
     const { state, close } = useUI();
 
@@ -75,13 +76,14 @@ const MainApp: React.FC = () => {
     isAuthenticated, isAuthReady,
     signIn, signUp, signOut, signInAnonymously,
     dailyCheckin, allDailyCheckins, handleCheckinConfirm,
+    completeStandardOnboarding,
     habits, addHabit, deleteHabit, toggleHabitCompletion, addXp,
     yesterdaysIncompleteKeystoneHabits,
     projects, addProject, deleteProject, selectedProjectId, setSelectedProjectId,
     tasks, addTask, updateTask, updateTaskStatus,
     books, saveBook, deleteBook, addNoteToBook, updateNote, deleteNote,
     backlinks,
-    developmentGraph, saveDevelopmentNode, deleteDevelopmentNode,
+    developmentGraph, saveDevelopmentNode, deleteDevelopmentNode, saveDevelopmentEdge,
     agendaEvents,
     goals, saveGoal, deleteGoal,
     flowSessions, saveFlowSession,
@@ -176,34 +178,18 @@ const MainApp: React.FC = () => {
   const today = new Date().toISOString().split('T')[0];
   const hasCheckedInToday = !!dailyCheckin && dailyCheckin.date === today;
 
-  useEffect(() => {
-    if (!loading && isAuthenticated && !hasCheckedInToday) {
-      setShowCheckin(true);
-    }
-  }, [loading, isAuthenticated, hasCheckedInToday]);
-
-
   const onCheckinConfirm = async (checkinData: Omit<DailyCheckin, 'date' | 'directive' | 'timestamp' | 'activeStrategy'>) => {
     setIsProcessingCheckin(true);
     await handleCheckinConfirm(checkinData);
     setIsProcessingCheckin(false);
     setShowCheckin(false);
   };
+  
+  const handleOnboardingComplete = async () => {
+    await completeStandardOnboarding();
+  };
 
   const renderView = () => {
-    if (loading) {
-        return (
-            <div className="w-full h-full flex items-center justify-center">
-                <div className="text-center">
-                    <svg className="animate-spin h-8 w-8 text-[#00A9FF] mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p className="text-gray-400 mt-4">{t('loading.syncing')}</p>
-                </div>
-            </div>
-        );
-    }
       
     switch (currentView) {
       case 'dashboard': return <Dashboard checkin={dailyCheckin} hasCheckedInToday={hasCheckedInToday} onStartCheckin={() => setShowCheckin(true)} habits={habits} goals={goals} tasks={allTasks} yesterdaysIncompleteKeystoneHabits={yesterdaysIncompleteKeystoneHabits} allDailyCheckins={allDailyCheckins} biohackingMetrics={biohackingMetrics} activeStreaks={activeStreaks} />;
@@ -232,19 +218,35 @@ const MainApp: React.FC = () => {
     }
   };
 
-  if (!isAuthReady) {
+  if (!isAuthReady || (isAuthenticated && loading)) {
     return (
         <div className="flex h-screen w-screen bg-black/10 items-center justify-center">
-            <svg className="animate-spin h-8 w-8 text-[#00A9FF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
+             <div className="text-center">
+                <svg className="animate-spin h-8 w-8 text-[#00A9FF] mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p className="text-gray-400 mt-4">{!isAuthReady ? t('loading.auth') : t('loading.syncing')}</p>
+            </div>
         </div>
     );
   }
 
   if (!isAuthenticated) {
       return <Login onSignIn={signIn} onSignUp={signUp} onSignInAnonymously={signInAnonymously} />;
+  }
+  
+  if (isAuthenticated && profile && profile.onboardingCompleted === false) {
+    return (
+      <OnboardingView 
+        onOnboardingComplete={handleOnboardingComplete}
+        addHabit={addHabit}
+        addProject={addProject}
+        addTask={addTask}
+        saveDevelopmentNode={saveDevelopmentNode}
+        saveDevelopmentEdge={saveDevelopmentEdge}
+      />
+    );
   }
 
   return (

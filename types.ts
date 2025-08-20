@@ -5,6 +5,7 @@ export type UserProfile = {
   createdAt: string; // ISO 8601
   name?: string;
   totalXp?: number;
+  onboardingCompleted?: boolean;
 };
 
 export type DailyStrategy = 'eat_the_frog' | 'small_wins' | 'deep_work_focus' | null;

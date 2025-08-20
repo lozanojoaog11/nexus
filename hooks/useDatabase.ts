@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { dataService } from '../services/firebase';
+import { dataService, getInitialEcosystemData } from '../services/firebase';
 import { generateDailyDirective } from '../services/geminiService';
 import { Habit, Task, Project, Book, BookNote, Goal, Milestone, DevelopmentGraph, DailyCheckin, TaskStatus, DevelopmentNode, FlowSession, CognitiveSession, BiohackingMetrics, UserProfile, DevelopmentEdge, DailyStrategy } from '../types';
 import { calculateCurrentStreak } from '../utils/streak';
@@ -120,6 +120,15 @@ export default function useDatabase(language: string, userManifesto: string) {
     const currentXp = profile?.totalXp || 0;
     await dataService.updateData('profile', { totalXp: currentXp + amount });
   }, [profile]);
+
+  const completeStandardOnboarding = useCallback(async () => {
+    const initialData = getInitialEcosystemData();
+    const updates = {
+      ...initialData,
+      'profile/onboardingCompleted': true
+    };
+    await dataService.updateData('/', updates);
+  }, []);
   
   // --- DATA TRANSFORMATION MEMOS ---
 
@@ -293,12 +302,13 @@ export default function useDatabase(language: string, userManifesto: string) {
     }
   }, [addXp, data.habits]);
 
-  const addProject = useCallback(async (name: string) => {
+  const addProject = useCallback(async (name: string): Promise<string | null> => {
     const newId = dataService.getNewId('projects');
-    if (!newId) return;
+    if (!newId) return null;
     const newProject = { name, id: newId };
     await dataService.setData(`projects/${newId}`, newProject);
     await addXp(100);
+    return newId;
   }, [addXp]);
   
   const deleteProject = useCallback(async (projectId: string) => {
@@ -312,10 +322,10 @@ export default function useDatabase(language: string, userManifesto: string) {
     }
   }, [tasks, selectedProjectId, data.projects]);
 
-  const addTask = useCallback(async (projectId: string, content: string) => {
+  const addTask = useCallback(async (projectId: string, content: string, isMIT: boolean = false) => {
     const newId = dataService.getNewId('tasks');
     if (!newId) return;
-    const newTask: Task = { id: newId, content, status: 'A Fazer', isMIT: false, projectId };
+    const newTask: Task = { id: newId, content, status: 'A Fazer', isMIT, projectId };
     await dataService.setData(`tasks/${newId}`, newTask);
   }, []);
 
@@ -360,14 +370,22 @@ export default function useDatabase(language: string, userManifesto: string) {
       await dataService.removeData(`bookNotes/${bookId}/${noteId}`);
   }, []);
 
-  const saveDevelopmentNode = useCallback(async (node: DevelopmentNode) => {
+  const saveDevelopmentNode = useCallback(async (node: DevelopmentNode): Promise<string | null> => {
     if (node.id) {
         await dataService.setData(`developmentGraph/nodes/${node.id}`, node);
+        return node.id;
     } else {
         const newId = dataService.getNewId('developmentGraph/nodes');
-        if (!newId) return;
+        if (!newId) return null;
         await dataService.setData(`developmentGraph/nodes/${newId}`, { ...node, id: newId });
+        return newId;
     }
+  }, []);
+  
+  const saveDevelopmentEdge = useCallback(async (edge: Omit<DevelopmentEdge, 'id'>) => {
+      const newId = dataService.getNewId('developmentGraph/edges');
+      if (!newId) return;
+      await dataService.setData(`developmentGraph/edges/${newId}`, { ...edge, id: newId });
   }, []);
 
   const deleteDevelopmentNode = useCallback(async (nodeId: string) => {
@@ -422,6 +440,7 @@ export default function useDatabase(language: string, userManifesto: string) {
     dailyCheckin,
     allDailyCheckins,
     handleCheckinConfirm,
+    completeStandardOnboarding,
     habits,
     addHabit,
     deleteHabit,
@@ -447,6 +466,7 @@ export default function useDatabase(language: string, userManifesto: string) {
     developmentGraph,
     saveDevelopmentNode,
     deleteDevelopmentNode,
+    saveDevelopmentEdge,
     agendaEvents,
     goals,
     saveGoal,

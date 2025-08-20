@@ -3,22 +3,22 @@ import { Project, Book, View, DevelopmentGraph, Habit, CalendarEvent, Goal, Icon
 export const ACCENT_COLOR = '#00A9FF';
 
 export const INITIAL_HABITS: Habit[] = [
-  { id: 'h1', name: 'Meditação Mindfulness', category: 'Mente', frequency: 7, history: [], bestStreak: 0, currentStreak: 0 },
-  { id: 'h2', name: 'Bloco de Deep Work (90 min)', category: 'Execução', frequency: 5, history: [], bestStreak: 0, currentStreak: 0 },
-  { id: 'h3', name: 'Leitura Focada (15 min)', category: 'Mente', frequency: 7, history: [], bestStreak: 0, currentStreak: 0 },
-  { id: 'h4', name: 'Treino de Força / Exercício', category: 'Corpo', frequency: 4, history: [], bestStreak: 0, currentStreak: 0 },
-  { id: 'h5', name: 'Protocolo Noturno (Wind down)', category: 'Corpo', frequency: 7, history: [], bestStreak: 0, currentStreak: 0, isKeystone: true },
+  { id: 'h1', name: '[TUTORIAL] Conclua um Hábito Diário (Clique no ✓)', category: 'Execução', frequency: 7, history: [{ date: new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0], completed: true }], bestStreak: 1, currentStreak: 1 },
+  { id: 'h2', name: '[TUTORIAL] Acompanhe sua Sequência (Streak)', category: 'Mente', frequency: 5, history: [], bestStreak: 0, currentStreak: 0 },
+  { id: 'h3', name: '[EXEMPLO] Leitura Focada (15 min)', category: 'Mente', frequency: 7, history: [], bestStreak: 0, currentStreak: 0 },
+  { id: 'h4', name: '[EXEMPLO] Exercício Físico', category: 'Corpo', frequency: 4, history: [], bestStreak: 0, currentStreak: 0 },
+  { id: 'h5', name: '[TUTORIAL] Identifique um Hábito Angular (🔑)', category: 'Corpo', frequency: 7, history: [], bestStreak: 0, currentStreak: 0, isKeystone: true },
 ];
 
 export const INITIAL_PROJECTS: Project[] = [
   {
     id: 'p1',
-    name: 'd.IA.logo',
+    name: '[PROJETO-GUIA] Conhecendo o Eixo OS',
     tasks: [
-      { id: 't1', content: 'Definir a MIT para o dia', status: 'A Fazer', isMIT: true, relatedDevelopmentNodeId: 'obj1', relatedHabitId: 'h2' },
-      { id: 't2', content: 'Estruturar mini-curso (Block 3)', status: 'A Fazer', isMIT: false, relatedDevelopmentNodeId: 'skill3', relatedHabitId: 'h2' },
-      { id: 't3', content: 'Revisar a Física do Desenvolvimento', status: 'Em Progresso', isMIT: false },
-      { id: 't4', content: 'Planejar próximo sprint', status: 'Concluído', isMIT: false },
+      { id: 't1', content: "[TUTORIAL] Esta é sua Tarefa Mais Importante (MIT). Arraste-me para 'Em Progresso' para começar.", status: 'A Fazer', isMIT: true, relatedDevelopmentNodeId: 'skill1' },
+      { id: 't2', content: "[TUTORIAL] Clique aqui para ver detalhes, adicionar notas e definir um prazo.", status: 'A Fazer', isMIT: false, relatedDevelopmentNodeId: 'skill1' },
+      { id: 't3', content: "[TUTORIAL] Esta tarefa já está em andamento. Arraste-a para 'Concluído' quando terminar.", status: 'Em Progresso', isMIT: false },
+      { id: 't4', content: "[TUTORIAL] Tarefas concluídas aparecem aqui. Você pode arrastá-las de volta se precisar.", status: 'Concluído', isMIT: false },
     ],
   },
 ];
@@ -26,35 +26,38 @@ export const INITIAL_PROJECTS: Project[] = [
 export const INITIAL_BOOKS: Book[] = [
     {
         id: 'b1',
-        title: 'Deep Work',
-        author: 'Cal Newport',
+        title: '[GUIA] Como Usar a Biblioteca',
+        author: 'Eixo OS',
         status: 'Lendo',
         notes: [
-            {id: 'n1', content: 'O conceito de desligamento completo é a chave para evitar o burnout que sinto no final do dia.', createdAt: new Date().toISOString()}
+            {id: 'n1', content: "[TUTORIAL] Anote insights de seus livros aqui. Use colchetes duplos, como [[Este é um Link]], para criar conexões entre suas ideias. Tente criar um link para o outro livro de exemplo.", createdAt: new Date().toISOString()}
         ],
-        relatedDevelopmentNodeId: 'res1'
+        relatedDevelopmentNodeId: 'res2'
     },
     {
         id: 'b2',
-        title: 'Building a Second Brain',
-        author: 'Tiago Forte',
-        status: 'Lendo',
+        title: '[GUIA] Construindo um Segundo Cérebro',
+        author: 'Princípios de Tiago Forte',
+        status: 'Quero Ler',
         notes: [],
         relatedDevelopmentNodeId: 'res2'
     },
     {
         id: 'b3',
-        title: 'Sapiens: Uma Breve História da Humanidade',
-        author: 'Yuval Noah Harari',
+        title: 'Este é um Link',
+        author: 'Exemplo de Conexão',
         status: 'Quero Ler',
         notes: [],
-        relatedDevelopmentNodeId: 'res3'
     }
 ];
 
+const todayForAgenda = new Date();
+const in3Days = new Date();
+in3Days.setDate(todayForAgenda.getDate() + 3);
+
 export const INITIAL_AGENDA_EVENTS: CalendarEvent[] = [
-    { id: 'e1', title: 'Reunião de Alinhamento Semanal', date: new Date().toISOString().split('T')[0], startTime: '10:00', endTime: '10:30' },
-    { id: 'e2', title: 'Bloco de Deep Work: Mini-Curso', date: new Date().toISOString().split('T')[0], startTime: '11:00', endTime: '12:30' },
+    { id: 'e1', title: '[EXEMPLO] Bloco de Foco para o Projeto-Guia', date: todayForAgenda.toISOString().split('T')[0], startTime: '10:00', endTime: '11:30' },
+    { id: 'e2', title: '[EXEMPLO] Revisão Semanal', date: in3Days.toISOString().split('T')[0], startTime: '16:00', endTime: '16:30' },
 ];
 
 const nextWeek = new Date();
@@ -63,44 +66,39 @@ nextWeek.setDate(nextWeek.getDate() + 7);
 export const INITIAL_GOALS: Goal[] = [
     {
         id: 'g1',
-        name: 'Lançar Mini-Curso Assinatura',
+        name: '[META-EXEMPLO] Dominar o Eixo OS',
         areaId: 'obj1',
-        horizon: 'Médio Prazo (3-12 meses)',
+        horizon: 'Curto Prazo (até 3 meses)',
         deadline: '2024-12-31',
-        description: 'Criar e lançar um produto de conhecimento que opere de forma semi-autônoma, gerando uma nova fonte de receita e autoridade.',
-        expectedResults: 'Curso lançado com pelo menos 100 alunos na primeira turma. Feedback positivo acima de 8/10.',
-        successMetrics: 'Faturamento de R$50k no lançamento. Taxa de conclusão do curso de 40%.',
-        tags: 'educação, ia, marketing',
+        description: 'Metas Estratégicas conectam sua visão de longo prazo (do painel de Desenvolvimento) aos seus projetos e tarefas do dia a dia. Elas dão propósito à sua execução.',
+        expectedResults: 'Sentir-se confiante para gerenciar todos os meus projetos, hábitos e conhecimento dentro do sistema.',
+        successMetrics: 'Criar 3 projetos reais, manter 5 hábitos por 30 dias.',
+        tags: 'onboarding, produtividade, sistema',
         relatedProjectIds: ['p1'],
         milestones: [
-            { id: 'm1', name: 'Estrutura do curso definida', date: new Date().toISOString().split('T')[0] },
-            { id: 'm2', name: 'Gravação dos módulos concluída', date: nextWeek.toISOString().split('T')[0] },
+            { id: 'm1', name: 'Completar todas as tarefas do Projeto-Guia', date: new Date().toISOString().split('T')[0] },
+            { id: 'm2', name: 'Criar meu primeiro projeto real', date: nextWeek.toISOString().split('T')[0] },
         ]
     }
 ];
 
 export const INITIAL_DEVELOPMENT_DATA: DevelopmentGraph = {
     nodes: [
-        { id: 'pf1', type: 'Ponto de Fuga', label: 'R$1M com d.IA.logo', description: 'Materializar a "potência realizada" através do sucesso do ecossistema educacional.', icon: 'Foguete', successMetrics: 'Atingir R$1M de faturamento em 18-24 meses.' },
-        { id: 'obj1', type: 'Objetivo', label: 'Lançar Mini-Curso Assinatura', description: 'Criar e lançar um produto de conhecimento que opere de forma semi-autônoma (Skill Pipeline, Block 3).', icon: 'Negocios', targetDate: '2024-12-31' },
-        { id: 'obj2', type: 'Objetivo', label: 'Dominar Foco Profundo', description: 'Instalar o hábito de Deep Work consistente para combater a "Gestão Atencional Volátil".', icon: 'Centro', targetDate: '2024-09-30' },
-        { id: 'skill1', type: 'Skill', label: 'Foco Profundo (Deep Work)', description: 'Capacidade de produzir trabalho de alta intensidade sem distrações.', icon: 'Estudos' },
-        { id: 'skill2', type: 'Skill', label: 'Engenharia de Ofertas', description: 'Criar ofertas irresistíveis para produtos de conhecimento, baseado em Hormozi.', icon: 'Educacao' },
-        { id: 'skill3', type: 'Skill', label: 'Arquitetura Cognitiva de IA', description: 'Sintetizar IA, ensino e vendas para criar produtos únicos.', icon: 'Global' },
-        { id: 'res1', type: 'Recurso', label: 'Livro: Deep Work', description: 'Cal Newport. O manual para desenvolver a skill de Foco Profundo.' },
-        { id: 'res2', type: 'Recurso', label: 'Livro: Building a Second Brain', description: 'Tiago Forte. Sistema para organizar o universo criativo e intelectual.' },
-        { id: 'res3', type: 'Recurso', label: 'Livro: Sapiens', description: 'Yuval Noah Harari. Entender as narrativas que governam a sociedade.' },
-        { id: 'mentor1', type: 'Mentor', label: 'Tiago Forte', description: 'Referência em produtividade e negócios de conhecimento.' },
+        { id: 'pf1', type: 'Ponto de Fuga', label: '[PONTO DE FUGA] Realizar Meu Potencial Máximo', description: 'Este é seu objetivo norteador. A visão de longo prazo que direciona todas as suas ações, skills e objetivos.', icon: 'Foguete', successMetrics: 'Viver de forma intencional, alinhado com meus valores e com alta capacidade de execução.' },
+        { id: 'obj1', type: 'Objetivo', label: '[OBJETIVO] Dominar o Eixo OS', description: 'Objetivos são metas concretas que te aproximam do seu Ponto de Fuga. Este objetivo está ligado à sua Meta-Exemplo.', icon: 'Negocios', targetDate: '2024-09-30' },
+        { id: 'obj2', type: 'Objetivo', label: '[OBJETIVO] Construir Consistência Diária', description: 'Este objetivo foca em desenvolver a disciplina através da conclusão de hábitos e rituais.', icon: 'Centro', targetDate: '2024-12-31' },
+        { id: 'skill1', type: 'Skill', label: '[SKILL] Gestão de Projetos e Tarefas', description: 'Skills são as competências que você precisa desenvolver. Esta é praticada usando a tela de Projetos (Kanban).', icon: 'Estudos' },
+        { id: 'skill2', type: 'Skill', label: '[SKILL] Formação de Hábitos', description: 'Esta skill é aprimorada na tela de Hábitos, construindo sequências e mantendo a consistência.', icon: 'Saude' },
+        { id: 'res1', type: 'Recurso', label: '[RECURSO] O Projeto-Guia', description: 'Recursos são ferramentas, livros ou projetos que te ajudam a desenvolver skills. Este projeto é seu tutorial inicial.' },
+        { id: 'res2', type: 'Recurso', label: '[RECURSO] A Biblioteca do Eixo OS', description: 'Sua Biblioteca é um recurso para centralizar conhecimento e conectar ideias.' },
     ],
     edges: [
         { id: 'e1', source: 'obj1', target: 'pf1', label: 'viabiliza' },
         { id: 'e2', source: 'obj2', target: 'pf1', label: 'viabiliza' },
-        { id: 'e3', source: 'skill1', target: 'obj2', label: 'viabiliza' },
-        { id: 'e4', source: 'skill2', target: 'obj1', label: 'viabiliza' },
-        { id: 'e5', source: 'skill3', target: 'obj1', label: 'viabiliza' },
-        { id: 'e6', source: 'res1', target: 'skill1', label: 'desenvolve' },
-        { id: 'e7', source: 'res2', target: 'skill3', label: 'suporta' },
-        { id: 'e8', source: 'mentor1', target: 'skill3', label: 'inspirado por' },
+        { id: 'e3', source: 'skill1', target: 'obj1', label: 'desenvolve' },
+        { id: 'e4', source: 'skill2', target: 'obj2', label: 'desenvolve' },
+        { id: 'e5', source: 'res1', target: 'skill1', label: 'suporta' },
+        { id: 'e6', source: 'res2', target: 'obj1', label: 'suporta' },
     ]
 };
 

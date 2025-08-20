@@ -3,7 +3,7 @@ import { useTranslation } from '../hooks/useTranslation';
 
 interface AddProjectModalProps {
   onClose: () => void;
-  onAdd: (name: string) => Promise<void>;
+  onAdd: (name: string) => Promise<string | null>;
 }
 
 const AddProjectModal: React.FC<AddProjectModalProps> = ({ onClose, onAdd }) => {

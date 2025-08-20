@@ -5,7 +5,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useUI } from '../contexts/UIContext';
 
 interface DevelopmentAreaModalProps {
-  onSave: (node: DevelopmentNode) => Promise<void>;
+  onSave: (node: DevelopmentNode) => Promise<string | null>;
 }
 
 const DevelopmentAreaModal: React.FC<DevelopmentAreaModalProps> = ({ onSave }) => {

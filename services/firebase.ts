@@ -40,7 +40,7 @@ try {
 }
 
 
-const transformInitialData = () => {
+export const getInitialEcosystemData = () => {
     const data: any = {
         habits: {}, habitHistory: {},
         projects: {}, tasks: {},
@@ -103,8 +103,7 @@ class DataService {
         this.userId = user.uid;
         this.isReady = true;
         console.log(`✅ Usuário autenticado: ${this.userId}`);
-        await this.checkAndSeedInitialData();
-        // Executa callbacks que estavam esperando a autenticação
+        await this.checkAndCreateUserProfile();
         this.onReadyCallbacks.forEach(cb => cb());
         this.onReadyCallbacks = [];
       } else {
@@ -115,23 +114,21 @@ class DataService {
     });
   }
 
-  private async checkAndSeedInitialData() {
+  private async checkAndCreateUserProfile() {
       if(!this.userId) return;
       const userRef = database.ref(`users/${this.userId}/profile`);
       const snapshot = await userRef.get();
       if(!snapshot.exists()) {
-          console.log(`🌱 Novo usuário. Semeando dados iniciais...`);
-          const initialData = transformInitialData();
-          // Profile data is set on sign up, but we can ensure it has a timestamp
-          initialData.profile = { 
+          console.log(`🌱 Novo usuário. Criando perfil inicial...`);
+          const initialProfile = { 
               email: auth.currentUser?.email || 'dev@eixo.os',
-              createdAt: new Date().toISOString() 
+              createdAt: new Date().toISOString(),
+              onboardingCompleted: false
           };
-          await this.setData('/', initialData);
+          await this.setData('profile', initialProfile);
       }
   }
   
-  // Função para garantir que o serviço está pronto antes de executar uma ação
   private whenReady(callback: () => void) {
       if (this.isReady && this.userId) {
           callback();
@@ -149,14 +146,6 @@ class DataService {
 
   public async signUpWithEmailAndPassword(email: string, password: string): Promise<firebase.auth.UserCredential> {
     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    if (userCredential.user) {
-        // Direct write, doesn't depend on the service's internal state
-        const userRef = database.ref(`users/${userCredential.user.uid}/profile`);
-        await userRef.set({
-            email: userCredential.user.email,
-            createdAt: new Date().toISOString()
-        });
-    }
     return userCredential;
   }
 
@@ -180,7 +169,7 @@ class DataService {
     let dataRef: firebase.database.Reference;
     const listener = (snapshot: firebase.database.DataSnapshot) => {
         const data = snapshot.val();
-        callback(data || null); // Return null instead of {} if no data
+        callback(data || null);
     };
 
     this.whenReady(() => {
