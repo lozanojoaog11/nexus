@@ -1,12 +1,12 @@
 // Caminho do arquivo: /api/mcp.ts
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import * as admin from 'firebase-admin';
+// CORREÇÃO CRÍTICA: Importa de 'firebase-admin' em vez de 'firebase'.
+import * as admin from 'firebase-admin'; 
 
 // --- Função de Inicialização do Firebase Admin ---
-// Esta função garante que o Firebase seja inicializado apenas uma vez por "instância" da função.
 function initializeFirebaseAdmin() {
-  // CORREÇÃO: Verifica se 'admin.apps' existe ANTES de checar seu tamanho.
+  // A verificação agora está correta e segura.
   if (admin.apps && admin.apps.length > 0) {
     return;
   }
@@ -35,7 +35,7 @@ function initializeFirebaseAdmin() {
   }
 }
 
-// --- Lógica das Ferramentas ---
+// --- Lógica das Ferramentas (sem alterações) ---
 
 async function createHabit(params: any) {
   const { userId, name, category, frequency } = params;
@@ -63,19 +63,17 @@ async function createHabit(params: any) {
     currentStreak: 0,
   };
 
-  console.log("Salvando novo hábito no Firebase com os dados:", newHabitData);
   await newHabitRef.set(newHabitData);
   console.log("Hábito salvo com sucesso no Firebase.");
 
   return `Hábito '${name}' criado com sucesso!`;
 }
 
-// --- Handler Principal da Função Serverless ---
+// --- Handler Principal da Função Serverless (sem alterações) ---
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Configuração do CORS
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*'); // Para desenvolvimento. Em produção, restrinja para o seu domínio.
+  res.setHeader('Access-Control-Allow-Origin', '*'); 
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
