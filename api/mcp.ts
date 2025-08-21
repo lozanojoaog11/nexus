@@ -53,6 +53,78 @@ async function createHabit(params: any) {
   return `Hábito '${name}' criado com sucesso!`;
 }
 
+// 🔥 Função para criar projeto
+async function createProject(params: any) {
+  const { userId, name } = params;
+  if (!userId || !name) {
+    throw new Error("Parâmetros inválidos para criar projeto.");
+  }
+
+  const db = admin.database();
+  const projectsRef = db.ref(`users/${userId}/projects`);
+  const newProjectRef = projectsRef.push();
+  const newProjectId = newProjectRef.key;
+
+  if (!newProjectId) {
+    throw new Error("Não foi possível gerar um ID para o novo projeto no Firebase.");
+  }
+
+  const newProjectData = {
+    id: newProjectId,
+    name,
+  };
+
+  await newProjectRef.set(newProjectData);
+  return newProjectId;
+}
+
+// 🔥 Função para criar tarefa
+async function createTask(params: any) {
+  const { userId, projectId, content, isMIT } = params;
+  if (!userId || !projectId || !content) {
+    throw new Error("Parâmetros inválidos para criar tarefa.");
+  }
+
+  const db = admin.database();
+  const tasksRef = db.ref(`users/${userId}/tasks`);
+  const newTaskRef = tasksRef.push();
+  const newTaskId = newTaskRef.key;
+
+  if (!newTaskId) {
+    throw new Error("Não foi possível gerar um ID para a nova tarefa no Firebase.");
+  }
+
+  const newTaskData = {
+    id: newTaskId,
+    projectId,
+    content,
+    status: 'A Fazer',
+    isMIT: isMIT || false,
+  };
+
+  await newTaskRef.set(newTaskData);
+  return newTaskId;
+}
+
+// 🔥 Função para atualizar status da tarefa
+async function updateTaskStatus(params: any) {
+  const { userId, taskId, newStatus } = params;
+  if (!userId || !taskId || !newStatus) {
+    throw new Error("Parâmetros inválidos para atualizar status da tarefa.");
+  }
+
+  const validStatuses: string[] = ['A Fazer', 'Em Progresso', 'Concluído'];
+  if (!validStatuses.includes(newStatus)) {
+    throw new Error(`Status inválido: '${newStatus}'. Use um dos seguintes: ${validStatuses.join(', ')}`);
+  }
+
+  const db = admin.database();
+  const taskRef = db.ref(`users/${userId}/tasks/${taskId}`);
+  
+  await taskRef.update({ status: newStatus });
+  return `Status da tarefa atualizado para '${newStatus}' com sucesso.`;
+}
+
 // 🔥 Handler principal da API
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -72,6 +144,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     switch (tool) {
       case "habits.create":
         result = await createHabit(params);
+        break;
+      case "projects.create":
+        result = await createProject(params);
+        break;
+      case "tasks.create":
+        result = await createTask(params);
+        break;
+      case "tasks.updateStatus":
+        result = await updateTaskStatus(params);
         break;
       default:
         throw new Error(`Ferramenta desconhecida: '${tool}'`);

@@ -95,6 +95,48 @@ export const askGuardian = async (query: string, systemPrompt: string, language:
            "frequency": 7
          }
        }
+
+  2. projects.create
+     - Descrição: "Cria um novo projeto no Kanban."
+     - Parâmetros (params):
+       - name (string, obrigatório): O nome do novo projeto.
+     - Exemplo de uso em JSON:
+       {
+         "tool": "projects.create",
+         "params": {
+           "name": "Lançamento do Produto X"
+         }
+       }
+
+  3. tasks.create
+     - Descrição: "Adiciona uma nova tarefa a um projeto existente."
+     - Parâmetros (params):
+       - projectId (string, obrigatório): O ID do projeto ao qual a tarefa pertence.
+       - content (string, obrigatório): A descrição da tarefa.
+       - isMIT (boolean, opcional): Se a tarefa é a Mais Importante do Dia.
+     - Exemplo de uso em JSON:
+       {
+         "tool": "tasks.create",
+         "params": {
+           "projectId": "-Nq_abc123",
+           "content": "Definir a estratégia de marketing",
+           "isMIT": true
+         }
+       }
+
+  4. tasks.updateStatus
+     - Descrição: "Atualiza o status de uma tarefa (ex: move no Kanban)."
+     - Parâmetros (params):
+       - taskId (string, obrigatório): O ID da tarefa a ser atualizada.
+       - newStatus (string, obrigatório, valores possíveis: 'A Fazer', 'Em Progresso', 'Concluído').
+     - Exemplo de uso em JSON:
+       {
+         "tool": "tasks.updateStatus",
+         "params": {
+           "taskId": "-Nr_def456",
+           "newStatus": "Em Progresso"
+         }
+       }
   --- FIM DAS FERRAMENTAS ---
   `;
   
