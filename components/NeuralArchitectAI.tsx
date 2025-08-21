@@ -80,6 +80,38 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
     };
   };
 
+  const invokeTool = async (toolName: string, params: any) => {
+    try {
+      const response = await fetch('/api/mcp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tool: toolName,
+          params: params,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        try {
+          const errorData = JSON.parse(errorText);
+          throw new Error(errorData.error || `A execução da ferramenta falhou com o status: ${response.status}`);
+        } catch (e) {
+          throw new Error(`A execução da ferramenta falhou com o status ${response.status}: ${errorText}`);
+        }
+      }
+
+      const result = await response.json();
+      return result.result;
+    } catch (error) {
+      console.error(`Erro ao invocar a ferramenta ${toolName}:`, error);
+      const errorMessage = error instanceof Error ? error.message : 'Ocorreu um erro desconhecido';
+      return `Erro ao executar a ferramenta: ${errorMessage}`;
+    }
+  };
+
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
       recognitionRef.current = new (window as any).webkitSpeechRecognition();
@@ -110,26 +142,78 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
     setIsLoading(true);
 
     try {
-      if (!userId) {
-        throw new Error("ID do usuário não encontrado. Não é possível se comunicar com o Jarvis.");
-      }
+      const context = generateSessionContext();
+      const strategyKeyMap: { [key in Exclude<DailyStrategy, null>]: string } = {
+          'eat_the_frog': 'eatTheFrog',
+          'small_wins': 'smallWins',
+          'deep_work_focus': 'deepWorkFocus'
+      };
+      const strategyNameKey = checkin?.activeStrategy ? `todayView.strategy.names.${strategyKeyMap[checkin.activeStrategy]}` : 'todayView.strategy.names.none';
+      const strategyName = t(strategyNameKey);
 
-      // O novo geminiService lida com a construção do contexto e do prompt.
-      // Apenas passamos os dados brutos.
-      const jarvisContext = { profile, checkin, habits, goals, tasks, developmentNodes };
+      const availableTools = `
+      --- FERRAMENTAS DISPONÍVEIS ---
+      Você tem acesso à seguinte ferramenta. Para usá-la, sua resposta DEVE incluir um bloco de código JSON formatado dentro de \`\`\`json ... \`\`\`.
       
-      // A lógica do módulo pode ser simplificada para apenas pré-formatar a query do usuário.
+      1. habits.create
+         - Descrição: Cria um novo hábito no sistema Eixo OS.
+         - Parâmetros (params):
+           - name (string, obrigatório): O nome do novo hábito.
+           - category (string, obrigatório, valores possíveis: 'Mente', 'Corpo', 'Execução').
+           - frequency (number, obrigatório): A frequência semanal (1 a 7).
+      --- FIM DAS FERRAMENTAS ---
+      `;
+
+      const systemPrompt = `${profile?.customSystemPrompt || t('neuralArchitect.systemPrompt')}\n\n${availableTools}`;
+      
+      let query = currentInput;
       const module = selectedModule ? coachingModules.find(m => m.id === selectedModule) : null;
-      let finalQuery = currentInput;
       if (module) {
-        finalQuery = `${module.prompt}\n\nConsulta do Arquiteto: ${currentInput}`;
+        query = `${module.prompt}\n\nConsulta do Arquiteto: ${currentInput}`;
       }
 
-      const response = await askGuardian(finalQuery, userId, jarvisContext, language);
+      const response = await askGuardian(query, systemPrompt, language);
       
-      // A nova askGuardian retorna uma resposta em linguagem natural, já tendo executado a ferramenta.
-      const guardianMessage: Message = { sender: 'guardian', text: response };
-      setMessages(prev => [...prev, guardianMessage]);
+      const jsonRegex = /```json\s*([\s\S]*?)\s*```/;
+      const match = response.match(jsonRegex);
+      
+      let introductoryText = response;
+      let toolCallResult: Message | null = null;
+
+      if (match && match[1]) {
+        const jsonString = match[1];
+        introductoryText = response.substring(0, match.index).trim();
+        
+        try {
+          const potentialToolCall = JSON.parse(jsonString);
+          if (potentialToolCall.tool && potentialToolCall.params) {
+            if (!userId) {
+              throw new Error("ID do usuário não encontrado. Não é possível executar a ferramenta.");
+            }
+            const { tool, params } = potentialToolCall;
+            const finalParams = { ...params, userId };
+            const result = await invokeTool(tool, finalParams);
+            toolCallResult = { sender: 'guardian', text: `**[Ação Executada]**\n${result}` };
+          }
+        } catch (e) {
+            const errorMessage = e instanceof Error ? e.message : 'Formato de JSON inválido.';
+            toolCallResult = { sender: 'guardian', text: `**[Falha na Ação]**\n${errorMessage}` };
+        }
+      }
+
+      const newMessages: Message[] = [];
+      if (introductoryText) {
+        newMessages.push({ sender: 'guardian', text: introductoryText });
+      }
+      if (toolCallResult) {
+        newMessages.push(toolCallResult);
+      }
+      
+      if (newMessages.length > 0) {
+        setMessages(prev => [...prev, ...newMessages]);
+      } else {
+        setMessages(prev => [...prev, { sender: 'guardian', text: response }]);
+      }
 
     } catch (error) {
       setMessages(prev => [...prev, { sender: 'guardian', text: t('neuralArchitect.error') }]);
@@ -141,14 +225,25 @@ const NeuralArchitectAI: React.FC<NeuralArchitectProps> = ({
 
   const generateContextAnalysis = async () => {
     setIsLoading(true);
+    const context = generateSessionContext();
+    const completedHabits = (context.todayHabits || []).filter(h => {
+        const today = new Date().toISOString().split('T')[0];
+        return (h.history || []).some(entry => entry.date === today && entry.completed);
+    }).length;
+    
+    const contextString = `
+${t('neuralArchitect.context.currentState')}
+- ${t('neuralArchitect.context.energy')}: ${context.checkinData?.energia || 'N/A'}/10
+- ${t('neuralArchitect.context.clarity')}: ${context.checkinData?.clareza || 'N/A'}/10  
+- ${t('neuralArchitect.context.momentum')}: ${context.checkinData?.momentum || 'N/A'}/10
+- ${t('neuralArchitect.context.userState')}: ${context.userState}
+- ${t('neuralArchitect.context.activeGoals')}: ${context.currentGoals.map(g => g.name).join(', ')}
+- ${t('neuralArchitect.context.completedHabits')}: ${completedHabits}/${(context.todayHabits || []).length}
+- ${t('neuralArchitect.context.pendingMITs')}: ${context.recentTasks.filter(t => t.isMIT).length}`;
+
+    const analysisPrompt = t('neuralArchitect.contextAnalysisPrompt', { context: contextString });
     try {
-      if (!userId) {
-        throw new Error("ID do usuário não encontrado.");
-      }
-      const jarvisContext = { profile, checkin, habits, goals, tasks, developmentNodes };
-      const analysisPrompt = t('neuralArchitect.contextAnalysisPrompt'); // O contexto agora é passado diretamente
-      
-      const response = await askGuardian(analysisPrompt, userId, jarvisContext, language);
+      const response = await askGuardian(analysisPrompt, t('neuralArchitect.contextAnalysisSystemPrompt'), language);
       setMessages(prev => [...prev, { sender: 'guardian', text: response }]);
     } catch (error) {
       setMessages(prev => [...prev, { sender: 'guardian', text: t('neuralArchitect.analysisError') }]);
